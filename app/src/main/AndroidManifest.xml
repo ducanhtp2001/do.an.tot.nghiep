@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +21,13 @@
         android:theme="@style/Theme.Commyproject"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.permission.RequestPermissionAct"
+            android:exported="false" />
+        <activity
+            android:name=".activities.setting.SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.intro.IntroAct"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +35,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.recyclebin.RecycleBinAct"
+            android:exported="false" />
+        <activity
+            android:name=".activities.profile.ProfileAct"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.changepass.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.fogetpass.FogetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.register.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.login.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.home.MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
