@@ -45,4 +45,5 @@
     <string name="external_storage_access">External Storage Access</string>
     <string name="external_storate_description">Allows you to select and store files on your device so they can be sent to the server for processing.</string>
     <string name="internet_access_description">Your device needs to be connected to the Internet via Wi-Fi to use the file transfer feature</string>
+    <string name="camera_access_descript">This app requires access to the camera to use the feature to extract information from photos</string>
 </resources>
