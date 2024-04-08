@@ -1,4 +1,4 @@
-package com.example.commyproject.activities.user.register
+package com.example.commyproject.activities.user.login
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -10,18 +10,22 @@ import com.example.commyproject.data.model.User
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import com.example.commyproject.ultil.Constant
+import com.example.commyproject.ultil.converter.UserConverter
+import com.taymay.taoday.service.SocketIOManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterActViewModel @Inject constructor(
-    private val networkHelperCheck: NetworkHelper,
-    val api: ApiClient,
+class LoginActViewModel @Inject constructor(
+    val networkHelperCheck: NetworkHelper,
     val share: SharedPreferenceUtils,
+    val socket: SocketIOManager,
+    val api: ApiClient
 ): ViewModel() {
-    val mTAG = "register_act"
+
+    val mTAG = "login_act"
 
     private val _networkHelper = MutableLiveData(checkNetWork())
     val networkHelper: LiveData<Boolean>
@@ -31,20 +35,25 @@ class RegisterActViewModel @Inject constructor(
     val stateLoading: LiveData<Boolean>
         get() = _stateLoading
 
-    private val _stateRegister = MutableLiveData<Boolean>()
-    val stateRegister: LiveData<Boolean>
-        get() = _stateRegister
+    private val _stateLogin = MutableLiveData<Boolean>()
+    val stateLogin: LiveData<Boolean>
+        get() = _stateLogin
 
-    fun register(user: User)= viewModelScope.launch(Dispatchers.IO) {
-        api.register(user) { user ->
-            Log.d(mTAG, "register: $user")
+    private fun loadCache(): User? {
+        val userStr = share.getStringValue(Constant.USER, "")
+        return UserConverter.str2User(userStr)
+    }
+
+    fun login(user: User) = viewModelScope.launch(Dispatchers.IO) {
+        api.login(user) {
+            Log.d(mTAG, "login: $user")
             if (user._id != "") {
                 _stateLoading.postValue(true)
                 val userData = user._id + "_" + user.userName + "_" + user.passWord
                 share.putStringValue(Constant.USER, userData)
-                _stateRegister.postValue(true)
+                _stateLogin.postValue(true)
             } else {
-                Log.d(mTAG, "false register")
+                Log.d(mTAG, "false login")
             }
             _stateLoading.postValue(false)
         }

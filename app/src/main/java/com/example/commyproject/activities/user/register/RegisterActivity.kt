@@ -2,6 +2,8 @@ package com.example.commyproject.activities.user.register
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +41,34 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
+        viewModel.stateLoading.observe(this) {
+            if (it) {
+                loading()
+            } else {
+                loadDone()
+            }
+        }
 
+        viewModel.stateRegister.observe(this) {
+            if (it) startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+        }
+    }
+
+    private fun loading() {
+        b.apply {
+            btnRegister.isEnabled = false
+            btnBackLogin.isEnabled = false
+            progressBar.visibility = View.VISIBLE
+        }
+        Log.d("register", "loading")
+    }
+    private fun loadDone() {
+        b.apply {
+            btnRegister.isEnabled = true
+            btnBackLogin.isEnabled = true
+            progressBar.visibility = View.GONE
+        }
+        Log.d("register", "loadDone")
     }
 
     private fun initEvent() {
