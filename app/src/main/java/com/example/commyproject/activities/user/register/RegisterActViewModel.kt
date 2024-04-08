@@ -1,6 +1,8 @@
 package com.example.commyproject.activities.user.register
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.NetworkHelper
@@ -22,14 +24,29 @@ class RegisterActViewModel @Inject constructor(
 ): ViewModel() {
     val mTAG = "register_act"
 
+    private val _networkHelper = MutableLiveData(checkNetWork())
+    val networkHelper: LiveData<Boolean>
+        get() = _networkHelper
+
+    private val _stateLoading = MutableLiveData<Boolean>()
+    val stateLoading: LiveData<Boolean>
+        get() = _stateLoading
+
+    private val _stateRegister = MutableLiveData<Boolean>()
+    val stateRegister: LiveData<Boolean>
+        get() = _stateRegister
+
     fun register(user: User)= viewModelScope.launch {
         api.register(user) { user ->
             if (user.id != "") {
+                _stateLoading.postValue(true)
                 val userData = user.id + "_" + user.userName + "_" + user.passWord
                 share.putStringValue(Constant.ID_USER, userData)
+                _stateRegister.postValue(true)
             } else {
                 Log.d(mTAG, "false register")
             }
+            _stateLoading.postValue(false)
         }
     }
 

@@ -11,7 +11,9 @@ import com.example.commyproject.R
 import com.example.commyproject.base.checkPermissionNotification
 import com.example.commyproject.base.requestAppPermissionNotification
 import com.example.commyproject.databinding.ActivityRequestPermissionBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RequestPermissionAct : AppCompatActivity() {
 
     lateinit var b: ActivityRequestPermissionBinding

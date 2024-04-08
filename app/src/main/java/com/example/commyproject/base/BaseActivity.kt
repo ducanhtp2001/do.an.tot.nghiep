@@ -6,17 +6,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.base.HideNavigation.Companion.systemBarBlack
+import com.example.commyproject.databinding.ActivityLoginBinding
 import java.io.Serializable
 
 
-abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
-
-    lateinit var binding: T
+abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, getLayoutResId())
         HideNavigation.fullScreenCall(this)
         systemBarBlack(true)
         init()
