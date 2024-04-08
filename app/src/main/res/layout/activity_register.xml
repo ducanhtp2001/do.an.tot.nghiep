@@ -79,7 +79,7 @@
         android:inputType="textPassword" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnLogInGuest"
+        android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -95,7 +95,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edtName" />
 
     <TextView
-        android:id="@+id/btn_back_login"
+        android:id="@+id/btnBackLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
