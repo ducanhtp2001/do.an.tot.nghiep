@@ -54,4 +54,6 @@
     <string name="setting_menu_item">Setting</string>
     <string name="logout_menu_item">Logout</string>
     <string name="trash_bin_menu_item">Trash bin</string>
+    <string name="private_file_txt">Private</string>
+    <string name="public_file_txt">Public</string>
 </resources>
