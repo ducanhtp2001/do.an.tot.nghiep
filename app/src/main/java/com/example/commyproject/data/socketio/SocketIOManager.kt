@@ -88,24 +88,21 @@ class SocketIOManager @Inject constructor(
             val data = args[0] as JSONObject
             val senderId = data.getString("sender_id")
             callback(senderId)
-//            elog(senderId)
         }
         mSocket.on("friend_request_block") { args ->
             val data = args[0] as JSONObject
             val senderId = data.getString("sender_id")
             callback(senderId)
-//            elog(senderId)
         }
         mSocket.on("friend_request_sended") { args ->
             val data = args[0] as JSONObject
             val senderId = data.getString("sender_id")
-//            callback(senderId)
-//            elog(senderId)
+            callback(senderId)
+
         }
         mSocket.on("friend_request_isfriend") { args ->
             val data = args[0] as JSONObject
             val senderId = data.getString("sender_id")
-//            callback(senderId)
         }
     }
 
@@ -205,21 +202,6 @@ class SocketIOManager @Inject constructor(
         }
         mSocket.emit("sos_alarm", data)
     }
-
-//    fun handleSOS(callback: (UserLocation) -> Unit) {
-//        mSocket.on("help_me") {
-//            val data = it[0] as JSONObject
-//            val locationData = data.getJSONObject("location")
-//            val latitude = locationData.getDouble("latitude")
-//            val longitude = locationData.getDouble("longitude")
-//            val idUser = locationData.getString("idUser")
-//            val time = locationData.getLong("time")
-//
-//            val userLocation = UserLocation(idUser, longitude, latitude, time)
-//
-//            callback(userLocation)
-//        }
-//    }
 
     fun receivedFriendLocaton() {
         mSocket.on("received_location") { args ->

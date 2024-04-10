@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home_frm_title" />
+    <item
+        android:id="@+id/globalFragment"
+        android:icon="@drawable/ic_global"
+        android:title="@string/global_frm_title" />
+    <item
+        android:id="@+id/followFragment"
+        android:icon="@drawable/ic_follower"
+        android:title="@string/follow_frm_title" />
+    <item
+        android:id="@+id/notificationFragment"
+        android:icon="@drawable/ic_notification"
+        android:title="@string/notification_frm_title" />
+
+</menu>

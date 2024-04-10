@@ -14,7 +14,6 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
 
         }
     }
-
     suspend fun login(user: User, callback: (User) -> Unit) {
         val response = apiService.login(user)
         if (response.isSuccessful) {

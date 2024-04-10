@@ -46,4 +46,12 @@
     <string name="external_storate_description">Allows you to select and store files on your device so they can be sent to the server for processing.</string>
     <string name="internet_access_description">Your device needs to be connected to the Internet via Wi-Fi to use the file transfer feature</string>
     <string name="camera_access_descript">This app requires access to the camera to use the feature to extract information from photos</string>
+    <string name="home_frm_title">Home</string>
+    <string name="global_frm_title">Global</string>
+    <string name="follow_frm_title">Follow</string>
+    <string name="notification_frm_title">Notification</string>
+    <string name="profile_menu_item">Profile</string>
+    <string name="setting_menu_item">Setting</string>
+    <string name="logout_menu_item">Logout</string>
+    <string name="trash_bin_menu_item">Trash bin</string>
 </resources>

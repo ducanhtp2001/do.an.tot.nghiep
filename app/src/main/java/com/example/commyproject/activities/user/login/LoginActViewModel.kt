@@ -46,8 +46,8 @@ class LoginActViewModel @Inject constructor(
 
     fun login(user: User) = viewModelScope.launch(Dispatchers.IO) {
         api.login(user) {
-            Log.d(mTAG, "login: $user")
-            if (user._id != "") {
+            Log.d(mTAG, "response: $user")
+            if (it._id != "") {
                 _stateLoading.postValue(true)
                 val userData = user._id + "_" + user.userName + "_" + user.passWord
                 share.putStringValue(Constant.USER, userData)

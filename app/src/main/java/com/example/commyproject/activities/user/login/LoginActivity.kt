@@ -11,9 +11,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.R
-import com.example.commyproject.activities.home.MainActivity
+import com.example.commyproject.activities.main.MainActivity
 import com.example.commyproject.activities.user.fogetpass.FogetPasswordActivity
-import com.example.commyproject.activities.user.register.RegisterActViewModel
 import com.example.commyproject.activities.user.register.RegisterActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityLoginBinding
@@ -97,6 +96,7 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                         } else {
                             val user = User(userName = userName, passWord =  pass)
+                            Log.d("testing", "user: $user")
                             viewModel.login(user)
                         }
                     }
