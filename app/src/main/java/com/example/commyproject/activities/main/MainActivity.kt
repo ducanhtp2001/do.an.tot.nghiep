@@ -21,7 +21,7 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(){
+class MainActivity : AppCompatActivity(){
     private lateinit var b: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var drawerToggle: ActionBarDrawerToggle
@@ -34,20 +34,7 @@ class MainActivity : BaseActivity(){
         initView()
         initEvent()
     }
-
-    override fun init() {
-
-    }
-
-    override fun initData() {
-
-    }
-
-    override fun initObserve() {
-
-    }
-
-    override fun initEvent() {
+    private fun initEvent() {
         b.apply {
             btnMenu.setOnClickListener {
                 drawerNav.visibility = if(drawerNav.visibility == View.VISIBLE) View.GONE else View.VISIBLE
@@ -55,7 +42,7 @@ class MainActivity : BaseActivity(){
         }
     }
 
-     override fun initView() {
+     private fun initView() {
 
         navController = findNavController(R.id.fragmentContainerView)
         b.bottomNavigationView.setupWithNavController(navController)

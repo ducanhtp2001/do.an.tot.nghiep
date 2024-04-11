@@ -50,6 +50,7 @@ class LoginActViewModel @Inject constructor(
             if (it._id != "") {
                 _stateLoading.postValue(true)
                 val userData = user._id + "_" + user.userName + "_" + user.passWord
+                Log.d("testing", "save to cache: $userData")
                 share.putStringValue(Constant.USER, userData)
                 _stateLogin.postValue(true)
             } else {

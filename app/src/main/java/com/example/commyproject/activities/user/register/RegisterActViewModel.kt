@@ -41,6 +41,7 @@ class RegisterActViewModel @Inject constructor(
             if (user._id != "") {
                 _stateLoading.postValue(true)
                 val userData = user._id + "_" + user.userName + "_" + user.passWord
+                Log.d("testing", "on register save to cache: $userData")
                 share.putStringValue(Constant.USER, userData)
                 _stateRegister.postValue(true)
             } else {
