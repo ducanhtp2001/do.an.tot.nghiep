@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -25,11 +26,14 @@ class MainActivity : AppCompatActivity(){
     private lateinit var b: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var viewModel: MainActViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
+
+        viewModel = ViewModelProvider(this)[MainActViewModel::class.java]
 
         initView()
         initEvent()

@@ -2,6 +2,7 @@ package com.example.commyproject.di
 
 import com.example.commyproject.data.network.ApiService
 import com.example.commyproject.repository.ApiClient
+import com.example.commyproject.ultil.Config
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://192.168.2.102:5000"
+    private const val BASE_URL = Config.SERVER_URL
 
     @Provides
     @Singleton

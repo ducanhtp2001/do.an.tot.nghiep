@@ -1,6 +1,7 @@
 package com.taymay.taoday.service
 
 import android.util.Log
+import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.DebounceUtils
 import com.google.gson.Gson
 import com.google.gson.JsonParser
@@ -19,7 +20,7 @@ class SocketIOManager @Inject constructor(
 
     companion object {
         private const val TAG = "SocketIOManager"
-        const val SERVER_URL = "http://192.168.2.102:5000"
+        const val SERVER_URL = Config.SERVER_URL
         const val TRANSACTION_EVENT = "transaction_event"
     }
 
@@ -52,7 +53,7 @@ class SocketIOManager @Inject constructor(
     }
 
 
-   private val onConnect = Emitter.Listener {
+    private val onConnect = Emitter.Listener {
         Log.e(
             TAG,
             "SocketManager  isConnected " + mSocket.connected() + " |  isActive  " + mSocket.isActive
@@ -185,7 +186,7 @@ class SocketIOManager @Inject constructor(
         mSocket.emit("unfriend", data)
     }
 
-    fun handleUnFriend(callback:(String)->Unit) {
+    fun handleUnFriend(callback: (String) -> Unit) {
         mSocket.on("friend_left_room") { args ->
             val data = args[0] as JSONObject
             val userId = data.getString("user_id")
