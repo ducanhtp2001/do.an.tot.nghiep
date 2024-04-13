@@ -28,7 +28,7 @@ class HomeFragmentViewModel @Inject constructor(
         get() = _stateLoading
 
     var msg = ""
-    fun upload(context: Context, uri: Uri, description: String, fileName: String) =
+    fun upload(context: Context, uri: Uri, description: String, fileName: String, userId: String) =
         viewModelScope.launch(Dispatchers.IO) {
             val userStr = share.getStringValue(Constant.USER, "")
             var user: User?
@@ -36,7 +36,7 @@ class HomeFragmentViewModel @Inject constructor(
                 user = UserConverter.str2User(userStr)
                 val mFileName = "$fileName.pdf"
 
-                api.upload(context, uri, description, mFileName, user!!._id) {
+                api.upload(context, uri, description, mFileName, userId) {
                     _stateLoading.postValue(true)
                     msg = it.msg
                     _stateLoading.postValue(false)
@@ -44,4 +44,6 @@ class HomeFragmentViewModel @Inject constructor(
                 Log.d("testing", userStr)
             }
         }
+
+    fun getUser() = share.getUser()
 }

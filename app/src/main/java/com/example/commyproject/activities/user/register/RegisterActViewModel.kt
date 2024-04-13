@@ -21,7 +21,7 @@ class RegisterActViewModel @Inject constructor(
     val api: ApiClient,
     val share: SharedPreferenceUtils,
 ): ViewModel() {
-    val mTAG = "register_act"
+    val mTAG = "testing register"
 
     private val _networkHelper = MutableLiveData(checkNetWork())
     val networkHelper: LiveData<Boolean>
@@ -36,11 +36,11 @@ class RegisterActViewModel @Inject constructor(
         get() = _stateRegister
 
     fun register(user: User)= viewModelScope.launch(Dispatchers.IO) {
-        api.register(user) { user ->
-            Log.d(mTAG, "register: $user")
-            if (user._id != "") {
+        api.register(user) { it ->
+            Log.d(mTAG, "register: $it")
+            if (it._id != "") {
                 _stateLoading.postValue(true)
-                val userData = user._id + "_" + user.userName + "_" + user.passWord
+                val userData = it._id + "_" + it.userName + "_" + it.passWord
                 Log.d("testing", "on register save to cache: $userData")
                 share.putStringValue(Constant.USER, userData)
                 _stateRegister.postValue(true)

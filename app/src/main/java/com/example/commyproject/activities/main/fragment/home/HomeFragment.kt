@@ -17,8 +17,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.activities.main.fragment.home.global.PublicFragment
 import com.example.commyproject.activities.main.fragment.home.local.LocalFragment
+import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.FragmentHomeBinding
 import com.example.commyproject.ultil.adapter.ViewPagerAdapter
+import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.showSetConfigDialog
 import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
@@ -28,6 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var b: FragmentHomeBinding
     private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var vpAdapter: ViewPagerAdapter
+    private lateinit var user: User
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +39,7 @@ class HomeFragment : Fragment() {
     ): View {
         b = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[HomeFragmentViewModel::class.java]
+        user = viewModel.getUser()
 
         initView()
         initEvent()
@@ -123,11 +128,11 @@ class HomeFragment : Fragment() {
             type = "*/*" // Tất cả các loại tệp
             putExtra(Intent.EXTRA_MIME_TYPES, arrayOf(
                 "application/pdf", // PDF
-                "application/msword", // DOC
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
-                "application/vnd.ms-excel", // EXCEL
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
-                "image/*" // Hình ảnh (tất cả các định dạng hình ảnh)
+//                "application/msword", // DOC
+//                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
+//                "application/vnd.ms-excel", // EXCEL
+//                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
+//                "image/*" // Hình ảnh (tất cả các định dạng hình ảnh)
             ))
         }
         startActivityForResult(Intent.createChooser(intent, "Select PDF"), REQUEST_PDF)
@@ -138,7 +143,11 @@ class HomeFragment : Fragment() {
         if (requestCode == REQUEST_PDF && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
                 requireContext().showToast(requireContext(), uri.toString())
-                viewModel.upload(requireContext(), uri, "abc", Calendar.getInstance().timeInMillis.toString())
+                requireContext().showSetConfigDialog {title, isTable, isPublic ->
+                    val fileName = FileConverter.getFileName(user._id ,Calendar.getInstance().timeInMillis.toString())
+                    val description = "$title-$isTable-$isPublic"
+                    viewModel.upload(requireContext(), uri, description, fileName, user._id)
+                }
             }
         }
     }

@@ -15,5 +15,10 @@ class UserConverter {
                 }
             }
         }
+
+        fun str2ListFollow(str: String): List<String> {
+            val strData = str.substring(1, str.length - 1)
+            return strData.split(",").toList()
+        }
     }
 }

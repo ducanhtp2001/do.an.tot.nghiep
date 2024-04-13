@@ -5,11 +5,16 @@ class User(
     val userName: String = "",
     val passWord: String = "",
     val email: String = "",
-    val follow: List<String> = emptyList()
+    val follow: List<String> = emptyList(),
+    val avatar: String = ""
     ) {
 
     override fun toString(): String {
-        return "User(id:$_id, userName:$userName, passWord:$passWord, email:$email, follow: $follow)"
+        return "User(id:$_id, userName:$userName, passWord:$passWord, email:$email, follow: $follow, avatar: $avatar)"
+    }
+
+    fun toStringSave(): String {
+        return "$_id-$userName-$passWord-$email-$follow-$avatar"
     }
 
     companion object {
@@ -19,7 +24,8 @@ class User(
                 userName = name,
                 passWord = passWord,
                 email = "",
-                follow = emptyList()
+                follow = emptyList(),
+                avatar = ""
             )
         }
     }

@@ -58,4 +58,12 @@
     <string name="trash_bin_menu_item">Trash bin</string>
     <string name="private_file_txt">Private</string>
     <string name="public_file_txt">Public</string>
+    <string name="config_dialog_title">Config</string>
+    <string name="is_table_description">"If your file contains tables, please check 'Table'."</string>
+    <string name="is_table_selection">Table</string>
+    <string name="btn_ok">Ok</string>
+    <string name="is_public_description">If you want to public this file data</string>
+    <string name="is_public_selection">Public</string>
+    <string name="reminder_input_name_file">Title: </string>
+    <string name="reminder_input_title">Input title for this file</string>
 </resources>

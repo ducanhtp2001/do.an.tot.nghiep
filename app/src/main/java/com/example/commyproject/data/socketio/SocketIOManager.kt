@@ -1,6 +1,7 @@
 package com.taymay.taoday.service
 
 import android.util.Log
+import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.DebounceUtils
 import com.google.gson.Gson
@@ -15,7 +16,8 @@ import javax.inject.Singleton
 @Singleton
 class SocketIOManager @Inject constructor(
     private val mSocket: Socket,
-    private val listener: SocketIOListener
+    private val listener: SocketIOListener,
+    private val share: SharedPreferenceUtils
 ) {
 
     companion object {
@@ -77,12 +79,29 @@ class SocketIOManager @Inject constructor(
     }
 
 
-    fun sendFriendRequest(idSender: String, idReceiver: String) {
+    fun login() {
+        onLoginReceiver()
+
+        val user = share.getUser()
         val requestData = JSONObject()
-        requestData.put("idSender", idSender)
-        requestData.put("idReceiver", idReceiver)
-        mSocket.emit("send_friend_request", requestData)
+        requestData.put("id", user._id)
+        mSocket.emit("login", requestData)
     }
+
+    private fun onLoginReceiver() {
+        Log.d("testing", "register on")
+        mSocket.on("on_login_receive") { args ->
+            val data = args[0] as JSONObject
+            val msg = data.getString("msg")
+
+            Log.d("testing", msg)
+        }
+    }
+
+
+
+
+
 
     fun getFriendRequest(callback: (String) -> Unit) {
         mSocket.on("friend_request_received") { args ->
