@@ -1,5 +1,6 @@
 package com.example.commyproject.data.network
 
+import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
 import com.example.commyproject.data.model.User
 import okhttp3.MultipartBody
@@ -20,6 +21,9 @@ interface ApiService {
 
     @POST("update-user")
     suspend fun updateUser(@Body user: User): Response<User>
+
+    @POST("get-private-file")
+    suspend fun getPrivateFile(@Body user: User): Response<List<FileEntry>>
 
     @Multipart
     @POST("upload")

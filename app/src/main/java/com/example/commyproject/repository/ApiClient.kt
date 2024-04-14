@@ -2,6 +2,7 @@ package com.example.commyproject.repository
 
 import android.content.Context
 import android.net.Uri
+import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.network.ApiService
@@ -27,6 +28,16 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         } else {
 
         }
+    }
+
+    suspend fun getPrivateFile(user: User): List<FileEntry> {
+        val response = apiService.getPrivateFile(user)
+//        if (response.isSuccessful) {
+//            callback(response.body()!!)
+//        } else {
+//
+//        }
+        return response.body()!!
     }
 
     suspend fun upload(

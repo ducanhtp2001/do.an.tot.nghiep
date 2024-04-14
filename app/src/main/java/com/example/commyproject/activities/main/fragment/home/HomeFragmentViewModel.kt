@@ -12,6 +12,7 @@ import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.converter.UserConverter
+import com.taymay.taoday.service.SocketIOManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeFragmentViewModel @Inject constructor(
     val api: ApiClient,
-    val share: SharedPreferenceUtils
+    val share: SharedPreferenceUtils,
+    val socket: SocketIOManager
 ) : ViewModel() {
 
     private val _stateLoading = MutableLiveData<Boolean>()
@@ -39,6 +41,7 @@ class HomeFragmentViewModel @Inject constructor(
                 api.upload(context, uri, description, mFileName, userId, fileId) {
                     _stateLoading.postValue(true)
                     msg = it.msg
+                    socket.requestExecute()
                     _stateLoading.postValue(false)
                 }
                 Log.d("testing", userStr)

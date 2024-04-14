@@ -24,6 +24,8 @@ class SocketIOManager @Inject constructor(
         private const val TAG = "SocketIOManager"
         const val SERVER_URL = Config.SERVER_URL
         const val TRANSACTION_EVENT = "transaction_event"
+        const val REQUEST_EXECUTE = "start_task"
+        const val REQUEST_EXECUTE_DONE = "on_file_execute_done"
     }
 
     fun socketDisconnect() {
@@ -95,6 +97,23 @@ class SocketIOManager @Inject constructor(
             val msg = data.getString("msg")
 
             Log.d("testing", msg)
+        }
+    }
+
+    fun requestExecute() {
+        onExecuteDone()
+        Log.d("testing", "request execute")
+        mSocket.emit(REQUEST_EXECUTE)
+    }
+
+    private fun onExecuteDone() {
+
+        mSocket.on(REQUEST_EXECUTE_DONE) { args ->
+            Log.d("testing", "on execute done")
+            val data = args[0] as JSONObject
+            val title = data.getString("fileTitle")
+
+            Log.d("testing", "file $title is done")
         }
     }
 
