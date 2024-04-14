@@ -27,7 +27,8 @@ interface ApiService {
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
         @Part("fileName") name: RequestBody,
-        @Part("id") id: RequestBody
+        @Part("id") id: RequestBody,
+        @Part("fileId") fileId: RequestBody
     ): Response<MsgResponse>
 
 }

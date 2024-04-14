@@ -35,6 +35,7 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         description: String,
         fileName: String,
         id: String,
+        fileId: String,
         callback: (MsgResponse) -> Unit
     ) {
 
@@ -47,8 +48,9 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         val descriptionPart = description.toRequestBody("text/plain".toMediaTypeOrNull())
         val fileNamePart = fileName.toRequestBody("text/plain".toMediaTypeOrNull())
         val idPart = id.toRequestBody("text/plain".toMediaTypeOrNull())
+        val idFilePart = fileId.toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val response = apiService.uploadFile(filePart, descriptionPart, fileNamePart, idPart)
+        val response = apiService.uploadFile(filePart, descriptionPart, fileNamePart, idPart, idFilePart)
         if (response.isSuccessful) {
             callback(response.body()!!)
         } else {
