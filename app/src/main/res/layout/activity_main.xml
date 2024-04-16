@@ -9,39 +9,26 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.main.MainActivity">
 
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/drawerNav"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:headerLayout="@layout/drawer_header"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/drawer_nav_menu"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <include android:id="@+id/topAppBar"
+        layout="@layout/main_menu_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#bcbcbc"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/btnMenu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_menu_2" />
-
-                <ImageView
-                    android:id="@+id/btnFind"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_find"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_alignParentEnd="true"/>
-            </RelativeLayout>
-        </androidx.appcompat.widget.Toolbar>
-
 
         <FrameLayout
             android:id="@+id/frameLayout"
@@ -57,13 +44,6 @@
                 app:defaultNavHost="true"
                 app:navGraph="@navigation/nav_graph" />
 
-            <com.google.android.material.navigation.NavigationView
-                android:id="@+id/drawerNav"
-                android:layout_width="263dp"
-                android:layout_height="619dp"
-                app:headerLayout="@layout/drawer_header"
-                android:visibility="gone"
-                app:menu="@menu/drawer_nav_menu" />
         </FrameLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -87,18 +67,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:src="@drawable/ic_add"-->
-<!--                    android:id="@+id/fab"-->
-<!--                    app:layout_anchor="@id/bottomAppBar"/>-->
             </com.google.android.material.bottomappbar.BottomAppBar>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-
     </RelativeLayout>
-
-
 
 </androidx.drawerlayout.widget.DrawerLayout>

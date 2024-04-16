@@ -6,4 +6,5 @@
     </style>
 
     <style name="Theme.Commyproject" parent="Base.Theme.Commyproject" />
+    <style name="Theme.TestDrawerMenu.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

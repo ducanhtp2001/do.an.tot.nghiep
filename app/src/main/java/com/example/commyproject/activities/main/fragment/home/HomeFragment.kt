@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,8 @@ class HomeFragment : Fragment() {
         initEvent()
         initObserver()
 
+//        Log.d("testing", "home create")
+
         return b.root
     }
 
@@ -68,12 +71,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() {
-        vpAdapter = ViewPagerAdapter(requireActivity().supportFragmentManager)
+//        Log.d("testing", "initView")
+        vpAdapter = ViewPagerAdapter(childFragmentManager)
         vpAdapter.add(LocalFragment(), "Private")
         vpAdapter.add(PublicFragment(), "Publish")
 
         b.viewPager.adapter = vpAdapter
         b.tabLayout.setupWithViewPager(b.viewPager)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     private fun checkPermission(): Boolean {

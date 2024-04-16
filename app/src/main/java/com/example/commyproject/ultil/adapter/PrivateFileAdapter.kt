@@ -12,7 +12,7 @@ import com.example.commyproject.ultil.converter.FileConverter
 
 class PrivateFileAdapter(
     val context: Context,
-    private val list: List<FileEntry>
+    private val list: MutableList<FileEntry>
 
     ): BaseAdapter() {
     override fun getCount(): Int {
