@@ -40,6 +40,11 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         return response.body()!!
     }
 
+    suspend fun getPublicFile(user: User): List<FileEntry> {
+        val response = apiService.getPublicFile(user)
+        return response.body()!!
+    }
+
     suspend fun upload(
         context: Context,
         uri: Uri,

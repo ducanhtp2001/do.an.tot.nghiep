@@ -25,6 +25,9 @@ interface ApiService {
     @POST("get-private-file")
     suspend fun getPrivateFile(@Body user: User): Response<List<FileEntry>>
 
+    @POST("get-public-file")
+    suspend fun getPublicFile(@Body user: User): Response<List<FileEntry>>
+
     @Multipart
     @POST("upload")
     suspend fun uploadFile(
