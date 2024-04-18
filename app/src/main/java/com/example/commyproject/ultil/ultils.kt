@@ -10,8 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.commyproject.R
 
-fun Context.showToast(context: Context, msg: String) {
-    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+fun Context.showToast(msg: String) {
+    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
 
 const val TAG = "testing"

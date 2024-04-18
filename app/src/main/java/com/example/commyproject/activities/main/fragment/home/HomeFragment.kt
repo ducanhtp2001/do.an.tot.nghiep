@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +53,7 @@ class HomeFragment : Fragment() {
     private fun initObserver() {
         viewModel.stateLoading.observe(requireActivity(), Observer {
             if (!viewModel.stateLoading.value!!) {
-                requireContext().showToast(requireContext(), viewModel.msg)
+                requireContext().showToast(viewModel.msg)
             }
         })
     }
@@ -150,7 +149,7 @@ class HomeFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_PDF && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
-                requireContext().showToast(requireContext(), uri.toString())
+                requireContext().showToast(uri.toString())
                 requireContext().showSetConfigDialog {title, isTable, isPublic ->
                     val fileName = FileConverter.getFileName(user._id ,Calendar.getInstance().timeInMillis.toString())
                     val description = "$title-$isTable-$isPublic"

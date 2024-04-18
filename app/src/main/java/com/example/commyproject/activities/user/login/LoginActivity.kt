@@ -58,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.stateLogin.observe(this) {
             if (it) startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            finish()
         }
     }
 

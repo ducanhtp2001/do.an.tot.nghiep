@@ -51,6 +51,7 @@ class RegisterActivity : AppCompatActivity() {
 
         viewModel.stateRegister.observe(this) {
             if (it) startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+            finish()
         }
     }
 

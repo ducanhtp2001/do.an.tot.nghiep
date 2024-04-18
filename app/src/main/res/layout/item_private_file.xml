@@ -6,27 +6,33 @@
     android:id="@+id/itemView"
     android:background="@drawable/bg_item_file"
     android:padding="10dp"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        >
+        android:focusable="false"
+        android:focusableInTouchMode="false">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_pdf"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/bg_avatar"/>
+            android:background="@drawable/bg_avatar"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="20dp">
+            android:layout_marginStart="20dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -34,13 +40,17 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
                 android:textSize="18sp"
-                android:text="Title"/>
+                android:text="Title"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:focusable="false"
+                android:focusableInTouchMode="false">
 
                 <TextView
                     android:id="@+id/txtTime"
@@ -48,13 +58,17 @@
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
                     android:textSize="15sp"
-                    android:text="time"/>
+                    android:text="time"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_public_off_small"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="20dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -70,8 +84,8 @@
         android:layout_margin="15dp"
         android:maxLines="3"
         android:ellipsize="end"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="content"/>
+        android:text="content"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
 </LinearLayout>
