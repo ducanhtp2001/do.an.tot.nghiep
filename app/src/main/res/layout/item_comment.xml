@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp">
+
+        <ImageView
+            android:id="@+id/cmtOwnerAvatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_avatar"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="15dp">
+
+            <TextView
+                android:id="@+id/userCommentName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="16sp"
+                android:textColor="#000000"/>
+
+            <TextView
+                android:id="@+id/userCommentContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comment"
+                android:textSize="14sp"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/option"
+            android:layout_width="15dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_menu"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="2 Day ago"
+            android:layout_marginEnd="15dp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:id="@+id/btnUpvote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Upvote"
+            android:layout_marginEnd="15dp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:id="@+id/btnReply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Reply"
+            android:layout_marginEnd="15dp"
+            android:textColor="#000000"/>
+
+
+        <TextView
+            android:id="@+id/txtUpvoteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="10"
+            android:textColor="#000000"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:padding="5dp"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/ic_upvote"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtReplyCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 reply"/>
+
+        <ListView
+            android:id="@+id/listViewReply"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"/>
+
+        <include
+            android:id="@+id/commentLayout"
+            layout="@layout/content_input_comment"/>
+    </LinearLayout>
+
+</LinearLayout>

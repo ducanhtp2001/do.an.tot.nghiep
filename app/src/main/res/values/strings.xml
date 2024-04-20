@@ -67,4 +67,6 @@
     <string name="reminder_input_name_file">Title: </string>
     <string name="reminder_input_title">Input title</string>
     <string name="see_more_comments"><u>See more comments</u></string>
+    <string name="comments">%1$s Comments</string>
+    <string name="upvote">%1$s Upvote</string>
 </resources>
