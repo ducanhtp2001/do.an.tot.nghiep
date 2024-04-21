@@ -2,7 +2,7 @@ package com.example.commyproject.data.model
 
 class FileEntry(
     val _id: String,
-    val isUser: String,
+    val idUser: String,
     val title: String,
     val fileName: String,
     val recognizeText: String,

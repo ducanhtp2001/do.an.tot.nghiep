@@ -6,6 +6,10 @@ class FileConverter {
             return "${id}_$currentTime"
         }
 
+        fun generateIdByUserId(userId: String): String {
+            return "${System.currentTimeMillis()}_$userId"
+        }
+
         fun getTimePassFromId(_id: String): String {
             val arr = _id.split("_")
             val fileTimeMillis = arr[1].toLong()

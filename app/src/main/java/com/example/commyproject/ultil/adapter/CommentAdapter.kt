@@ -12,16 +12,21 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Comment
+import com.example.commyproject.data.model.CommentEntity
+import com.example.commyproject.data.model.Evaluation
+import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
 
 class CommentAdapter(
     private val context: Context,
-    private val allComments: List<Comment>?,
+    private val allComments: List<Comment>? = emptyList(),
     private val createContextMenu: () -> Unit,
-    private val sendUpvote: () -> Unit,
-    private val sendComment: (String) -> Unit
+    private val sendUpvote: (vote: Evaluation) -> Unit,
+    private val sendComment: (CommentEntity) -> Unit,
+    private val onClickReply: () -> Unit
 ): BaseAdapter() {
+
     private val currentComments = mutableListOf<Comment>().apply {
         if (allComments?.isNotEmpty() == true) {
             add(allComments[0])
@@ -63,7 +68,9 @@ class CommentAdapter(
         val data = currentComments[position]
 
         viewHolder.apply {
+
             commentLayout.visibility = View.GONE
+
             val avatarUrl = Config.SERVER_URL + data.avatar
 
             Glide.with(context)
@@ -77,12 +84,23 @@ class CommentAdapter(
             txtReplyCount.text = data.replies.size.toString()
 
             menu.setOnClickListener { createContextMenu() }
-            btnUpvote.setOnClickListener { sendUpvote() }
-            btnSend.setOnClickListener { sendComment(inputReply.text.toString()) }
+            btnUpvote.setOnClickListener {
+                val id = "${System.currentTimeMillis()}_${data.idUser}"
+                val upvote = Evaluation(id, data.idUser, EvaluationEntityType.COMMENT, data._id)
+                sendUpvote(upvote)
+            }
 
-            btnReply.setOnClickListener { commentLayout.visibility = View.VISIBLE }
+            btnReply.setOnClickListener { onClickReply() }
 
-            val adapter = CommentAdapter(context, data.replies, createContextMenu, sendUpvote, sendComment)
+            btnSend.setOnClickListener {
+                if (viewHolder.inputReply.text.toString().isNotEmpty()) {
+                    val id = FileConverter.generateIdByUserId(data.idUser)
+                    val comment = CommentEntity(id, null, EvaluationEntityType.FILE, viewHolder.inputReply.text.toString())
+                    sendComment(comment)
+                }
+            }
+
+            val adapter = CommentAdapter(context, data.replies, createContextMenu, sendUpvote, sendComment, onClickReply)
             listViewReply.adapter = adapter
 
         }

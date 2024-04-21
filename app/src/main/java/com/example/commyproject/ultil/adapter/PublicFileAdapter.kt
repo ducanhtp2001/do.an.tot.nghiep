@@ -11,6 +11,9 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import com.example.commyproject.R
+import com.example.commyproject.data.model.CommentEntity
+import com.example.commyproject.data.model.Evaluation
+import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.ultil.converter.FileConverter
 
@@ -18,11 +21,11 @@ class PublicFileAdapter(
     val context: Context,
     private val list: MutableList<FileEntry>,
     val getMoreComments: () -> Unit,
-    val sendComment: (String) -> Unit,
+    private val sendComment: (CommentEntity) -> Unit,
     private val createContextMenu: () -> Unit,
-    private val sendUpvote: () -> Unit,
+    private val sendUpvote: (vote: Evaluation) -> Unit,
 
-) : BaseAdapter() {
+    ) : BaseAdapter() {
     override fun getCount(): Int {
         return list.size
     }
@@ -69,9 +72,17 @@ class PublicFileAdapter(
         viewHolder.comment.text = context.getString(R.string.comments, commentCount)
 
         viewHolder.btnMoreComment.setOnClickListener { getMoreComments() }
-        viewHolder.btnSend.setOnClickListener { sendComment(viewHolder.inputComment.text.toString()) }
+        viewHolder.btnSend.setOnClickListener {
+            if (viewHolder.inputComment.text.toString().isNotEmpty()) {
+                val id = FileConverter.generateIdByUserId(data.idUser)
+                val comment = CommentEntity(id, null, EvaluationEntityType.FILE, viewHolder.inputComment.text.toString())
+                sendComment(comment)
+            }
+        }
 
-        val adapter = CommentAdapter(context, data.comments, createContextMenu, sendUpvote, sendComment)
+        val adapter = CommentAdapter(context, data.comments, createContextMenu, sendUpvote, sendComment, onClickReply = {
+            viewHolder.inputComment.requestFocus()
+        })
         viewHolder.commentListView.adapter = adapter
 
         return view
@@ -87,5 +98,7 @@ class PublicFileAdapter(
         val commentListView: ListView = view.findViewById(R.id.listViewComment)
         val inputComment: EditText = view.findViewById(R.id.inputReply)
         val btnSend: ImageView = view.findViewById(R.id.btnSend)
+        val commentLayout: View = view.findViewById(R.id.commentLayout)
     }
+
 }
