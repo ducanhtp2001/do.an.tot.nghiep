@@ -23,7 +23,7 @@ class CommentAdapter(
     private val allComments: List<Comment>? = emptyList(),
     private val createContextMenu: () -> Unit,
     private val sendUpvote: (vote: Evaluation) -> Unit,
-    private val sendComment: (CommentEntity) -> Unit,
+    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
     private val onClickReply: () -> Unit
 ): BaseAdapter() {
 
@@ -96,7 +96,10 @@ class CommentAdapter(
                 if (viewHolder.inputReply.text.toString().isNotEmpty()) {
                     val id = FileConverter.generateIdByUserId(data.idUser)
                     val comment = CommentEntity(id, null, EvaluationEntityType.FILE, viewHolder.inputReply.text.toString())
-                    sendComment(comment)
+                    sendComment(comment) {
+                        currentComments.add(it)
+                        notifyDataSetChanged()
+                    }
                 }
             }
 

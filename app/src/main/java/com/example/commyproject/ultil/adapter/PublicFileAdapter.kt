@@ -11,21 +11,23 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import com.example.commyproject.R
+import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.showToast
 
 class PublicFileAdapter(
     val context: Context,
     private val list: MutableList<FileEntry>,
-    val getMoreComments: () -> Unit,
-    private val sendComment: (CommentEntity) -> Unit,
+    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
     private val createContextMenu: () -> Unit,
     private val sendUpvote: (vote: Evaluation) -> Unit,
 
     ) : BaseAdapter() {
+
     override fun getCount(): Int {
         return list.size
     }
@@ -71,12 +73,15 @@ class PublicFileAdapter(
         viewHolder.upVote.text = context.getString(R.string.upvote, upvoteCount)
         viewHolder.comment.text = context.getString(R.string.comments, commentCount)
 
-        viewHolder.btnMoreComment.setOnClickListener { getMoreComments() }
+        viewHolder.btnMoreComment.setOnClickListener {  }
         viewHolder.btnSend.setOnClickListener {
+            context.showToast("send")
             if (viewHolder.inputComment.text.toString().isNotEmpty()) {
                 val id = FileConverter.generateIdByUserId(data.idUser)
                 val comment = CommentEntity(id, null, EvaluationEntityType.FILE, viewHolder.inputComment.text.toString())
-                sendComment(comment)
+                sendComment(comment) {
+
+                }
             }
         }
 

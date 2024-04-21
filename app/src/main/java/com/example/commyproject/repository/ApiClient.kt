@@ -2,6 +2,8 @@ package com.example.commyproject.repository
 
 import android.content.Context
 import android.net.Uri
+import com.example.commyproject.data.model.Comment
+import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
 import com.example.commyproject.data.model.User
@@ -43,6 +45,13 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
     suspend fun getPublicFile(user: User): List<FileEntry> {
         val response = apiService.getPublicFile(user)
         return response.body()!!
+    }
+
+    suspend fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) {
+        val response = apiService.postComment(cmt)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
     }
 
     suspend fun upload(

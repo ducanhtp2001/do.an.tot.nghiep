@@ -14,8 +14,8 @@ import com.example.commyproject.R
 import com.example.commyproject.activities.user.login.LoginActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityRegisterBinding
-import com.example.commyproject.ultil.constaint.PasswordConstraint
-import com.example.commyproject.ultil.constaint.UserNameConstraint
+import com.example.commyproject.ultil.constraint.PasswordConstraint
+import com.example.commyproject.ultil.constraint.UserNameConstraint
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

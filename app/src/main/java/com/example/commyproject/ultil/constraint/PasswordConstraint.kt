@@ -1,4 +1,4 @@
-package com.example.commyproject.ultil.constaint
+package com.example.commyproject.ultil.constraint
 
 class PasswordConstraint {
     companion object {

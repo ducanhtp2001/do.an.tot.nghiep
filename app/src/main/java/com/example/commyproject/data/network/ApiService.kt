@@ -1,5 +1,7 @@
 package com.example.commyproject.data.network
 
+import com.example.commyproject.data.model.Comment
+import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
 import com.example.commyproject.data.model.User
@@ -27,6 +29,9 @@ interface ApiService {
 
     @POST("get-public-file")
     suspend fun getPublicFile(@Body user: User): Response<List<FileEntry>>
+
+    @POST("post-comment")
+    suspend fun postComment(@Body commentEntity: CommentEntity): Response<Comment>
 
     @Multipart
     @POST("upload")

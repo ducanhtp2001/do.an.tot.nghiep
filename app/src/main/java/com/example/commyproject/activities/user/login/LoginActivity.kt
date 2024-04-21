@@ -16,8 +16,8 @@ import com.example.commyproject.activities.user.fogetpass.FogetPasswordActivity
 import com.example.commyproject.activities.user.register.RegisterActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityLoginBinding
-import com.example.commyproject.ultil.constaint.PasswordConstraint
-import com.example.commyproject.ultil.constaint.UserNameConstraint
+import com.example.commyproject.ultil.constraint.PasswordConstraint
+import com.example.commyproject.ultil.constraint.UserNameConstraint
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

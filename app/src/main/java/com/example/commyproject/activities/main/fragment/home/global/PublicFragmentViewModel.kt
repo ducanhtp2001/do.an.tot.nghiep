@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.commyproject.data.model.Comment
+import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
@@ -30,6 +32,12 @@ class PublicFragmentViewModel @Inject constructor(
         val privateFileData = async { api.getPublicFile(getUser()) }.await()
         withContext(Dispatchers.Main) {
             publicFiles.value = privateFileData
+        }
+    }
+
+    fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        api.postComment(cmt) {
+            callback(it)
         }
     }
 
