@@ -18,9 +18,13 @@ import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.ultil.converter.FileConverter
 import com.example.commyproject.ultil.showToast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class PublicFileAdapter(
-    val context: Context,
+    private val context: Context,
+    private val userId: String,
     private val list: MutableList<FileEntry>,
     private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
     private val createContextMenu: () -> Unit,
@@ -78,14 +82,19 @@ class PublicFileAdapter(
             context.showToast("send")
             if (viewHolder.inputComment.text.toString().isNotEmpty()) {
                 val id = FileConverter.generateIdByUserId(data.idUser)
-                val comment = CommentEntity(id, null, EvaluationEntityType.FILE, viewHolder.inputComment.text.toString())
+                val comment = CommentEntity(id, userId, data._id, null, EvaluationEntityType.FILE, viewHolder.inputComment.text.toString())
                 sendComment(comment) {
+                    viewHolder.inputComment.setText("")
+                    data.comments?.add(it)
 
+                    GlobalScope.launch(Dispatchers.Main) {
+                        notifyDataSetChanged()
+                    }
                 }
             }
         }
 
-        val adapter = CommentAdapter(context, data.comments, createContextMenu, sendUpvote, sendComment, onClickReply = {
+        val adapter = CommentAdapter(context, userId, data._id, null, data.comments, createContextMenu, sendUpvote, sendComment, onClickReply = {
             viewHolder.inputComment.requestFocus()
         })
         viewHolder.commentListView.adapter = adapter

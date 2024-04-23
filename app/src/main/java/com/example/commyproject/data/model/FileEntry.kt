@@ -11,6 +11,6 @@ class FileEntry(
     val isPublic: Boolean = false,
     val isTable: Boolean = false,
     val evaluation: List<Evaluation>? = emptyList(),
-    val comments: List<Comment>? = emptyList()
+    val comments: MutableList<Comment>? = mutableListOf()
 ) {
 }

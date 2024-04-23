@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="2 Day ago"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="5dp"
             android:textColor="#000000"/>
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Upvote"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="5dp"
             android:textColor="#000000"/>
 
         <TextView
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Reply"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="5dp"
             android:textColor="#000000"/>
 
 
@@ -93,7 +93,7 @@
             android:id="@+id/txtUpvoteCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="2dp"
             android:text="10"
             android:textColor="#000000"/>
 

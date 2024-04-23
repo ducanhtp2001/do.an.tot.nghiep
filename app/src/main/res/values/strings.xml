@@ -69,4 +69,5 @@
     <string name="see_more_comments"><u>See more comments</u></string>
     <string name="comments">%1$s Comments</string>
     <string name="upvote">%1$s Upvote</string>
+    <string name="comments_count_txt">%1$s comments</string>
 </resources>

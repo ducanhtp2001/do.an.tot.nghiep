@@ -17,9 +17,15 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CommentAdapter(
     private val context: Context,
+    private val userId: String,
+    private val fileId: String,
+    private val commentId: String?,
     private val allComments: List<Comment>? = emptyList(),
     private val createContextMenu: () -> Unit,
     private val sendUpvote: (vote: Evaluation) -> Unit,
@@ -80,8 +86,16 @@ class CommentAdapter(
             userName.text = data.userName
             cmtContent.text = data.comment
             txtTime.text = FileConverter.getTimePassFromId(data._id)
-            txtUpvoteCount.text = data.votes.size.toString()
-            txtReplyCount.text = data.replies.size.toString()
+            txtUpvoteCount.text = data.votes?.size.toString()
+
+            data.replies?.let {
+                if (it.isNotEmpty()) {
+                    txtReplyCount.text =
+                        context.getString(R.string.comments_count_txt, data.replies?.size.toString())
+                }
+            } ?: {
+                txtReplyCount.visibility = View.GONE
+            }
 
             menu.setOnClickListener { createContextMenu() }
             btnUpvote.setOnClickListener {
@@ -94,16 +108,22 @@ class CommentAdapter(
 
             btnSend.setOnClickListener {
                 if (viewHolder.inputReply.text.toString().isNotEmpty()) {
+                    // id if this comment, generate by userId and current time
                     val id = FileConverter.generateIdByUserId(data.idUser)
-                    val comment = CommentEntity(id, null, EvaluationEntityType.FILE, viewHolder.inputReply.text.toString())
+                    //
+                    val cmtId = commentId ?: data._id
+                    val comment = CommentEntity(id, userId, fileId, cmtId, EvaluationEntityType.COMMENT, viewHolder.inputReply.text.toString())
                     sendComment(comment) {
+                        inputReply.setText("")
                         currentComments.add(it)
-                        notifyDataSetChanged()
+                        GlobalScope.launch(Dispatchers.Main) {
+                            notifyDataSetChanged()
+                        }
                     }
                 }
             }
 
-            val adapter = CommentAdapter(context, data.replies, createContextMenu, sendUpvote, sendComment, onClickReply)
+            val adapter = CommentAdapter(context, userId, fileId, data._id, data.replies, createContextMenu, sendUpvote, sendComment, onClickReply)
             listViewReply.adapter = adapter
 
         }
@@ -120,8 +140,8 @@ class CommentAdapter(
         val txtReplyCount: TextView = view.findViewById(R.id.txtReplyCount)
         val listViewReply: ListView = view.findViewById(R.id.listViewReply)
         val menu: ImageView = view.findViewById(R.id.option)
-        val btnUpvote: ImageView = view.findViewById(R.id.btnUpvote)
-        val btnReply: ImageView = view.findViewById(R.id.btnReply)
+        val btnUpvote: TextView = view.findViewById(R.id.btnUpvote)
+        val btnReply: TextView = view.findViewById(R.id.btnReply)
         val btnSend: ImageView = view.findViewById(R.id.btnSend)
         val inputReply: EditText = view.findViewById(R.id.inputReply)
         val commentLayout: View = view.findViewById(R.id.commentLayout)

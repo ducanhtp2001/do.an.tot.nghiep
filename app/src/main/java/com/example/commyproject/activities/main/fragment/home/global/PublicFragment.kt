@@ -54,7 +54,9 @@ class PublicFragment : Fragment() {
     }
 
     private fun initView() {
-        adapter = PublicFileAdapter(requireContext(), 
+        adapter = PublicFileAdapter(
+            requireContext(),
+            user._id,
             list,
             sendComment = {commentEntity, callback ->
                 commentEntity.userId = user._id
