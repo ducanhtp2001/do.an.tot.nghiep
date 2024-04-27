@@ -66,12 +66,12 @@
     <string name="is_public_selection">Public</string>
     <string name="reminder_input_name_file">Title: </string>
     <string name="reminder_input_title">Input title</string>
-    <string name="see_more_comments"><u>See more comments</u></string>
+<!--    <string name="see_more_comments"><u>See more comments</u></string>-->
     <string name="comments">%1$s Comments</string>
     <string name="upvote">%1$s Upvote</string>
     <string name="comments_count_txt">%1$s comments</string>
     <string name="like">Like</string>
-    <string name="more_content">More content</string>
+    <string name="more_content">Read more</string>
     <string name="read_more_content">%1$s ...More</string>
     <string name="menu">Menu</string>
     <string name="delete">Delete</string>

@@ -9,6 +9,6 @@ class Comment(
     val toId: String? = null,
     val type: EvaluationEntityType,
     val content: String,
-    val like: Int = 0
+    val like: MutableList<Evaluation> = mutableListOf()
 ) {
 }

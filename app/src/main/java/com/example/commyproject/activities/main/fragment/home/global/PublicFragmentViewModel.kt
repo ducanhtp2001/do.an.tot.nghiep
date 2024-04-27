@@ -27,6 +27,8 @@ class PublicFragmentViewModel @Inject constructor(
     val list: LiveData<List<FileEntry>>
         get() = publicFiles
 
+    var toId: String? = null
+
 
     fun getPublicFile() = viewModelScope.launch(Dispatchers.IO) {
         val privateFileData = async { api.getPublicFile(getUser()) }.await()

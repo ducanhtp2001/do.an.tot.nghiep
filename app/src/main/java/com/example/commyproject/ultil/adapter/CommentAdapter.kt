@@ -10,43 +10,23 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Comment
-import com.example.commyproject.data.model.CommentEntity
-import com.example.commyproject.data.model.Evaluation
-import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
 
 class CommentAdapter(
     private val context: Context,
-    private val userId: String,
-    private val fileId: String,
-    private val commentId: String?,
-    private val allComments: List<Comment>? = emptyList(),
-    private val createContextMenu: () -> Unit,
-    private val sendUpvote: (vote: Evaluation) -> Unit,
-    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
+    private val allComments: List<Comment> = emptyList(),
+    private val onGoToUserProfile: () -> Unit,
+    private val onClickLike: () -> Unit,
+//    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
     private val onClickReply: () -> Unit
 ): BaseAdapter() {
-
-    private val currentComments = mutableListOf<Comment>().apply {
-        if (allComments?.isNotEmpty() == true) {
-            add(allComments[0])
-        }
-    }
-
-    fun loadAllComment() {
-        currentComments.clear()
-        allComments?.let {
-            currentComments.addAll(it)
-        }
-    }
-
     override fun getCount(): Int {
-        return currentComments.size
+        return allComments.size
     }
 
     override fun getItem(position: Int): Any {
-        return currentComments[position]
+        return allComments[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -66,7 +46,7 @@ class CommentAdapter(
             viewHolder = view.tag as CommentViewHolder
         }
 
-        val data = currentComments[position]
+        val data = allComments[position]
 
         viewHolder.apply {
 
@@ -92,14 +72,9 @@ class CommentAdapter(
 //                txtReplyCount.visibility = View.GONE
 //            }
 
-            menu.setOnClickListener { createContextMenu() }
-            btnUpvote.setOnClickListener {
-                val id = "${System.currentTimeMillis()}_${data.idUser}"
-                val upvote = Evaluation(id, data.idUser, EvaluationEntityType.COMMENT, data._id)
-                sendUpvote(upvote)
-            }
 
             btnReply.setOnClickListener { onClickReply() }
+            btnLike.setOnClickListener { onClickLike() }
 
 //            btnSend.setOnClickListener {
 //                if (viewHolder.inputReply.text.toString().isNotEmpty()) {
@@ -134,8 +109,7 @@ class CommentAdapter(
         val txtUpvoteCount: TextView = view.findViewById(R.id.txtUpvoteCount)
 //        val txtReplyCount: TextView = view.findViewById(R.id.txtReplyCount)
 //        val listViewReply: ListView = view.findViewById(R.id.listViewReply)
-        val menu: ImageView = view.findViewById(R.id.option)
-        val btnUpvote: TextView = view.findViewById(R.id.btnUpvote)
+        val btnLike: TextView = view.findViewById(R.id.btnLike)
         val btnReply: TextView = view.findViewById(R.id.btnReply)
 //        val btnSend: ImageView = view.findViewById(R.id.btnSend)
 //        val inputReply: EditText = view.findViewById(R.id.inputReply)
