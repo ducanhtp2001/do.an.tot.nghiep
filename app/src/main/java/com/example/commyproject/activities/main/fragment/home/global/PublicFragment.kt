@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.R
+import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
+import com.example.commyproject.data.model.Evaluation
+import com.example.commyproject.data.model.EvaluationEntity
+import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.DialogCommentBinding
@@ -15,10 +19,11 @@ import com.example.commyproject.databinding.FragmentPublicBinding
 import com.example.commyproject.ultil.adapter.CommentAdapter
 import com.example.commyproject.ultil.adapter.PublicFileAdapter
 import com.example.commyproject.ultil.converter.FileConverter
-import com.example.commyproject.ultil.showToast
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -65,24 +70,41 @@ class PublicFragment : Fragment() {
             requireContext(),
             user._id,
             list,
-            hideFile = { file ->
-                requireContext().showToast("hide file")
+            hideFile = { file, _->
+
             },
-            createContextMenu = {file ->
-                requireContext().showToast("menu")
+            createContextMenu = { file ->
+
             },
-            onClickLike = { file ->
-                requireContext().showToast("like")
+            onOpenLikeDialog = { file ->
+
             },
             onClickComment = { file ->
                 openCommentDialog(file)
             },
-            onItemClick = {file ->
-                requireContext().showToast("see detail")
+            onItemClick = { file ->
+
             }
         )
         b.apply {
             listView.adapter = adapter
+        }
+    }
+
+    private fun postLike(file: FileEntry?, cmt: Comment?, type: EvaluationEntityType, callback: (evaluation: Evaluation) -> Unit) {
+        var evaluationEntity: EvaluationEntity
+        val id = FileConverter.generateIdByUserId(user._id)
+        when(type) {
+            EvaluationEntityType.FILE -> {
+                evaluationEntity = EvaluationEntity(id, user._id, file!!._id, null, type)
+            }
+            EvaluationEntityType.COMMENT -> {
+                evaluationEntity = EvaluationEntity(id, user._id, cmt!!.idFile, cmt._id, type)
+            }
+        }
+        viewModel.postLike(evaluationEntity) {evaluation ->
+
+            callback(evaluation)
         }
     }
 
@@ -100,21 +122,52 @@ class PublicFragment : Fragment() {
             usableHeight
         )
 
-        val behavior: BottomSheetBehavior<View> = BottomSheetBehavior.from(binding.root)
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+//        val behavior: BottomSheetBehavior<View> = BottomSheetBehavior.from(binding.root)
+//        behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         bottomDialog.setContentView(binding.root)
 
+        val cmtAdapter = CommentAdapter(
+            requireContext(),
+            user._id,
+            file.comments,
+            onGoToUserProfile = { cmt ->
+
+            },
+            onClickLike = { cmt, callback ->
+                postLike(null, cmt, EvaluationEntityType.COMMENT, callback)
+            },
+            onClickReply = { cmt ->
+                viewModel.toId = cmt.idUser
+                binding.apply {
+                    toUser.visibility = View.VISIBLE
+                    cancelReply.visibility = View.VISIBLE
+                    toUser.text = getString(R.string.answer_to, cmt.userName)
+                }
+            },
+            onOpenLike = { cmt ->
+
+            }
+        )
+
+        binding.listViewComment.adapter = cmtAdapter
+
         binding.apply {
+            // button send comment
             btnSend.setOnClickListener {
                 if (binding.inputReply.text.isNotEmpty()) {
-                    val content = binding.inputReply.text.toString()
+                    binding.inputReply.setText("")
+                    var content = binding.inputReply.text.toString()
                     val id = FileConverter.generateIdByUserId(file.idUser)
-                    val cmt = CommentEntity(id, file.idUser, viewModel.toId, file._id, content)
+                    if (viewModel.toId != null) content = "Answer @${viewModel.toUserName} $content"
+                    val cmt = CommentEntity(id, user._id, viewModel.toId, file._id, content)
                     viewModel.postComment(cmt) {
                         file.comments.add(it)
+                        GlobalScope.launch(Dispatchers.Main) {
+                            cmtAdapter.notifyDataSetChanged()
+                        }
                         viewModel.toId = null
-                        binding.inputReply.setText("")
+                        viewModel.toUserName = null
                     }
                 }
             }
@@ -130,8 +183,6 @@ class PublicFragment : Fragment() {
             like.setOnClickListener {
                 openLikeDialog()
             }
-
-            val cmtAdapter = CommentAdapter()
         }
 
         bottomDialog.show()

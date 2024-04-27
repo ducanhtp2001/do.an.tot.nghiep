@@ -19,7 +19,8 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_avatar"/>
+            android:src="@drawable/ic_avatar"
+            android:foreground="?attr/selectableItemBackgroundBorderless"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:text="Name"
                 android:textSize="16sp"
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
 
             <TextView
                 android:id="@+id/userCommentContent"
@@ -77,7 +79,8 @@
             android:padding="5dp"
             android:text="@string/like"
             android:layout_marginEnd="5dp"
-            android:textColor="#000000"/>
+            android:textColor="#000000"
+            android:foreground="?attr/selectableItemBackgroundBorderless"/>
 
         <TextView
             android:id="@+id/btnReply"
@@ -86,7 +89,8 @@
             android:padding="5dp"
             android:text="Reply"
             android:layout_marginEnd="5dp"
-            android:textColor="#000000"/>
+            android:textColor="#000000"
+            android:foreground="?attr/selectableItemBackgroundBorderless"/>
 
 
         <TextView

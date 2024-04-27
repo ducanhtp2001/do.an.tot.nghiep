@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
+import com.example.commyproject.data.model.Evaluation
+import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
@@ -28,6 +30,7 @@ class PublicFragmentViewModel @Inject constructor(
         get() = publicFiles
 
     var toId: String? = null
+    var toUserName: String? = null
 
 
     fun getPublicFile() = viewModelScope.launch(Dispatchers.IO) {
@@ -39,6 +42,12 @@ class PublicFragmentViewModel @Inject constructor(
 
     fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         api.postComment(cmt) {
+            callback(it)
+        }
+    }
+
+    fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        api.postLike(evaluation) {
             callback(it)
         }
     }

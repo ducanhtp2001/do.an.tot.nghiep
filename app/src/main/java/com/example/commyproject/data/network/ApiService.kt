@@ -2,6 +2,8 @@ package com.example.commyproject.data.network
 
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
+import com.example.commyproject.data.model.Evaluation
+import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
 import com.example.commyproject.data.model.User
@@ -32,6 +34,9 @@ interface ApiService {
 
     @POST("post-comment")
     suspend fun postComment(@Body commentEntity: CommentEntity): Response<Comment>
+
+    @POST("post-like")
+    suspend fun postLike(@Body evaluationEntity: EvaluationEntity): Response<Evaluation>
 
     @Multipart
     @POST("upload")

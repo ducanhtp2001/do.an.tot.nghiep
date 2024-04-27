@@ -10,7 +10,7 @@ class FileEntry(
     val state: Boolean,
     val isPublic: Boolean = false,
     val isTable: Boolean = false,
-    val likes: MutableList<Evaluation> = mutableListOf(),
+    val likes: MutableList<EvaluationEntity> = mutableListOf(),
     val comments: MutableList<Comment> = mutableListOf()
 ) {
 }

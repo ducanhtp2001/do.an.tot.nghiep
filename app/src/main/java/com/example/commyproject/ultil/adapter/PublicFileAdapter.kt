@@ -2,10 +2,6 @@ package com.example.commyproject.ultil.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +9,8 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.commyproject.R
-import com.example.commyproject.data.model.Comment
-import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.databinding.ItemPublicFileBinding
 import com.example.commyproject.ultil.converter.FileConverter
 
 
@@ -27,8 +20,8 @@ class PublicFileAdapter(
     private val list: MutableList<FileEntry>,
 //    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
     private val createContextMenu: (file: FileEntry) -> Unit,
-    private val hideFile: (file: FileEntry) -> Unit,
-    private val onClickLike: (file: FileEntry) -> Unit,
+    private val hideFile: (file: FileEntry, callback:() -> Unit) -> Unit,
+    private val onOpenLikeDialog: (file: FileEntry) -> Unit,
     private val onClickComment: (file: FileEntry) -> Unit,
     private val onItemClick: (file: FileEntry) -> Unit,
 
@@ -88,7 +81,7 @@ class PublicFileAdapter(
 
         viewHolder.like.text = context.getString(R.string.upvote, data.likes?.size ?: 0)
         viewHolder.like.setOnClickListener {
-            onClickLike(data)
+            onOpenLikeDialog(data)
         }
 
         viewHolder.comment.text = context.getString(R.string.comments, data.comments?.size ?: 0)
@@ -100,10 +93,6 @@ class PublicFileAdapter(
         viewHolder.apply {
             btnMenu.setOnClickListener {
                 createContextMenu(data)
-            }
-
-            btnDelete.setOnClickListener {
-                hideFile(data)
             }
         }
 

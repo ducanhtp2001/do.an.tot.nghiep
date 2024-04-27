@@ -1,6 +1,7 @@
 package com.example.commyproject.ultil.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +11,23 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Comment
+import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CommentAdapter(
     private val context: Context,
-    private val allComments: List<Comment> = emptyList(),
-    private val onGoToUserProfile: () -> Unit,
-    private val onClickLike: () -> Unit,
+    private val idUser: String,
+    private val allComments: MutableList<Comment> = mutableListOf(),
+    private val onGoToUserProfile: (cmt: Comment) -> Unit,
+    private val onClickLike: (cmt: Comment, callback: (evaluation: Evaluation) -> Unit) -> Unit,
 //    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
-    private val onClickReply: () -> Unit
+    private val onClickReply: (cmt: Comment) -> Unit,
+    private val onOpenLike: (cmt: Comment) -> Unit
 ): BaseAdapter() {
     override fun getCount(): Int {
         return allComments.size
@@ -33,6 +41,7 @@ class CommentAdapter(
         return position.toLong()
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val viewHolder: CommentViewHolder
@@ -48,10 +57,15 @@ class CommentAdapter(
 
         val data = allComments[position]
 
+        // neu user like thi nut like mau xanh
+        data.likes?.let {
+            for (item in it) {
+                if (item.idUser == idUser) viewHolder.btnLike.setTextColor(0x3586F6)
+                else viewHolder.btnLike.setTextColor(0x000000)
+            }
+        }
+
         viewHolder.apply {
-
-//            commentLayout.visibility = View.GONE
-
             val avatarUrl = Config.SERVER_URL + data.avatar
 
             Glide.with(context)
@@ -61,41 +75,38 @@ class CommentAdapter(
             userName.text = data.userName
             cmtContent.text = data.content
             txtTime.text = FileConverter.getTimePassFromId(data._id)
-            txtUpvoteCount.text = data.like.toString()
+            txtLikeCount.text = data.likes?.size?.toString() ?: "0"
 
-//            data.replies?.let {
-//                if (it.isNotEmpty()) {
-//                    txtReplyCount.text =
-//                        context.getString(R.string.comments_count_txt, data.replies?.size.toString())
-//                }
-//            } ?: {
-//                txtReplyCount.visibility = View.GONE
-//            }
+            avatar.setOnClickListener { onGoToUserProfile(data) }
+            userName.setOnClickListener { onGoToUserProfile(data) }
+            btnReply.setOnClickListener { onClickReply(data) }
 
+            btnLike.setOnClickListener {
 
-            btnReply.setOnClickListener { onClickReply() }
-            btnLike.setOnClickListener { onClickLike() }
+                btnLike.isEnabled = false
 
-//            btnSend.setOnClickListener {
-//                if (viewHolder.inputReply.text.toString().isNotEmpty()) {
-//                    // id if this comment, generate by userId and current time
-//                    val id = FileConverter.generateIdByUserId(data.idUser)
-//                    //
-//                    val cmtId = commentId ?: data._id
-//                    val comment = CommentEntity(id, userId, fileId, cmtId, EvaluationEntityType.COMMENT, viewHolder.inputReply.text.toString())
-//                    sendComment(comment) {
-//                        inputReply.setText("")
-//                        currentComments.add(it)
-//                        GlobalScope.launch(Dispatchers.Main) {
-//                            notifyDataSetChanged()
-//                        }
-//                    }
-//                }
-//            }
+                onClickLike(data) {evaluation ->
 
-//            val adapter = CommentAdapter(context, userId, fileId, data._id, data.replies, createContextMenu, sendUpvote, sendComment, onClickReply)
-//            listViewReply.adapter = adapter
+                    if (allComments[position].likes == null) {
+                        allComments[position].likes = mutableListOf()
+                        allComments[position].likes!!.add(evaluation)
+                        btnLike.setTextColor(0x3586F6)
+                    } else {
+                        if (allComments[position].likes!!.contains(evaluation)) {
+                            allComments[position].likes!!.remove(evaluation)
+                            btnLike.setTextColor(0x000000)
+                        } else {
+                            allComments[position].likes!!.add(evaluation)
+                            btnLike.setTextColor(0x3586F6)
+                        }
+                    }
 
+                    GlobalScope.launch(Dispatchers.Main) {
+                        btnLike.isEnabled = true
+                        notifyDataSetChanged()
+                    }
+                }
+            }
         }
 
         return view
@@ -106,13 +117,8 @@ class CommentAdapter(
         val userName: TextView = view.findViewById(R.id.userCommentName)
         val cmtContent: TextView = view.findViewById(R.id.userCommentContent)
         val txtTime: TextView = view.findViewById(R.id.txtTime)
-        val txtUpvoteCount: TextView = view.findViewById(R.id.txtUpvoteCount)
-//        val txtReplyCount: TextView = view.findViewById(R.id.txtReplyCount)
-//        val listViewReply: ListView = view.findViewById(R.id.listViewReply)
+        val txtLikeCount: TextView = view.findViewById(R.id.txtUpvoteCount)
         val btnLike: TextView = view.findViewById(R.id.btnLike)
         val btnReply: TextView = view.findViewById(R.id.btnReply)
-//        val btnSend: ImageView = view.findViewById(R.id.btnSend)
-//        val inputReply: EditText = view.findViewById(R.id.inputReply)
-//        val commentLayout: View = view.findViewById(R.id.commentLayout)
     }
 }

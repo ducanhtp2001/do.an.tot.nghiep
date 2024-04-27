@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
+import com.example.commyproject.data.model.Evaluation
+import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
 import com.example.commyproject.data.model.User
@@ -49,6 +51,13 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
 
     suspend fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) {
         val response = apiService.postComment(cmt)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
+    }
+
+    suspend fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) {
+        val response = apiService.postLike(evaluation)
         if (response.isSuccessful) {
             callback(response.body()!!)
         }

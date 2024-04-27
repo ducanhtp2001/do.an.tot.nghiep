@@ -6,9 +6,7 @@ class Comment(
     val avatar: String,
     val userName: String,
     val idFile: String,
-    val toId: String? = null,
-    val type: EvaluationEntityType,
+    val toUserId: String? = null,
     val content: String,
-    val like: MutableList<Evaluation> = mutableListOf()
-) {
-}
+    var likes: MutableList<Evaluation>? = mutableListOf()
+)
