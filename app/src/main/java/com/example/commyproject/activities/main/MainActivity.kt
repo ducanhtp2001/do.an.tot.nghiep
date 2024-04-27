@@ -99,6 +99,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.socketDisconnect()
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (b.main.isDrawerOpen(GravityCompat.START)) {

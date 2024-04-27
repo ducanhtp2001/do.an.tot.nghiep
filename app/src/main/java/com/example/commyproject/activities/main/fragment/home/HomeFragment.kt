@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.activities.main.fragment.home.global.PublicFragment
 import com.example.commyproject.activities.main.fragment.home.local.LocalFragment
@@ -51,11 +50,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun initObserver() {
-        viewModel.stateLoading.observe(requireActivity(), Observer {
+        viewModel.stateLoading.observe(requireActivity()) {
             if (!viewModel.stateLoading.value!!) {
                 requireContext().showToast(viewModel.msg)
             }
-        })
+        }
     }
 
     private fun initEvent() {
@@ -107,6 +106,7 @@ class HomeFragment : Fragment() {
         else readFile()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -132,19 +132,20 @@ class HomeFragment : Fragment() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
 //            type = "application/pdf"
 
-            type = "*/*" // Tất cả các loại tệp
+            type = "*/*"
             putExtra(Intent.EXTRA_MIME_TYPES, arrayOf(
                 "application/pdf", // PDF
 //                "application/msword", // DOC
 //                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
 //                "application/vnd.ms-excel", // EXCEL
 //                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
-//                "image/*" // Hình ảnh (tất cả các định dạng hình ảnh)
+//                "image/*"
             ))
         }
         startActivityForResult(Intent.createChooser(intent, "Select PDF"), REQUEST_PDF)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_PDF && resultCode == Activity.RESULT_OK) {

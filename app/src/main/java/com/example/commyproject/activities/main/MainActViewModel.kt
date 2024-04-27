@@ -19,4 +19,7 @@ class MainActViewModel @Inject constructor(
     }
 
     fun getUser() = share.getUser()
+    fun socketDisconnect() {
+        socket.socketDisconnect()
+    }
 }

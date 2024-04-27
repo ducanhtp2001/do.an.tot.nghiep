@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.EditText
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
@@ -17,9 +15,6 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class CommentAdapter(
     private val context: Context,
@@ -75,7 +70,7 @@ class CommentAdapter(
 
         viewHolder.apply {
 
-            commentLayout.visibility = View.GONE
+//            commentLayout.visibility = View.GONE
 
             val avatarUrl = Config.SERVER_URL + data.avatar
 
@@ -84,18 +79,18 @@ class CommentAdapter(
                 .into(avatar)
 
             userName.text = data.userName
-            cmtContent.text = data.comment
+            cmtContent.text = data.content
             txtTime.text = FileConverter.getTimePassFromId(data._id)
-            txtUpvoteCount.text = data.votes?.size.toString()
+            txtUpvoteCount.text = data.like.toString()
 
-            data.replies?.let {
-                if (it.isNotEmpty()) {
-                    txtReplyCount.text =
-                        context.getString(R.string.comments_count_txt, data.replies?.size.toString())
-                }
-            } ?: {
-                txtReplyCount.visibility = View.GONE
-            }
+//            data.replies?.let {
+//                if (it.isNotEmpty()) {
+//                    txtReplyCount.text =
+//                        context.getString(R.string.comments_count_txt, data.replies?.size.toString())
+//                }
+//            } ?: {
+//                txtReplyCount.visibility = View.GONE
+//            }
 
             menu.setOnClickListener { createContextMenu() }
             btnUpvote.setOnClickListener {
@@ -106,25 +101,25 @@ class CommentAdapter(
 
             btnReply.setOnClickListener { onClickReply() }
 
-            btnSend.setOnClickListener {
-                if (viewHolder.inputReply.text.toString().isNotEmpty()) {
-                    // id if this comment, generate by userId and current time
-                    val id = FileConverter.generateIdByUserId(data.idUser)
-                    //
-                    val cmtId = commentId ?: data._id
-                    val comment = CommentEntity(id, userId, fileId, cmtId, EvaluationEntityType.COMMENT, viewHolder.inputReply.text.toString())
-                    sendComment(comment) {
-                        inputReply.setText("")
-                        currentComments.add(it)
-                        GlobalScope.launch(Dispatchers.Main) {
-                            notifyDataSetChanged()
-                        }
-                    }
-                }
-            }
+//            btnSend.setOnClickListener {
+//                if (viewHolder.inputReply.text.toString().isNotEmpty()) {
+//                    // id if this comment, generate by userId and current time
+//                    val id = FileConverter.generateIdByUserId(data.idUser)
+//                    //
+//                    val cmtId = commentId ?: data._id
+//                    val comment = CommentEntity(id, userId, fileId, cmtId, EvaluationEntityType.COMMENT, viewHolder.inputReply.text.toString())
+//                    sendComment(comment) {
+//                        inputReply.setText("")
+//                        currentComments.add(it)
+//                        GlobalScope.launch(Dispatchers.Main) {
+//                            notifyDataSetChanged()
+//                        }
+//                    }
+//                }
+//            }
 
-            val adapter = CommentAdapter(context, userId, fileId, data._id, data.replies, createContextMenu, sendUpvote, sendComment, onClickReply)
-            listViewReply.adapter = adapter
+//            val adapter = CommentAdapter(context, userId, fileId, data._id, data.replies, createContextMenu, sendUpvote, sendComment, onClickReply)
+//            listViewReply.adapter = adapter
 
         }
 
@@ -137,13 +132,13 @@ class CommentAdapter(
         val cmtContent: TextView = view.findViewById(R.id.userCommentContent)
         val txtTime: TextView = view.findViewById(R.id.txtTime)
         val txtUpvoteCount: TextView = view.findViewById(R.id.txtUpvoteCount)
-        val txtReplyCount: TextView = view.findViewById(R.id.txtReplyCount)
-        val listViewReply: ListView = view.findViewById(R.id.listViewReply)
+//        val txtReplyCount: TextView = view.findViewById(R.id.txtReplyCount)
+//        val listViewReply: ListView = view.findViewById(R.id.listViewReply)
         val menu: ImageView = view.findViewById(R.id.option)
         val btnUpvote: TextView = view.findViewById(R.id.btnUpvote)
         val btnReply: TextView = view.findViewById(R.id.btnReply)
-        val btnSend: ImageView = view.findViewById(R.id.btnSend)
-        val inputReply: EditText = view.findViewById(R.id.inputReply)
-        val commentLayout: View = view.findViewById(R.id.commentLayout)
+//        val btnSend: ImageView = view.findViewById(R.id.btnSend)
+//        val inputReply: EditText = view.findViewById(R.id.inputReply)
+//        val commentLayout: View = view.findViewById(R.id.commentLayout)
     }
 }

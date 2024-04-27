@@ -58,19 +58,18 @@ class PublicFragment : Fragment() {
             requireContext(),
             user._id,
             list,
-            sendComment = {commentEntity, callback ->
-                commentEntity.userId = user._id
-                viewModel.postComment(commentEntity) {
-                    callback(it)
-                }
+            hideFile = { idFile ->
             },
             createContextMenu = {
 
             },
-            sendUpvote = {
+            onClickLike = { idFile ->
+
+            },
+            onClickComment = { idFile ->
 
             }
-            )
+        )
         b.apply {
             listView.adapter = adapter
         }

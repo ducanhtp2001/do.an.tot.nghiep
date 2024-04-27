@@ -6,10 +6,9 @@ class Comment(
     val avatar: String,
     val userName: String,
     val idFile: String,
-    val idComment: String? = null,
+    val toId: String? = null,
     val type: EvaluationEntityType,
-    val comment: String,
-    val votes: List<Evaluation>? = null,
-    val replies: List<Comment>? = null
+    val content: String,
+    val like: Int = 0
 ) {
 }

@@ -12,7 +12,7 @@ class FileConverter {
 
         fun getTimePassFromId(_id: String): String {
             val arr = _id.split("_")
-            val fileTimeMillis = arr[1].toLong()
+            val fileTimeMillis = arr[0].toLong()
             val currentTimeMillis = System.currentTimeMillis()
 
             val diffMillis = currentTimeMillis - fileTimeMillis

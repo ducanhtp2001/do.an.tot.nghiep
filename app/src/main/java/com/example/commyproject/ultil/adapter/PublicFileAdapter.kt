@@ -2,34 +2,33 @@ package com.example.commyproject.ultil.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.EditText
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
-import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
+import com.example.commyproject.databinding.ItemPublicFileBinding
 import com.example.commyproject.ultil.converter.FileConverter
-import com.example.commyproject.ultil.showToast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 class PublicFileAdapter(
     private val context: Context,
     private val userId: String,
     private val list: MutableList<FileEntry>,
-    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
-    private val createContextMenu: () -> Unit,
-    private val sendUpvote: (vote: Evaluation) -> Unit,
-
+//    private val sendComment: (CommentEntity, callback: (Comment) -> Unit) -> Unit,
+    private val createContextMenu: (idFile: String) -> Unit,
+    private val hideFile: (idFile: String) -> Unit,
+    private val onClickLike: (idFile: String) -> Unit,
+    private val onClickComment: (idFile: String) -> Unit,
     ) : BaseAdapter() {
 
     override fun getCount(): Int {
@@ -51,7 +50,7 @@ class PublicFileAdapter(
 
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.item_public_file, parent, false)
-            viewHolder = PrivateViewHolder(view)
+            viewHolder = PrivateViewHolder(context, view)
             view.tag = viewHolder
         } else {
             view = convertView
@@ -62,57 +61,89 @@ class PublicFileAdapter(
 
         viewHolder.txtTitle.text = data.title
         viewHolder.txtTime.text = FileConverter.getTimePassFromId(data._id)
-        viewHolder.txtContent.text = data.summaryText
 
-        var commentCount = 0
-        if (data.comments?.isNotEmpty() == true) {
-            commentCount = data.comments.size
+
+        // set event click on read more to expand the textview to see all content
+        val spanString = SpannableString(
+            context.getString(
+                R.string.read_more_content,
+                data.summaryText
+            )
+        )
+        viewHolder.txtContent.text = spanString
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(view: View) {
+                viewHolder.txtContent.maxLines = Int.MAX_VALUE
+            }
+        }
+        spanString.setSpan(
+            clickableSpan,
+            data.summaryText.length + 3,
+            spanString.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+
+        viewHolder.like.text = context.getString(R.string.upvote, data.likes?.size ?: 0)
+        viewHolder.like.setOnClickListener {
+            onClickLike(data._id)
         }
 
-        var upvoteCount = 0
-        if (data.evaluation?.isNotEmpty() == true) {
-            upvoteCount = data.evaluation.size
+        viewHolder.comment.text = context.getString(R.string.comments, data.comments?.size ?: 0)
+        viewHolder.like.setOnClickListener {
+            onClickComment(data._id)
         }
 
-        viewHolder.upVote.text = context.getString(R.string.upvote, upvoteCount)
-        viewHolder.comment.text = context.getString(R.string.comments, commentCount)
 
-        viewHolder.btnMoreComment.setOnClickListener {  }
-        viewHolder.btnSend.setOnClickListener {
-            context.showToast("send")
-            if (viewHolder.inputComment.text.toString().isNotEmpty()) {
-                val id = FileConverter.generateIdByUserId(data.idUser)
-                val comment = CommentEntity(id, userId, data._id, null, EvaluationEntityType.FILE, viewHolder.inputComment.text.toString())
-                sendComment(comment) {
-                    viewHolder.inputComment.setText("")
-                    data.comments?.add(it)
+        viewHolder.b.apply {
+            btnMenu.setOnClickListener {
+                createContextMenu(data._id)
+            }
 
-                    GlobalScope.launch(Dispatchers.Main) {
-                        notifyDataSetChanged()
-                    }
-                }
+            btnDelete.setOnClickListener {
+                hideFile(data._id)
             }
         }
 
-        val adapter = CommentAdapter(context, userId, data._id, null, data.comments, createContextMenu, sendUpvote, sendComment, onClickReply = {
-            viewHolder.inputComment.requestFocus()
-        })
-        viewHolder.commentListView.adapter = adapter
+
+//        viewHolder.btnMoreComment.setOnClickListener {  }
+//        viewHolder.btnSend.setOnClickListener {
+//            context.showToast("send")
+//            if (viewHolder.inputComment.text.toString().isNotEmpty()) {
+//                val id = FileConverter.generateIdByUserId(data.idUser)
+//                val comment = CommentEntity(id, userId, data._id, null, viewHolder.inputComment.text.toString())
+//                sendComment(comment) {
+//                    viewHolder.inputComment.setText("")
+//                    data.comments?.add(it)
+//
+//                    GlobalScope.launch(Dispatchers.Main) {
+//                        notifyDataSetChanged()
+//                    }
+//                }
+//            }
+//        }
+
+//        val adapter = CommentAdapter(context, userId, data._id, null, data.comments, createContextMenu, sendUpvote, sendComment, onClickReply = {
+//            viewHolder.inputComment.requestFocus()
+//        })
+//        viewHolder.commentListView.adapter = adapter
 
         return view
     }
 
-    class PrivateViewHolder(view: View) {
+    class PrivateViewHolder(context: Context, view: View) {
+
+        val b: ItemPublicFileBinding =
+            ItemPublicFileBinding.inflate(LayoutInflater.from(context), null, false)
+
         val txtTitle: TextView = view.findViewById(R.id.txtTitle)
         val txtTime: TextView = view.findViewById(R.id.txtTime)
         val txtContent: TextView = view.findViewById(R.id.txtContent)
-        val upVote: TextView = view.findViewById(R.id.upvote)
+        val like: TextView = view.findViewById(R.id.like)
         val comment: TextView = view.findViewById(R.id.comment)
-        val btnMoreComment: TextView = view.findViewById(R.id.btnMoreComments)
-        val commentListView: ListView = view.findViewById(R.id.listViewComment)
-        val inputComment: EditText = view.findViewById(R.id.inputReply)
-        val btnSend: ImageView = view.findViewById(R.id.btnSend)
-        val commentLayout: View = view.findViewById(R.id.commentLayout)
+//        val btnMenu: ImageView = view.findViewById(R.id.btnMenu)
+//        val btnDelete: ImageView = view.findViewById(R.id.btnDelete)
     }
 
 }
