@@ -1,5 +1,6 @@
 package com.example.commyproject.activities.main.fragment.home.global
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,9 @@ import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
+import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
+import com.example.commyproject.data.model.StatusResponse
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,6 +52,20 @@ class PublicFragmentViewModel @Inject constructor(
     fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         api.postLike(evaluation) {
             callback(it)
+        }
+    }
+
+    fun deleteFile(file: FileEntity, callback: (StatusResponse) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        api.deleteFile(file) {
+            if (it.status) callback(it)
+            else Log.e("testing", it.msg)
+        }
+    }
+
+    fun changeState(file: FileEntity, callback: (StatusResponse) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        api.changeState(file) {
+            if (it.status) callback(it)
+            else Log.e("testing", it.msg)
         }
     }
 

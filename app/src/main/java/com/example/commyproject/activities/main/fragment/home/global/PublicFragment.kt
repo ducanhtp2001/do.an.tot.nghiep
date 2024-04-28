@@ -12,8 +12,10 @@ import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.EvaluationEntityType
+import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
+import com.example.commyproject.databinding.DialogBottomMenuBinding
 import com.example.commyproject.databinding.DialogCommentBinding
 import com.example.commyproject.databinding.DialogLikeBinding
 import com.example.commyproject.databinding.FragmentPublicBinding
@@ -26,8 +28,6 @@ import com.example.commyproject.ultil.getStatusBarHeight
 import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
-
-
 @AndroidEntryPoint
 class PublicFragment : Fragment() {
     private lateinit var b: FragmentPublicBinding
@@ -50,7 +50,6 @@ class PublicFragment : Fragment() {
 
         return b.root
     }
-
     private fun initObserver() {
         viewModel.apply {
             list.observe(viewLifecycleOwner) {
@@ -62,11 +61,9 @@ class PublicFragment : Fragment() {
             }
         }
     }
-
     private fun initEvent() {
 
     }
-
     private fun initView() {
         adapter = PublicFileAdapter(
             requireContext(),
@@ -76,7 +73,7 @@ class PublicFragment : Fragment() {
 
             },
             createContextMenu = { file ->
-
+                openContextMenuDialog(file)
             },
             onOpenLikeDialog = { file ->
                 openLikeDialog(file, null)
@@ -92,6 +89,52 @@ class PublicFragment : Fragment() {
             listView.adapter = adapter
         }
     }
+    private fun openContextMenuDialog(file: FileEntry) {
+        val bottomDialog = BottomSheetDialog(requireContext())
+        val binding = DialogBottomMenuBinding.inflate(layoutInflater, null, false)
+
+        binding.root.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+
+        bottomDialog.setContentView(binding.root)
+
+        val fileEntity = FileEntity(file._id)
+
+        binding.apply {
+            btnDetail.setOnClickListener {
+                viewDetailFile(file)
+            }
+
+            btnChangeState.setOnClickListener {
+                viewModel.changeState(fileEntity) {
+                    requireContext().showToast(it.msg)
+                }
+            }
+
+            btnNotification.setOnClickListener {
+
+            }
+
+            btnDelete.setOnClickListener {
+
+                viewModel.deleteFile(fileEntity) {
+                    requireContext().showToast(it.msg)
+                }
+            }
+        }
+
+        bottomDialog.show()
+    }
+
+    private fun setStateFile(file: FileEntry) {
+
+    }
+
+    private fun viewDetailFile(file: FileEntry) {
+
+    }
 
     private fun postLike(
         file: FileEntry?,
@@ -99,7 +142,7 @@ class PublicFragment : Fragment() {
         type: EvaluationEntityType,
         callback: (evaluation: Evaluation) -> Unit
     ) {
-        var evaluationEntity: EvaluationEntity
+        val evaluationEntity: EvaluationEntity
         val id = FileConverter.generateIdByUserId(user._id)
         evaluationEntity = when (type) {
             EvaluationEntityType.FILE -> {
@@ -115,7 +158,6 @@ class PublicFragment : Fragment() {
             callback(evaluation)
         }
     }
-
     private fun openCommentDialog(file: FileEntry) {
 
         val bottomDialog = BottomSheetDialog(requireContext())
@@ -129,10 +171,8 @@ class PublicFragment : Fragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             usableHeight
         )
-
 //        val behavior: BottomSheetBehavior<View> = BottomSheetBehavior.from(binding.root)
 //        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
         bottomDialog.setContentView(binding.root)
 
         val cmtAdapter = CommentAdapter(

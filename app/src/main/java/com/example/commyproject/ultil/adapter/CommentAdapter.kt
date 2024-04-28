@@ -14,7 +14,6 @@ import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 class CommentAdapter(
     private val context: Context,
@@ -38,7 +37,6 @@ class CommentAdapter(
         return position.toLong()
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val viewHolder: CommentViewHolder

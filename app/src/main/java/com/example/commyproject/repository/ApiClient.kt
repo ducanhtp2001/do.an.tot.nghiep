@@ -6,8 +6,10 @@ import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
+import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
+import com.example.commyproject.data.model.StatusResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.network.ApiService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -58,6 +60,20 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
 
     suspend fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) {
         val response = apiService.postLike(evaluation)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
+    }
+
+    suspend fun deleteFile(file: FileEntity, callback: (StatusResponse) -> Unit) {
+        val response = apiService.deleteFile(file)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
+    }
+
+    suspend fun changeState(file: FileEntity, callback: (StatusResponse) -> Unit) {
+        val response = apiService.changeState(file)
         if (response.isSuccessful) {
             callback(response.body()!!)
         }

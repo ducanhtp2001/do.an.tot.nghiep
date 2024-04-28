@@ -4,8 +4,10 @@ import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
+import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
+import com.example.commyproject.data.model.StatusResponse
 import com.example.commyproject.data.model.User
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -34,6 +36,12 @@ interface ApiService {
 
     @POST("post-comment")
     suspend fun postComment(@Body commentEntity: CommentEntity): Response<Comment>
+
+    @POST("delete-file")
+    suspend fun deleteFile(@Body file: FileEntity): Response<StatusResponse>
+
+    @POST("change-state")
+    suspend fun changeState(@Body file: FileEntity): Response<StatusResponse>
 
     @POST("post-like")
     suspend fun postLike(@Body evaluationEntity: EvaluationEntity): Response<Evaluation>
