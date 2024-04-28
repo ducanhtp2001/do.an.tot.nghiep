@@ -156,14 +156,14 @@ class PublicFragment : Fragment() {
             // button send comment
             btnSend.setOnClickListener {
                 if (binding.inputReply.text.isNotEmpty()) {
-                    binding.inputReply.setText("")
                     var content = binding.inputReply.text.toString()
+                    binding.inputReply.setText("")
                     val id = FileConverter.generateIdByUserId(file.idUser)
                     if (viewModel.toId != null) content = "Answer @${viewModel.toUserName} $content"
                     val cmt = CommentEntity(id, user._id, viewModel.toId, file._id, content)
                     viewModel.postComment(cmt) {
                         file.comments.add(it)
-                        GlobalScope.launch(Dispatchers.Main) {
+                        requireActivity().runOnUiThread {
                             cmtAdapter.notifyDataSetChanged()
                         }
                         viewModel.toId = null

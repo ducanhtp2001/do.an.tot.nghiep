@@ -1,6 +1,7 @@
 package com.example.commyproject.ultil.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Comment
@@ -57,11 +59,13 @@ class CommentAdapter(
 
         val data = allComments[position]
 
+        val likeColor = ContextCompat.getColor(context, R.color.like)
+        val nonLikeColor = ContextCompat.getColor(context, R.color.black)
         // neu user like thi nut like mau xanh
         data.likes?.let {
             for (item in it) {
-                if (item.idUser == idUser) viewHolder.btnLike.setTextColor(0x3586F6)
-                else viewHolder.btnLike.setTextColor(0x000000)
+                if (item.idUser == idUser) viewHolder.btnLike.setTextColor(likeColor)
+                else viewHolder.btnLike.setTextColor(nonLikeColor)
             }
         }
 
@@ -90,21 +94,26 @@ class CommentAdapter(
                     if (allComments[position].likes == null) {
                         allComments[position].likes = mutableListOf()
                         allComments[position].likes!!.add(evaluation)
-                        btnLike.setTextColor(0x3586F6)
+                        btnLike.setTextColor(likeColor)
                     } else {
-                        if (allComments[position].likes!!.contains(evaluation)) {
-                            allComments[position].likes!!.remove(evaluation)
-                            btnLike.setTextColor(0x000000)
+                        if (allComments[position].likes!!.any{ it.idUser == evaluation.idUser }) {
+                            allComments[position].likes?.removeIf { it.idUser == evaluation.idUser }
+                            btnLike.setTextColor(nonLikeColor)
                         } else {
                             allComments[position].likes!!.add(evaluation)
-                            btnLike.setTextColor(0x3586F6)
+                            btnLike.setTextColor(likeColor)
                         }
                     }
 
-                    GlobalScope.launch(Dispatchers.Main) {
+                    btnLike.post {
                         btnLike.isEnabled = true
                         notifyDataSetChanged()
                     }
+
+//                    GlobalScope.launch(Dispatchers.Main) {
+//                        btnLike.isEnabled = true
+//                        notifyDataSetChanged()
+//                    }
                 }
             }
         }
