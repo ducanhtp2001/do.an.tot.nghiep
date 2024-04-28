@@ -17,6 +17,7 @@ import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.DialogBottomMenuBinding
 import com.example.commyproject.databinding.DialogCommentBinding
+import com.example.commyproject.databinding.DialogFileDetailBinding
 import com.example.commyproject.databinding.DialogLikeBinding
 import com.example.commyproject.databinding.FragmentPublicBinding
 import com.example.commyproject.ultil.adapter.CommentAdapter
@@ -62,7 +63,6 @@ class PublicFragment : Fragment() {
         }
     }
     private fun initEvent() {
-
     }
     private fun initView() {
         adapter = PublicFileAdapter(
@@ -92,31 +92,30 @@ class PublicFragment : Fragment() {
     private fun openContextMenuDialog(file: FileEntry) {
         val bottomDialog = BottomSheetDialog(requireContext())
         val binding = DialogBottomMenuBinding.inflate(layoutInflater, null, false)
-
         binding.root.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-
         bottomDialog.setContentView(binding.root)
-
         val fileEntity = FileEntity(file._id)
-
         binding.apply {
             btnDetail.setOnClickListener {
                 viewDetailFile(file)
             }
-
             btnChangeState.setOnClickListener {
-                viewModel.changeState(fileEntity) {
-                    requireContext().showToast(it.msg)
+                viewModel.changeState(fileEntity) { response, file ->
+                    requireContext().showToast(response.msg)
+                    list.removeIf {
+                        it._id == file._id
+                    }
+                    requireActivity().runOnUiThread {
+                        adapter.notifyDataSetChanged()
+                    }
                 }
             }
-
             btnNotification.setOnClickListener {
 
             }
-
             btnDelete.setOnClickListener {
 
                 viewModel.deleteFile(fileEntity) {
@@ -127,15 +126,23 @@ class PublicFragment : Fragment() {
 
         bottomDialog.show()
     }
-
-    private fun setStateFile(file: FileEntry) {
-
-    }
-
     private fun viewDetailFile(file: FileEntry) {
+        val bottomDialog = BottomSheetDialog(requireContext())
+        val binding = DialogFileDetailBinding.inflate(layoutInflater, null, false)
 
+        val windowHeight = requireActivity().window.decorView.height
+        val statusBarHeight = getStatusBarHeight()
+        val navigationBarHeight = getNavigationBarHeight()
+        val usableHeight = windowHeight - statusBarHeight - navigationBarHeight
+        binding.root.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            usableHeight
+        )
+        bottomDialog.setContentView(binding.root)
+
+
+        bottomDialog.show()
     }
-
     private fun postLike(
         file: FileEntry?,
         cmt: Comment?,
@@ -159,8 +166,8 @@ class PublicFragment : Fragment() {
         }
     }
     private fun openCommentDialog(file: FileEntry) {
-
         val bottomDialog = BottomSheetDialog(requireContext())
+//        , android.R.style.Theme_DeviceDefault_Light
         val binding = DialogCommentBinding.inflate(layoutInflater, null, false)
 
         val windowHeight = requireActivity().window.decorView.height

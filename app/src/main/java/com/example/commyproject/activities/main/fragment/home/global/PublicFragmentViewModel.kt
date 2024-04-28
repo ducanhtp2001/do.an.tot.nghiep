@@ -62,9 +62,9 @@ class PublicFragmentViewModel @Inject constructor(
         }
     }
 
-    fun changeState(file: FileEntity, callback: (StatusResponse) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+    fun changeState(file: FileEntity, callback: (StatusResponse, file: FileEntity) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         api.changeState(file) {
-            if (it.status) callback(it)
+            if (it.status) callback(it, file)
             else Log.e("testing", it.msg)
         }
     }

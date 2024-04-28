@@ -33,11 +33,20 @@
                 android:src="@drawable/ic_upvote"/>
         </LinearLayout>
 
+        <View
+            android:id="@+id/view"
+            android:layout_width="3dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/listViewComment"
+            app:layout_constraintTop_toBottomOf="@+id/like"
+            app:layout_constraintBottom_toTopOf="@+id/inputLayout" />
+
         <ListView
             android:id="@+id/listViewComment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/like"
             app:layout_constraintBottom_toTopOf="@+id/inputLayout"
