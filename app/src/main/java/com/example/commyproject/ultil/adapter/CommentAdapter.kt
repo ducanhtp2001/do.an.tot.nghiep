@@ -1,8 +1,6 @@
 package com.example.commyproject.ultil.adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +15,6 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class CommentAdapter(
     private val context: Context,
@@ -80,6 +75,9 @@ class CommentAdapter(
             cmtContent.text = data.content
             txtTime.text = FileConverter.getTimePassFromId(data._id)
             txtLikeCount.text = data.likes?.size?.toString() ?: "0"
+            btnOpenLike.setOnClickListener {
+                onOpenLike(data)
+            }
 
             avatar.setOnClickListener { onGoToUserProfile(data) }
             userName.setOnClickListener { onGoToUserProfile(data) }
@@ -126,8 +124,9 @@ class CommentAdapter(
         val userName: TextView = view.findViewById(R.id.userCommentName)
         val cmtContent: TextView = view.findViewById(R.id.userCommentContent)
         val txtTime: TextView = view.findViewById(R.id.txtTime)
-        val txtLikeCount: TextView = view.findViewById(R.id.txtUpvoteCount)
+        val btnOpenLike: View = view.findViewById(R.id.btnOpenLike)
         val btnLike: TextView = view.findViewById(R.id.btnLike)
+        val txtLikeCount: TextView = view.findViewById(R.id.txtLikeCount)
         val btnReply: TextView = view.findViewById(R.id.btnReply)
     }
 }

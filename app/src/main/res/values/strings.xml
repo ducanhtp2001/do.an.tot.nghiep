@@ -79,4 +79,5 @@
     <string name="input_your_reply">Input your reply</string>
     <string name="upload">upload</string>
     <string name="image_avatar">Image avatar</string>
+    <string name="people_who_liked_this_file">People who liked this file</string>
 </resources>

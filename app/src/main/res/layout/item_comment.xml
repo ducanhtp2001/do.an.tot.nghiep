@@ -93,20 +93,27 @@
             android:foreground="?attr/selectableItemBackgroundBorderless"/>
 
 
-        <TextView
-            android:id="@+id/txtUpvoteCount"
+        <LinearLayout
+            android:id="@+id/btnOpenLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:text="10"
-            android:textColor="#000000"/>
+            android:orientation="horizontal"
+            android:foreground="?attr/selectableItemBackgroundBorderless">
+            <TextView
+                android:id="@+id/txtLikeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="10"
+                android:textColor="#000000"/>
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:padding="5dp"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/ic_upvote"/>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:padding="5dp"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/ic_upvote"/>
+        </LinearLayout>
 
     </LinearLayout>
 

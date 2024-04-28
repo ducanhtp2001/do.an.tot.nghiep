@@ -155,6 +155,7 @@ class PublicFragment : Fragment() {
             },
             onOpenLike = { cmt ->
                 openLikeDialog(null, cmt)
+                bottomDialog.dismiss()
             }
         )
 
@@ -197,9 +198,6 @@ class PublicFragment : Fragment() {
     }
 
     private fun openLikeDialog(file: FileEntry?, cmt: Comment?) {
-
-        requireContext().showToast("Open like dialog")
-
         val bottomDialog = BottomSheetDialog(requireContext())
         val binding = DialogLikeBinding.inflate(layoutInflater, null, false)
 
@@ -225,8 +223,11 @@ class PublicFragment : Fragment() {
         )
 
         binding.apply {
-            txtLikeCount.text = likeList!!.size.toString()
             listViewLike.adapter = likeAdapter
+
+            btnBack.setOnClickListener {
+                bottomDialog.dismiss()
+            }
         }
 
         bottomDialog.show()

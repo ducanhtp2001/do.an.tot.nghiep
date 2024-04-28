@@ -77,20 +77,17 @@ class PublicFileAdapter(
             txtContent.setOnClickListener {
                 onItemClick(data)
             }
-        }
 
-        viewHolder.like.text = context.getString(R.string.upvote, data.likes?.size ?: 0)
-        viewHolder.like.setOnClickListener {
-            onOpenLikeDialog(data)
-        }
+            like.text = context.getString(R.string.upvote, data.likes?.size ?: 0)
+            like.setOnClickListener {
+                onOpenLikeDialog(data)
+            }
 
-        viewHolder.comment.text = context.getString(R.string.comments, data.comments?.size ?: 0)
-        viewHolder.comment.setOnClickListener {
-            onClickComment(data)
-        }
+            comment.text = context.getString(R.string.comments, data.comments?.size ?: 0)
+            comment.setOnClickListener {
+                onClickComment(data)
+            }
 
-
-        viewHolder.apply {
             btnMenu.setOnClickListener {
                 createContextMenu(data)
             }
