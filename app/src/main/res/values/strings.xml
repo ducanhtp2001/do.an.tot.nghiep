@@ -78,4 +78,5 @@
     <string name="answer_to">answer to @<font color="#3586F6">%1$s</font></string>
     <string name="input_your_reply">Input your reply</string>
     <string name="upload">upload</string>
+    <string name="image_avatar">Image avatar</string>
 </resources>

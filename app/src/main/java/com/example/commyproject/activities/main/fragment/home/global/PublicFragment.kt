@@ -15,15 +15,17 @@ import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.DialogCommentBinding
+import com.example.commyproject.databinding.DialogLikeBinding
 import com.example.commyproject.databinding.FragmentPublicBinding
 import com.example.commyproject.ultil.adapter.CommentAdapter
+import com.example.commyproject.ultil.adapter.LikeAdapter
 import com.example.commyproject.ultil.adapter.PublicFileAdapter
 import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.getNavigationBarHeight
+import com.example.commyproject.ultil.getStatusBarHeight
+import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -70,14 +72,14 @@ class PublicFragment : Fragment() {
             requireContext(),
             user._id,
             list,
-            hideFile = { file, _->
+            hideFile = { file, _ ->
 
             },
             createContextMenu = { file ->
 
             },
             onOpenLikeDialog = { file ->
-
+                openLikeDialog(file, null)
             },
             onClickComment = { file ->
                 openCommentDialog(file)
@@ -91,18 +93,24 @@ class PublicFragment : Fragment() {
         }
     }
 
-    private fun postLike(file: FileEntry?, cmt: Comment?, type: EvaluationEntityType, callback: (evaluation: Evaluation) -> Unit) {
+    private fun postLike(
+        file: FileEntry?,
+        cmt: Comment?,
+        type: EvaluationEntityType,
+        callback: (evaluation: Evaluation) -> Unit
+    ) {
         var evaluationEntity: EvaluationEntity
         val id = FileConverter.generateIdByUserId(user._id)
-        when(type) {
+        evaluationEntity = when (type) {
             EvaluationEntityType.FILE -> {
-                evaluationEntity = EvaluationEntity(id, user._id, file!!._id, null, type)
+                EvaluationEntity(id, user._id, file!!._id, null, type)
             }
+
             EvaluationEntityType.COMMENT -> {
-                evaluationEntity = EvaluationEntity(id, user._id, cmt!!.idFile, cmt._id, type)
+                EvaluationEntity(id, user._id, cmt!!.idFile, cmt._id, type)
             }
         }
-        viewModel.postLike(evaluationEntity) {evaluation ->
+        viewModel.postLike(evaluationEntity) { evaluation ->
 
             callback(evaluation)
         }
@@ -132,7 +140,7 @@ class PublicFragment : Fragment() {
             user._id,
             file.comments,
             onGoToUserProfile = { cmt ->
-
+                goToUserProfile(cmt.idUser)
             },
             onClickLike = { cmt, callback ->
                 postLike(null, cmt, EvaluationEntityType.COMMENT, callback)
@@ -146,7 +154,7 @@ class PublicFragment : Fragment() {
                 }
             },
             onOpenLike = { cmt ->
-
+                openLikeDialog(null, cmt)
             }
         )
 
@@ -181,36 +189,52 @@ class PublicFragment : Fragment() {
             txtLikeCount.text = file.likes.size.toString()
 
             like.setOnClickListener {
-                openLikeDialog()
+                openLikeDialog(file, null)
             }
         }
 
         bottomDialog.show()
     }
 
-    private fun openLikeDialog() {
+    private fun openLikeDialog(file: FileEntry?, cmt: Comment?) {
 
-    }
+        requireContext().showToast("Open like dialog")
 
+        val bottomDialog = BottomSheetDialog(requireContext())
+        val binding = DialogLikeBinding.inflate(layoutInflater, null, false)
 
-    private fun getStatusBarHeight(): Int {
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        return if (resourceId > 0) {
-            resources.getDimensionPixelSize(resourceId)
-        } else {
-            0
+        val windowHeight = requireActivity().window.decorView.height
+        val statusBarHeight = getStatusBarHeight()
+        val navigationBarHeight = getNavigationBarHeight()
+        val usableHeight = windowHeight - statusBarHeight - navigationBarHeight
+        binding.root.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            usableHeight
+        )
+
+        bottomDialog.setContentView(binding.root)
+
+        val likeList = file?.likes ?: cmt!!.likes
+
+        val likeAdapter = LikeAdapter(
+            requireContext(),
+            likeList ?: mutableListOf(),
+            openProfile = { evaluation ->
+                goToUserProfile(evaluation.idUser)
+            }
+        )
+
+        binding.apply {
+            txtLikeCount.text = likeList!!.size.toString()
+            listViewLike.adapter = likeAdapter
         }
+
+        bottomDialog.show()
     }
 
-    private fun getNavigationBarHeight(): Int {
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        return if (resourceId > 0) {
-            resources.getDimensionPixelSize(resourceId)
-        } else {
-            0
-        }
+    private fun goToUserProfile(idUser: String) {
+        requireContext().showToast("Open user profile")
     }
-
 
     private fun initData() {
         user = viewModel.getUser()
