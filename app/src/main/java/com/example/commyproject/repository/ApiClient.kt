@@ -15,6 +15,7 @@ import com.example.commyproject.data.network.ApiService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class ApiClient @Inject constructor(private val apiService: ApiService) {
@@ -105,6 +106,13 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
             callback(response.body()!!)
         } else {
 
+        }
+    }
+
+    suspend fun download(file: FileEntity, callback: (ResponseBody) -> Unit) {
+        val response = apiService.downloadFile(file)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
         }
     }
 }

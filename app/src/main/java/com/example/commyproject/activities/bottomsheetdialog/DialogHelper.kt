@@ -2,6 +2,7 @@ package com.example.commyproject.activities.bottomsheetdialog
 
 import android.app.Activity
 import android.content.Context
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,12 @@ import com.example.commyproject.ultil.getNavigationBarHeight
 import com.example.commyproject.ultil.getStatusBarHeight
 import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import okhttp3.ResponseBody
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
 fun Fragment.showFileDetailDialog(
     file: FileEntry,
@@ -364,7 +371,9 @@ private fun openContextMenuDialog(
 
         }
         btnDownload.setOnClickListener {
-
+            viewModel.download(fileEntity) { responseBody ->
+                saveFile(responseBody, file.fileName)
+            }
         }
         btnDelete.setOnClickListener {
 
@@ -379,6 +388,27 @@ private fun openContextMenuDialog(
 
 fun Fragment.goToUserProfile(idUser: String) {
     requireContext().showToast("Open user profile")
+}
+
+private fun saveFile(body: ResponseBody, fileName: String) {
+    try {
+        val inputStream: InputStream = body.byteStream()
+        val outputStream: OutputStream = FileOutputStream(
+            File(Environment.getExternalStorageDirectory(), fileName)
+        )
+
+        val data = ByteArray(1024)
+        var count: Int
+        while (inputStream.read(data).also { count = it } != -1) {
+            outputStream.write(data, 0, count)
+        }
+
+        outputStream.flush()
+        outputStream.close()
+        inputStream.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
 }
 
 fun Fragment.calculateUsableHeight(): Int {

@@ -14,6 +14,7 @@ import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import javax.inject.Inject
 @HiltViewModel
 class DialogViewModel @Inject constructor(
@@ -47,6 +48,12 @@ class DialogViewModel @Inject constructor(
         api.changeState(file) {
             if (it.status) callback(it, file)
             else Log.e("testing", it.msg)
+        }
+    }
+
+    fun download(file: FileEntity, callback: (ResponseBody) -> Unit) = viewModelScope.launch {
+        api.download(file) {
+            callback(it)
         }
     }
     private fun getUserData() = share.getUser()
