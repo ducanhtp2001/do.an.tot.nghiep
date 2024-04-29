@@ -87,4 +87,8 @@
     <string name="view_file_detail">view file detail</string>
     <string name="public_or_private_this_file">Public or private this file</string>
     <string name="on_off_notification">on/off notification</string>
+    <string name="back">back</string>
+    <string name="action_follow">Follow</string>
+    <string name="comment">Comment</string>
+    <string name="like_count">like count</string>
 </resources>

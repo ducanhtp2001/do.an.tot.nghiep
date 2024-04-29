@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.R
+import com.example.commyproject.activities.bottomsheetdialog.showFileDetailDialog
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
@@ -82,7 +83,7 @@ class PublicFragment : Fragment() {
                 openCommentDialog(file)
             },
             onItemClick = { file ->
-
+                viewDetailFile(file)
             }
         )
         b.apply {
@@ -127,21 +128,23 @@ class PublicFragment : Fragment() {
         bottomDialog.show()
     }
     private fun viewDetailFile(file: FileEntry) {
-        val bottomDialog = BottomSheetDialog(requireContext())
-        val binding = DialogFileDetailBinding.inflate(layoutInflater, null, false)
+//        val bottomDialog = BottomSheetDialog(requireContext())
+//        val binding = DialogFileDetailBinding.inflate(layoutInflater, null, false)
+//
+//        val windowHeight = requireActivity().window.decorView.height
+//        val statusBarHeight = getStatusBarHeight()
+//        val navigationBarHeight = getNavigationBarHeight()
+//        val usableHeight = windowHeight - statusBarHeight - navigationBarHeight
+//        binding.root.layoutParams = ViewGroup.LayoutParams(
+//            ViewGroup.LayoutParams.MATCH_PARENT,
+//            usableHeight
+//        )
+//        bottomDialog.setContentView(binding.root)
+//
+//
+//        bottomDialog.show()
 
-        val windowHeight = requireActivity().window.decorView.height
-        val statusBarHeight = getStatusBarHeight()
-        val navigationBarHeight = getNavigationBarHeight()
-        val usableHeight = windowHeight - statusBarHeight - navigationBarHeight
-        binding.root.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            usableHeight
-        )
-        bottomDialog.setContentView(binding.root)
-
-
-        bottomDialog.show()
+        showFileDetailDialog(file)
     }
     private fun postLike(
         file: FileEntry?,
@@ -169,7 +172,6 @@ class PublicFragment : Fragment() {
         val bottomDialog = BottomSheetDialog(requireContext())
 //        , android.R.style.Theme_DeviceDefault_Light
         val binding = DialogCommentBinding.inflate(layoutInflater, null, false)
-
         val windowHeight = requireActivity().window.decorView.height
         val statusBarHeight = getStatusBarHeight()
         val navigationBarHeight = getNavigationBarHeight()
@@ -178,8 +180,6 @@ class PublicFragment : Fragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             usableHeight
         )
-//        val behavior: BottomSheetBehavior<View> = BottomSheetBehavior.from(binding.root)
-//        behavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomDialog.setContentView(binding.root)
 
         val cmtAdapter = CommentAdapter(
