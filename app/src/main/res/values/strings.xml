@@ -92,4 +92,5 @@
     <string name="comment">Comment</string>
     <string name="like_count">like count</string>
     <string name="download_original_file">Download original file</string>
+    <string name="comment_">Comment</string>
 </resources>

@@ -2,8 +2,10 @@ package com.example.commyproject.activities.bottomsheetdialog
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -31,7 +33,11 @@ import com.example.commyproject.ultil.getStatusBarHeight
 import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-fun Fragment.showFileDetailDialog(file: FileEntry) {
+fun Fragment.showFileDetailDialog(
+    file: FileEntry,
+    updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+    updateLike: (evaluation: Evaluation) -> Unit,
+) {
     val viewModel = ViewModelProvider(this)[DialogViewModel::class.java]
     val b = DialogFileDetailBinding.inflate(layoutInflater, null, false)
 
@@ -40,33 +46,96 @@ fun Fragment.showFileDetailDialog(file: FileEntry) {
         calculateUsableHeight()
     )
 
-    openFileDetailDialog(requireContext(), b, viewModel, file)
+    openFileDetailDialog(
+        requireContext(),
+        this,
+        requireActivity(),
+        b,
+        viewModel,
+        file,
+        updateState,
+        updateLike
+    )
 }
 
 private fun openFileDetailDialog(
-    context: Context?,
+    context: Context,
+    fragment: Fragment,
+    activity: FragmentActivity,
     b: DialogFileDetailBinding,
     viewModel: DialogViewModel,
-    file: FileEntry
+    file: FileEntry,
+    updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+    updateLike: (evaluation: Evaluation) -> Unit,
 ) {
-    val bottomSheetDialog = BottomSheetDialog(context!!)
-    bottomSheetDialog.setContentView(b.root)
+    val likeColor = ContextCompat.getColor(context, R.color.like)
+    val nonLikeColor = ContextCompat.getColor(context, R.color.black)
+    val bottomDialog = BottomSheetDialog(context)
+    bottomDialog.setContentView(b.root)
 
     val user = viewModel.user
 
-
-
     b.apply {
+
+        if (file.likes.any { it.idUser == user._id }) {
+            btnLikeTxt.setTextColor(likeColor)
+        } else {
+            btnLikeTxt.setTextColor(nonLikeColor)
+        }
 
         content.text = file.recognizeText
         body.setOnClickListener {
             // open profile
         }
         btnMenu.setOnClickListener {
-            // ====================================================================================
+            fragment.showContextMenuDialog(file, updateState)
         }
         btnFollow.setOnClickListener {
             // ====================================================================================
+        }
+        btnBack.setOnClickListener {
+            bottomDialog.dismiss()
+        }
+        btnOpenLike.setOnClickListener {
+            fragment.showLikeDialog(file, null)
+        }
+        btnComment.setOnClickListener {
+            fragment.showCommentDialog(file)
+        }
+
+        btnLike.setOnClickListener {
+            val id = FileConverter.generateIdByUserId(user._id)
+            val evaluation =
+                EvaluationEntity(id, user._id, file._id, null, EvaluationEntityType.FILE)
+            viewModel.postLike(evaluation) { evaluationResponse ->
+                if (file.likes.any { it.idUser == evaluationResponse.idUser }) {
+                    for (item in file.likes) {
+                        if (item.idUser == evaluationResponse.idUser) file.likes.remove(item)
+                    }
+                } else {
+                    file.likes.add(evaluationResponse)
+                }
+                btnLike.post {
+                    Log.d("testing", file.likes.size.toString())
+                    txtLikeCount.text = file.likes.size.toString()
+
+                    if (file.likes.any { it.idUser == user._id }) {
+                        btnLikeTxt.setTextColor(likeColor)
+                        Log.d("testing", "like")
+                    } else {
+                        btnLikeTxt.setTextColor(nonLikeColor)
+                        Log.d("testing", "dislike")
+                    }
+                }
+                updateLike(evaluationResponse)
+            }
+        }
+
+        txtLikeCount.text = file.likes.size.toString()
+        txtCommentCount.text = file.comments.size.toString()
+
+        btnOpenComment.setOnClickListener {
+            fragment.showCommentDialog(file)
         }
 
         val prettyTime = FileConverter.getTimePassFromId(file._id)
@@ -81,7 +150,7 @@ private fun openFileDetailDialog(
             .into(avatar)
     }
 
-    bottomSheetDialog.show()
+    bottomDialog.show()
 }
 
 fun Fragment.showCommentDialog(file: FileEntry) {
@@ -237,14 +306,28 @@ private fun openLikeDialog(
 
 
 // callback to update the list file display on fragment if this file change state or delete
-fun Fragment.showContextMenuDialog(file: FileEntry, callback: (response: StatusResponse, file: FileEntity) -> Unit) {
+fun Fragment.showContextMenuDialog(
+    file: FileEntry,
+    updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+//    updateLike: (Evaluation) -> Unit
+) {
     val viewModel = ViewModelProvider(this)[DialogViewModel::class.java]
     val b = DialogBottomMenuBinding.inflate(layoutInflater, null, false)
     b.root.layoutParams = ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,
-        calculateUsableHeight()
+        ViewGroup.LayoutParams.WRAP_CONTENT
+//        calculateUsableHeight()
     )
-    openContextMenuDialog(requireContext(), this, requireActivity(), b, viewModel, file, callback)
+    openContextMenuDialog(
+        requireContext(),
+        this,
+        requireActivity(),
+        b,
+        viewModel,
+        file,
+        updateState,
+//        updateLike
+    )
 }
 
 private fun openContextMenuDialog(
@@ -254,18 +337,19 @@ private fun openContextMenuDialog(
     b: DialogBottomMenuBinding,
     viewModel: DialogViewModel,
     file: FileEntry,
-    callback: (response: StatusResponse, file: FileEntity) -> Unit
+    updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+//    updateLike: (Evaluation) -> Unit
 ) {
     val bottomDialog = BottomSheetDialog(context)
     bottomDialog.setContentView(b.root)
     val fileEntity = FileEntity(file._id)
     b.apply {
-        btnDetail.setOnClickListener {
-            fragment.showFileDetailDialog(file)
-        }
+//        btnDetail.setOnClickListener {
+//            fragment.showFileDetailDialog(file, updateLike)
+//        }
         btnChangeState.setOnClickListener {
             viewModel.changeState(fileEntity) { response, mFile ->
-                callback(response, mFile)
+                updateState(response, mFile)
 //                context.showToast(response.msg)
 //                list.removeIf {
 //                    it._id == file._id
@@ -303,6 +387,7 @@ fun Fragment.calculateUsableHeight(): Int {
     val navigationBarHeight = getNavigationBarHeight()
     return windowHeight - statusBarHeight - navigationBarHeight
 }
+
 fun Activity.calculateUsableHeight(): Int {
     val windowHeight = window.decorView.height
     val statusBarHeight = getStatusBarHeight()

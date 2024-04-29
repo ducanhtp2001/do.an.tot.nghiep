@@ -23,7 +23,7 @@ class PublicFileAdapter(
     private val hideFile: (file: FileEntry, callback:() -> Unit) -> Unit,
     private val onOpenLikeDialog: (file: FileEntry) -> Unit,
     private val onClickComment: (file: FileEntry) -> Unit,
-    private val onItemClick: (file: FileEntry) -> Unit,
+    private val onItemClick: (file: FileEntry, callback: (Evaluation) -> Unit) -> Unit,
 
     ) : BaseAdapter() {
 
@@ -72,10 +72,30 @@ class PublicFileAdapter(
 
         viewHolder.apply {
             title.setOnClickListener {
-                onItemClick(data)
+                onItemClick(data) {evaluation ->
+                    if (list[position].likes.any{ it.idUser == evaluation.idUser }) {
+                        list[position].likes.removeIf { it.idUser == evaluation.idUser }
+                    } else {
+                        list[position].likes.add(evaluation)
+                    }
+
+                    btnMenu.post {
+                        notifyDataSetChanged()
+                    }
+                }
             }
             txtContent.setOnClickListener {
-                onItemClick(data)
+                onItemClick(data) {evaluation ->
+                    if (list[position].likes.any{ it.idUser == evaluation.idUser }) {
+                        list[position].likes.removeIf { it.idUser == evaluation.idUser }
+                    } else {
+                        list[position].likes.add(evaluation)
+                    }
+
+                    btnMenu.post {
+                        notifyDataSetChanged()
+                    }
+                }
             }
 
             like.text = context.getString(R.string.upvote, data.likes?.size ?: 0)

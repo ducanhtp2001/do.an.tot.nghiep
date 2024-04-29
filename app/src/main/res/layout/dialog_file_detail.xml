@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topLayout"
-        app:layout_constraintBottom_toTopOf="@+id/cmtLayout">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -64,6 +64,7 @@
                 android:id="@+id/body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="15dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/padding"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -147,6 +148,7 @@
                 android:layout_margin="10dp"
                 android:text="content"
                 android:textColor="@color/black"
+                android:paddingVertical="15dp"
                 app:layout_constraintTop_toBottomOf="@+id/body"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -157,7 +159,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@+id/content"
+                app:layout_constraintTop_toBottomOf="@+id/btnOpenLike"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -168,6 +170,8 @@
                     android:orientation="horizontal"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:layout_marginVertical="5dp"
+                    android:paddingVertical="5dp"
                     android:foreground="?attr/selectableItemBackgroundBorderless">
 
                     <ImageView
@@ -178,6 +182,7 @@
                         android:contentDescription="@string/like"/>
 
                     <TextView
+                        android:id="@+id/btnLikeTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="2dp"
@@ -193,6 +198,8 @@
                     android:orientation="horizontal"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:layout_marginVertical="5dp"
+                    android:paddingVertical="5dp"
                     android:foreground="?attr/selectableItemBackgroundBorderless">
 
                     <ImageView
@@ -220,8 +227,11 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:layout_marginStart="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/userAction"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="25dp"
+                android:paddingVertical="10dp"
+                app:layout_constraintStart_toStartOf="@+id/content"
+                app:layout_constraintTop_toBottomOf="@+id/content"
                 android:foreground="?attr/selectableItemBackgroundBorderless">
                 <TextView
                     android:id="@+id/txtLikeCount"
@@ -240,55 +250,110 @@
                     android:contentDescription="@string/like_count" />
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/listViewComment"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginHorizontal="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnOpenLike"/>
+            <LinearLayout
+                android:id="@+id/btnOpenComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="25dp"
+                android:paddingVertical="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/content"
+                app:layout_constraintTop_toBottomOf="@+id/content"
+                android:foreground="?attr/selectableItemBackgroundBorderless">
+                <TextView
+                    android:id="@+id/txtCommentCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="0"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginEnd="15dp"
+                    android:text="@string/comment_"/>
+            </LinearLayout>
+
+<!--            <ListView-->
+<!--                android:id="@+id/listViewComment"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="400dp"-->
+<!--                android:layout_marginHorizontal="10dp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/btnOpenLike"/>-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cmtLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/cmtLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginHorizontal="10dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent">-->
 
-        <EditText
-            android:id="@+id/inputReply"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_alignEnd="@+id/btnSend"
-            android:layout_alignParentStart="true"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="25dp"
-            android:hint="@string/input_your_reply"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnSend"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <TextView-->
+<!--            android:id="@+id/toUser"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="35dp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:text="answer to"-->
+<!--            android:visibility="gone"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/inputReply"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/cancelReply"/>-->
 
-        <ImageView
-            android:id="@+id/btnSend"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="25dp"
-            android:src="@drawable/ic_send"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <ImageView-->
+<!--            android:id="@+id/cancelReply"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:src="@drawable/ic_delete"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:padding="5dp"-->
+<!--            android:visibility="gone"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/toUser"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/inputReply"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="45dp"-->
+<!--            android:layout_alignEnd="@+id/btnSend"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_marginEnd="15dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            android:layout_marginStart="25dp"-->
+<!--            android:hint="@string/input_your_reply"-->
+<!--            android:focusable="true"-->
+<!--            android:focusableInTouchMode="true"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/btnSend"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/toUser" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/btnSend"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:src="@drawable/ic_send"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/cancelReply" />-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
