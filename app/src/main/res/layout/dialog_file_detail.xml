@@ -52,12 +52,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <View
+                android:id="@+id/padding"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/padding"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <ImageView
@@ -109,6 +117,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/txtUserNameBot"/>
 
                 <ImageView
+                    android:id="@+id/btnMenu"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginBottom="10dp"
