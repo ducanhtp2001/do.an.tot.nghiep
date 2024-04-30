@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
+import com.example.commyproject.base.checkPermissionFile
+import com.example.commyproject.base.showPermissionSettingsDialog
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
@@ -32,6 +34,7 @@ import com.example.commyproject.ultil.converter.FileConverter
 import com.example.commyproject.ultil.getNavigationBarHeight
 import com.example.commyproject.ultil.getStatusBarHeight
 import com.example.commyproject.ultil.showToast
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.ResponseBody
 import java.io.File
@@ -158,6 +161,8 @@ private fun openFileDetailDialog(
     }
 
     bottomDialog.show()
+    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
 }
 
 fun Fragment.showCommentDialog(file: FileEntry) {
@@ -227,21 +232,20 @@ private fun openCommentDialog(
                 }
             }
         }
-
         cancelReply.setOnClickListener {
             it.visibility = View.GONE
             b.toUser.visibility = View.GONE
             viewModel.toId = null
         }
-
         txtLikeCount.text = file.likes.size.toString()
-
         like.setOnClickListener {
             fragment.showLikeDialog(file, null)
         }
     }
 
     bottomDialog.show()
+
+    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
 }
 
 private fun postLike(
@@ -309,6 +313,8 @@ private fun openLikeDialog(
     }
 
     bottomDialog.show()
+    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
 }
 
 
@@ -357,22 +363,20 @@ private fun openContextMenuDialog(
         btnChangeState.setOnClickListener {
             viewModel.changeState(fileEntity) { response, mFile ->
                 updateState(response, mFile)
-//                context.showToast(response.msg)
-//                list.removeIf {
-//                    it._id == file._id
-//                }
-//                activity.runOnUiThread {
-//                    adapter.notifyDataSetChanged()
-//                }
             }
 
         }
         btnNotification.setOnClickListener {
-
+            // ====================================================================================
         }
         btnDownload.setOnClickListener {
+            bottomDialog.dismiss()
             viewModel.download(fileEntity) { responseBody ->
-                saveFile(responseBody, file.fileName)
+                if (activity.checkPermissionFile()){
+                    context.saveFile(responseBody, file.fileName)
+                } else {
+                    context.showPermissionSettingsDialog()
+                }
             }
         }
         btnDelete.setOnClickListener {
@@ -390,23 +394,26 @@ fun Fragment.goToUserProfile(idUser: String) {
     requireContext().showToast("Open user profile")
 }
 
-private fun saveFile(body: ResponseBody, fileName: String) {
+fun Context.saveFile(body: ResponseBody, fileName: String) {
     try {
+        Log.d("testing", "start storage")
         val inputStream: InputStream = body.byteStream()
-        val outputStream: OutputStream = FileOutputStream(
-            File(Environment.getExternalStorageDirectory(), fileName)
-        )
+        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val file = File(downloadsDir, fileName)
+//        val file = File(getExternalFilesDir(null), fileName)
+        val outputStream: OutputStream = FileOutputStream(file)
 
         val data = ByteArray(1024)
         var count: Int
         while (inputStream.read(data).also { count = it } != -1) {
             outputStream.write(data, 0, count)
         }
-
+        showToast("Download success!")
         outputStream.flush()
         outputStream.close()
         inputStream.close()
     } catch (e: IOException) {
+        Log.d("testing", "storage false")
         e.printStackTrace()
     }
 }

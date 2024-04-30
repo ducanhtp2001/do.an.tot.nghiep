@@ -9,12 +9,17 @@ import android.Manifest.permission.READ_MEDIA_IMAGES
 import android.Manifest.permission.READ_MEDIA_VIDEO
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
+import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.commyproject.R
 
 
 fun Activity.requestAppPermissionNotification(requestCode: Int) {
@@ -26,7 +31,7 @@ fun Activity.requestAppPermissionNotification(requestCode: Int) {
 fun Activity.requestAppPermissionFile(requestCode: Int) {
 
     if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        val permissions13 = arrayOf(READ_MEDIA_VIDEO, READ_MEDIA_AUDIO, READ_MEDIA_IMAGES)
+        val permissions13 = arrayOf(READ_MEDIA_VIDEO, READ_MEDIA_AUDIO, READ_MEDIA_IMAGES, WRITE_EXTERNAL_STORAGE)
         ActivityCompat.requestPermissions(this, permissions13, requestCode)
     } else {
         val permissions =
@@ -41,10 +46,10 @@ fun Activity.checkPermissionFile(): Boolean {
         if (ContextCompat.checkSelfPermission(
                 this,
                 READ_MEDIA_VIDEO
-            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
                 this,
                 READ_MEDIA_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
                 this,
                 READ_MEDIA_IMAGES
             ) != PackageManager.PERMISSION_GRANTED
@@ -55,7 +60,7 @@ fun Activity.checkPermissionFile(): Boolean {
         if (ContextCompat.checkSelfPermission(
                 this,
                 WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
                 this,
                 READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
@@ -100,19 +105,19 @@ fun Activity.requestPermissionRecognition(requestCode: Int) {
 
 
 
-//fun Context.showPermissionSettingsDialog() {
-//    val builder = AlertDialog.Builder(this, R.style.YourCustomAlertDialogTheme)
-//    builder.setTitle("R.string.title_dialog_permission")
-//        .setMessage("R.string.content_dialog_permission")
-//        .setPositiveButton("R.string.setting") { _, _ ->
-//            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//            val uri: Uri = Uri.fromParts("package", packageName, null)
-//            intent.data = uri
-//            startActivity(intent)
-//        }
-//        .setNegativeButton("R.string.tv_cancel") { dialog, _ ->
-//            dialog.dismiss()
-//        }
-//        .show()
-//}
+fun Context.showPermissionSettingsDialog(msg: String = getString(R.string.msg_permission_request_template)) {
+    val builder = AlertDialog.Builder(this)
+    builder.setTitle("Request permission")
+        .setMessage(msg)
+        .setPositiveButton("Allow") { _, _ ->
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri: Uri = Uri.fromParts("package", packageName, null)
+            intent.data = uri
+            startActivity(intent)
+        }
+        .setNegativeButton("Deny") { dialog, _ ->
+            dialog.dismiss()
+        }
+        .show()
+}
 

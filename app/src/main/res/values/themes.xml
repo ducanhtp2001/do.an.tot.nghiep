@@ -7,4 +7,8 @@
 
     <style name="Theme.Commyproject" parent="Base.Theme.Commyproject" />
     <style name="Theme.TestDrawerMenu.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
 </resources>

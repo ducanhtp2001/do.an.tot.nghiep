@@ -93,4 +93,5 @@
     <string name="like_count">like count</string>
     <string name="download_original_file">Download original file</string>
     <string name="comment_">Comment</string>
+    <string name="msg_permission_request_template">Please granted the permission access external storage to use application feature</string>
 </resources>

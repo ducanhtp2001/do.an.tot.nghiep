@@ -19,13 +19,16 @@ class SocketIOManager @Inject constructor(
     private val listener: SocketIOListener,
     private val share: SharedPreferenceUtils
 ) {
+    val user by lazy {
+        share.getUser()
+    }
 
     companion object {
         private const val TAG = "SocketIOManager"
         const val SERVER_URL = Config.SERVER_URL
         const val TRANSACTION_EVENT = "transaction_event"
         const val REQUEST_EXECUTE = "start_task"
-        const val REQUEST_EXECUTE_DONE = "on_file_execute_done"
+        const val ON_EXECUTE_DONE = "on_file_execute_done"
     }
 
     fun socketDisconnect() {
@@ -54,6 +57,7 @@ class SocketIOManager @Inject constructor(
 
     private fun socketOff() {
         mSocket.off(TRANSACTION_EVENT)
+        mSocket.off(ON_EXECUTE_DONE)
     }
 
 
@@ -84,7 +88,14 @@ class SocketIOManager @Inject constructor(
     fun login() {
         onLoginReceiver()
 
-        val user = share.getUser()
+        val requestData = JSONObject()
+        requestData.put("id", user._id)
+        mSocket.emit("login", requestData)
+    }
+
+    fun logout() {
+        onLoginReceiver()
+
         val requestData = JSONObject()
         requestData.put("id", user._id)
         mSocket.emit("login", requestData)
@@ -108,7 +119,7 @@ class SocketIOManager @Inject constructor(
 
     private fun onExecuteDone() {
 
-        mSocket.on(REQUEST_EXECUTE_DONE) { args ->
+        mSocket.on(ON_EXECUTE_DONE) { args ->
             Log.d("testing", "on execute done")
             val data = args[0] as JSONObject
             val title = data.getString("fileTitle")

@@ -16,6 +16,10 @@ fun Context.showToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
 
+fun Context.showLongToast(msg: String) {
+    Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+}
+
 const val TAG = "testing"
 fun Context.log(context: Context, msg: String) {
     Log.d(TAG, msg)

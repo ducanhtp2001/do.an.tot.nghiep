@@ -100,8 +100,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         viewModel.socketDisconnect()
+        super.onDestroy()
     }
 
     @Deprecated("Deprecated in Java")
