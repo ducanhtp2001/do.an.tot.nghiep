@@ -70,5 +70,4 @@ class PublicFragmentViewModel @Inject constructor(
     }
 
     fun getUser() = share.getUser()
-
 }

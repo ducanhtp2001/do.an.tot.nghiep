@@ -7,8 +7,10 @@ import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
+import com.example.commyproject.data.model.ProfileResponse
 import com.example.commyproject.data.model.StatusResponse
 import com.example.commyproject.data.model.User
+import com.example.commyproject.data.model.UserEntity
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -49,6 +51,9 @@ interface ApiService {
 
     @POST("post-like")
     suspend fun postLike(@Body evaluationEntity: EvaluationEntity): Response<Evaluation>
+
+    @POST("get-profile")
+    suspend fun getProfile(@Body user: UserEntity): Response<ProfileResponse>
 
     @Multipart
     @POST("upload")

@@ -66,7 +66,7 @@
     <string name="is_public_selection">Public</string>
     <string name="reminder_input_name_file">Title: </string>
     <string name="reminder_input_title">Input title</string>
-<!--    <string name="see_more_comments"><u>See more comments</u></string>-->
+    <!--    <string name="see_more_comments"><u>See more comments</u></string>-->
     <string name="comments">%1$s Comments</string>
     <string name="upvote">%1$s Like</string>
     <string name="comments_count_txt">%1$s comments</string>
@@ -94,4 +94,9 @@
     <string name="download_original_file">Download original file</string>
     <string name="comment_">Comment</string>
     <string name="msg_permission_request_template">Please granted the permission access external storage to use application feature</string>
+    <string name="img_find">img find</string>
+    <string name="you_follow_n_people">You follow 5 people</string>
+    <string name="follow_count">%1$s follow</string>
+    <string name="followers_count">%1$s followers</string>
+    <string name="action_hind">action hind</string>
 </resources>

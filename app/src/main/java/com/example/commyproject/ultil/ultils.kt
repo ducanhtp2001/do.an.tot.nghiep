@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.commyproject.R
 
 fun Context.showToast(msg: String) {
@@ -18,6 +20,13 @@ fun Context.showToast(msg: String) {
 
 fun Context.showLongToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+}
+
+fun Context.loadImg(imgName: String, imageView: ImageView) {
+    val avatarUrl = Config.SERVER_URL + imgName
+    Glide.with(this)
+        .load(avatarUrl)
+        .into(imageView)
 }
 
 const val TAG = "testing"

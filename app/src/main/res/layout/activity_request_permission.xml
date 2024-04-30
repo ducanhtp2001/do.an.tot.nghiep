@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/grant_permission_title"
                 android:textSize="18sp"
-                android:fontFamily="@font/lilita_one"
+                android:fontFamily="@font/lita_one"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="20dp"/>

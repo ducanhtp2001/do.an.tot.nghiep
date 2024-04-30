@@ -25,4 +25,9 @@
         android:name="com.example.commyproject.activities.main.fragment.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/fileDetailFragment"
+        android:name="com.example.commyproject.activities.main.detail.FileDetailFragment"
+        android:label="fragment_file_detail"
+        tools:layout="@layout/fragment_file_detail" />
 </navigation>

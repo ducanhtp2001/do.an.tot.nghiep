@@ -9,13 +9,16 @@ import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.MsgResponse
+import com.example.commyproject.data.model.ProfileResponse
 import com.example.commyproject.data.model.StatusResponse
 import com.example.commyproject.data.model.User
+import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.network.ApiService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
+import okhttp3.internal.notify
 import javax.inject.Inject
 
 class ApiClient @Inject constructor(private val apiService: ApiService) {
@@ -78,6 +81,14 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         if (response.isSuccessful) {
             callback(response.body()!!)
         }
+    }
+
+    suspend fun getProfile(userEntity: UserEntity): ProfileResponse? {
+        val response = apiService.getProfile(userEntity)
+        if (response.isSuccessful) {
+            return response.body()!!
+        }
+        return null
     }
 
     suspend fun upload(

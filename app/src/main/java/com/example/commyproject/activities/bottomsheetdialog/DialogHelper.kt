@@ -2,6 +2,7 @@ package com.example.commyproject.activities.bottomsheetdialog
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import android.view.View
@@ -10,8 +11,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
+import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.base.checkPermissionFile
 import com.example.commyproject.base.showPermissionSettingsDialog
 import com.example.commyproject.data.model.Comment
@@ -28,6 +31,7 @@ import com.example.commyproject.databinding.DialogCommentBinding
 import com.example.commyproject.databinding.DialogFileDetailBinding
 import com.example.commyproject.databinding.DialogLikeBinding
 import com.example.commyproject.ultil.Config
+import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.adapter.CommentAdapter
 import com.example.commyproject.ultil.adapter.LikeAdapter
 import com.example.commyproject.ultil.converter.FileConverter
@@ -86,16 +90,14 @@ private fun openFileDetailDialog(
     val user = viewModel.user
 
     b.apply {
-
         if (file.likes.any { it.idUser == user._id }) {
             btnLikeTxt.setTextColor(likeColor)
         } else {
             btnLikeTxt.setTextColor(nonLikeColor)
         }
-
         content.text = file.recognizeText
         body.setOnClickListener {
-            // open profile
+            fragment.goToUserProfile(file.idUser)
         }
         btnMenu.setOnClickListener {
             fragment.showContextMenuDialog(file, updateState)
@@ -112,7 +114,6 @@ private fun openFileDetailDialog(
         btnComment.setOnClickListener {
             fragment.showCommentDialog(file)
         }
-
         btnLike.setOnClickListener {
             val id = FileConverter.generateIdByUserId(user._id)
             val evaluation =
@@ -140,29 +141,25 @@ private fun openFileDetailDialog(
                 updateLike(evaluationResponse)
             }
         }
-
         txtLikeCount.text = file.likes.size.toString()
         txtCommentCount.text = file.comments.size.toString()
 
         btnOpenComment.setOnClickListener {
             fragment.showCommentDialog(file)
         }
-
         val prettyTime = FileConverter.getTimePassFromId(file._id)
         txtTime.text = prettyTime
 
         txtUserNameTop.text = user.userName
         txtUserNameBot.text = user.userName
-
         val avatarUrl = Config.SERVER_URL + user.avatar
         Glide.with(context)
             .load(avatarUrl)
             .into(avatar)
     }
-
     bottomDialog.show()
-    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
+    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state =
+        BottomSheetBehavior.STATE_EXPANDED
 }
 
 fun Fragment.showCommentDialog(file: FileEntry) {
@@ -186,7 +183,6 @@ private fun openCommentDialog(
     val bottomDialog = BottomSheetDialog(context!!)  //, android.R.style.Theme_DeviceDefault_Light
     bottomDialog.setContentView(b.root)
     val user = viewModel.user
-
     val cmtAdapter = CommentAdapter(
         context,
         user._id,
@@ -210,9 +206,7 @@ private fun openCommentDialog(
             bottomDialog.dismiss()
         }
     )
-
     b.listViewComment.adapter = cmtAdapter
-
     b.apply {
         // button send comment
         btnSend.setOnClickListener {
@@ -242,10 +236,9 @@ private fun openCommentDialog(
             fragment.showLikeDialog(file, null)
         }
     }
-
     bottomDialog.show()
-
-    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state =
+        BottomSheetBehavior.STATE_EXPANDED
 }
 
 private fun postLike(
@@ -262,7 +255,6 @@ private fun postLike(
         EvaluationEntityType.FILE -> {
             EvaluationEntity(id, user._id, file!!._id, null, type)
         }
-
         EvaluationEntityType.COMMENT -> {
             EvaluationEntity(id, user._id, cmt!!.idFile, cmt._id, type)
         }
@@ -295,7 +287,6 @@ private fun openLikeDialog(
     bottomDialog.setContentView(b.root)
 
     val likeList = file?.likes ?: cmt!!.likes
-
     val likeAdapter = LikeAdapter(
         context,
         likeList ?: mutableListOf(),
@@ -303,7 +294,6 @@ private fun openLikeDialog(
             fragment.goToUserProfile(evaluation.idUser)
         }
     )
-
     b.apply {
         listViewLike.adapter = likeAdapter
 
@@ -311,10 +301,9 @@ private fun openLikeDialog(
             bottomDialog.dismiss()
         }
     }
-
     bottomDialog.show()
-    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
+    if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state =
+        BottomSheetBehavior.STATE_EXPANDED
 }
 
 
@@ -364,7 +353,6 @@ private fun openContextMenuDialog(
             viewModel.changeState(fileEntity) { response, mFile ->
                 updateState(response, mFile)
             }
-
         }
         btnNotification.setOnClickListener {
             // ====================================================================================
@@ -372,7 +360,7 @@ private fun openContextMenuDialog(
         btnDownload.setOnClickListener {
             bottomDialog.dismiss()
             viewModel.download(fileEntity) { responseBody ->
-                if (activity.checkPermissionFile()){
+                if (activity.checkPermissionFile()) {
                     context.saveFile(responseBody, file.fileName)
                 } else {
                     context.showPermissionSettingsDialog()
@@ -391,14 +379,21 @@ private fun openContextMenuDialog(
 }
 
 fun Fragment.goToUserProfile(idUser: String) {
-    requireContext().showToast("Open user profile")
+    startActivity(Intent(requireActivity(), ProfileAct::class.java).apply {
+        putExtra(Constant.USER_ID, idUser)
+    })
+}
+
+fun Fragment.goToFragment(id: Int) {
+    findNavController().navigate(id)
 }
 
 fun Context.saveFile(body: ResponseBody, fileName: String) {
     try {
         Log.d("testing", "start storage")
         val inputStream: InputStream = body.byteStream()
-        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val downloadsDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(downloadsDir, fileName)
 //        val file = File(getExternalFilesDir(null), fileName)
         val outputStream: OutputStream = FileOutputStream(file)

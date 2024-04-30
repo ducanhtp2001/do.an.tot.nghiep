@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.fragmentContainerView)
         b.topAppBar.contentMain.bottomNavigationView.setupWithNavController(navController)
-        b.topAppBar.toolBar.setNavigationIcon(R.drawable.ic_menu_2)
+//        b.topAppBar.toolBar.setNavigationIcon(R.drawable.ic_menu_2)
 
         b.topAppBar.toolBar.setNavigationOnClickListener {
             if (!b.main.isDrawerOpen(GravityCompat.START)) {
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_item_profile -> {
                     Log.d("MainActivity", "Profile clicked")
-
+//                    navController.navigate(R.id.fileDetailFragment)
                 }
 
                 R.id.menu_item_setting -> {

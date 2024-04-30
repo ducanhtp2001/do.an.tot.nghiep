@@ -9,10 +9,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-
 
     <application
         android:name=".MyApplication"
@@ -21,12 +20,15 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.Commyproject"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.find.FindActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.permission.RequestPermissionAct"
             android:exported="false" />
@@ -35,33 +37,29 @@
             android:exported="false" />
         <activity
             android:name=".activities.intro.IntroAct"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activities.recyclebin.RecycleBinAct"
             android:exported="false" />
         <activity
-            android:name=".activities.setting.ProfileAct"
+            android:name=".activities.profile.ProfileAct"
             android:exported="false" />
         <activity
             android:name=".activities.user.changepass.ChangePasswordActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.user.fogetpass.FogetPasswordActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.user.register.RegisterActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" >
-
-        </activity>
+            android:exported="true"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.user.login.LoginActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" >
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -70,9 +68,7 @@
         </activity>
         <activity
             android:name=".activities.main.MainActivity"
-            android:exported="true" >
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>
