@@ -13,6 +13,7 @@ import com.example.commyproject.ultil.loadImg
 
 class PeopleRCAdapter(
     private val context: Context,
+    private val layoutId: Int,
     private val list: List<FollowerResponse>,
 ) : RecyclerView.Adapter<PeopleRCAdapter.ViewHolder>() {
 
@@ -22,7 +23,7 @@ class PeopleRCAdapter(
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_people, parent, false)
+            .inflate(layoutId, parent, false)
         return ViewHolder(view)
     }
 

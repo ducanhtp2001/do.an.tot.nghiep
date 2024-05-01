@@ -28,6 +28,7 @@ class GlobalFileRCAdapter(
     private val onOpenCommentDialog: (file: FileEntry) -> Unit,
     private val openFileDetail: (file: FileEntry, callback: (Evaluation) -> Unit) -> Unit,
     private val onLike: (file: FileEntry, callback: (Evaluation) -> Unit) -> Unit,
+    private val onFollow: (file: FileEntry, callback: () -> Unit) -> Unit,
 ): RecyclerView.Adapter<GlobalFileRCAdapter.ViewHolder>() {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val txtTitle: TextView = view.findViewById(R.id.txtTitle)
@@ -43,6 +44,7 @@ class GlobalFileRCAdapter(
         val info : View = view.findViewById(R.id.info)
         val btnLike : View = view.findViewById(R.id.btnLike)
         val btnLikeTxt : TextView = view.findViewById(R.id.btnLikeTxt)
+        val btnFollow : TextView = view.findViewById(R.id.btnFollow)
         val btnOpenLike : View = view.findViewById(R.id.btnOpenLike)
         val btnComment : View = view.findViewById(R.id.btnComment)
         val btnOpenComment : View = view.findViewById(R.id.btnOpenComment)
@@ -83,8 +85,9 @@ class GlobalFileRCAdapter(
         holder.apply {
             txtContent.text = data.summaryText
 
-            if (txtContent.lineCount <= 3) btnMoreContent.visibility = View.GONE
-
+            if (txtContent.maxLines < Int.MAX_VALUE) {
+                btnMoreContent.visibility = View.GONE
+            }
             btnMoreContent.setOnClickListener {
                 txtContent.maxLines = Int.MAX_VALUE
                 it.visibility = View.GONE
@@ -112,6 +115,17 @@ class GlobalFileRCAdapter(
                     btnHide.post {
                         notifyDataSetChanged()
                     }
+                }
+            }
+            if (user._id == profile._id) {
+                btnFollow.apply {
+                    isEnabled = false
+                    visibility = View.GONE
+                }
+            }
+            btnFollow.setOnClickListener {
+                onFollow(data) {
+                    // =============================================================================
                 }
             }
             info.setOnClickListener {

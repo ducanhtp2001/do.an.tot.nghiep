@@ -84,7 +84,7 @@ class ProfileAct : AppCompatActivity() {
             btnSetting.setOnClickListener {
                 startActivity(Intent(this@ProfileAct, SettingActivity::class.java))
             }
-            followerAdapter = PeopleRCAdapter(this@ProfileAct, user.followers)
+            followerAdapter = PeopleRCAdapter(this@ProfileAct, R.layout.item_people, user.followers)
             val layoutManager = LinearLayoutManager(this@ProfileAct)
             listViewFollower.layoutManager = layoutManager
             listViewFollower.adapter = followerAdapter
@@ -139,6 +139,9 @@ class ProfileAct : AppCompatActivity() {
                     postLike(file, null, EvaluationEntityType.FILE, user._id, viewModel) { evaluation ->
                         callback(evaluation)
                     }
+                },
+                onFollow = { file, callback ->
+
                 }
             )
             listViewFile.layoutManager = LinearLayoutManager(this@ProfileAct).apply {

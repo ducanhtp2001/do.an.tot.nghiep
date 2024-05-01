@@ -4,14 +4,11 @@ import android.util.Log
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.DebounceUtils
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 @Singleton
 class SocketIOManager @Inject constructor(
@@ -33,6 +30,7 @@ class SocketIOManager @Inject constructor(
 
     fun socketDisconnect() {
         socketOff()
+        logout()
         mSocket.disconnect()
     }
 
@@ -93,12 +91,12 @@ class SocketIOManager @Inject constructor(
         mSocket.emit("login", requestData)
     }
 
-    fun logout() {
+    private fun logout() {
         onLoginReceiver()
 
         val requestData = JSONObject()
         requestData.put("id", user._id)
-        mSocket.emit("login", requestData)
+        mSocket.emit("logout", requestData)
     }
 
     private fun onLoginReceiver() {
@@ -133,143 +131,37 @@ class SocketIOManager @Inject constructor(
 
 
 
-    fun getFriendRequest(callback: (String) -> Unit) {
-        mSocket.on("friend_request_received") { args ->
-            val data = args[0] as JSONObject
-            val senderId = data.getString("sender_id")
-            callback(senderId)
-        }
-        mSocket.on("friend_request_block") { args ->
-            val data = args[0] as JSONObject
-            val senderId = data.getString("sender_id")
-            callback(senderId)
-        }
-        mSocket.on("friend_request_sended") { args ->
-            val data = args[0] as JSONObject
-            val senderId = data.getString("sender_id")
-            callback(senderId)
+//    fun getFriendRequest(callback: (String) -> Unit) {
+//        mSocket.on("friend_request_received") { args ->
+//            val data = args[0] as JSONObject
+//            val senderId = data.getString("sender_id")
+//            callback(senderId)
+//        }
+//        mSocket.on("friend_request_block") { args ->
+//            val data = args[0] as JSONObject
+//            val senderId = data.getString("sender_id")
+//            callback(senderId)
+//        }
+//        mSocket.on("friend_request_sended") { args ->
+//            val data = args[0] as JSONObject
+//            val senderId = data.getString("sender_id")
+//            callback(senderId)
+//
+//        }
+//        mSocket.on("friend_request_isfriend") { args ->
+//            val data = args[0] as JSONObject
+//            val senderId = data.getString("sender_id")
+//        }
+//    }
+//
+//    fun blockFriend(senderId: String, receiverId: String) {
+//        val data = JSONObject()
+//        data.put("idRequest", senderId + "_" + receiverId)
+//        data.put("idSender", senderId)
+//        data.put("idReceiver", receiverId)
+//        mSocket.emit("block_friend", data)
+//    }
 
-        }
-        mSocket.on("friend_request_isfriend") { args ->
-            val data = args[0] as JSONObject
-            val senderId = data.getString("sender_id")
-        }
-    }
-
-    fun blockFriend(senderId: String, receiverId: String) {
-        val data = JSONObject()
-        data.put("idRequest", senderId + "_" + receiverId)
-        data.put("idSender", senderId)
-        data.put("idReceiver", receiverId)
-        mSocket.emit("block_friend", data)
-    }
-
-
-    fun unblockFriend(senderId: String, receiverId: String) {
-        val data = JSONObject()
-        data.put("idSender", senderId)
-        data.put("idReceiver", receiverId)
-        mSocket.emit("unblock_friend", data)
-    }
-
-    fun acceptFriendRequest(idSender: String, idReceiver: String) {
-        val requestData = JSONObject()
-//        requestData.put("idRequest", idSender + "_" + idReceiver)
-        requestData.put("idSender", idSender)
-        requestData.put("idReceiver", idReceiver)
-        mSocket.emit("accept_friend", requestData)
-    }
-
-    fun denyFriendRequest(idSender: String, idReceiver: String) {
-        val requestData = JSONObject()
-        requestData.put("your_id", idSender)
-        requestData.put("other_id", idReceiver)
-        mSocket.emit("deny_request_friend", requestData)
-    }
-
-    fun handleFriendRequestDenied(callback: (String) -> Unit) {
-        mSocket.on("friend_request_denied") { args ->
-            val data = args[0] as JSONObject
-            val senderId = data.getString("sender_id")
-
-            callback(senderId)
-//            elog(senderId)
-        }
-    }
-
-    fun handleFriendRequestAccepted(callback: (String) -> Unit) {
-        mSocket.on("friend_request_accepted") { args ->
-            val data = args[0] as JSONObject
-            val receiverId = data.getString("receiver_id")
-
-            callback(receiverId)
-
-//            elog("Yêu cầu kết bạn của bạn đã được chấp nhận bởi $receiverId.")
-        }
-    }
-
-
-    fun sendLocationToFriends(roomIds: List<String>, senderId: String, location: JSONObject) {
-        val data = JSONObject().apply {
-            put("room_ids", roomIds)
-            put("sender_id", senderId)
-            put("location", location)
-        }
-
-        mSocket.emit("send_location_to_rooms", data)
-    }
-
-    fun getLocationFromRooms(roomIds: List<String>, userId: String) {
-        val data = JSONObject().apply {
-            put("room_ids", roomIds)
-            put("user_id", userId)
-        }
-        mSocket.emit("get_location_from_rooms", data)
-    }
-
-    fun unFriend(yourId: String, friendId: String) {
-        val data = JSONObject().apply {
-            put("your_id", yourId)
-            put("friend_id", friendId)
-        }
-        mSocket.emit("unfriend", data)
-    }
-
-    fun handleUnFriend(callback: (String) -> Unit) {
-        mSocket.on("friend_left_room") { args ->
-            val data = args[0] as JSONObject
-            val userId = data.getString("user_id")
-            callback(userId)
-        }
-
-    }
-
-    fun senSOS(friendIds: List<String>, yourID: String) {
-        val gson = Gson()
-        val data = JSONObject().apply {
-            put("your_id", gson.toJson(friendIds))
-            put("friend_ids", JsonParser.parseString(yourID))
-        }
-        mSocket.emit("sos_alarm", data)
-    }
-
-    fun receivedFriendLocaton() {
-        mSocket.on("received_location") { args ->
-            val data = args[0] as JSONObject
-            val senderId = data.getString("sender_id")
-            val location = data.getJSONObject("location")
-
-            println("Received realtime location from sender ID: $senderId")
-            println("Location: $location")
-
-        }
-    }
-
-    fun login(userId: String) {
-        val requestData = JSONObject()
-        requestData.put("idUser", userId)
-        mSocket.emit("login", requestData)
-    }
 }
 
 
