@@ -5,16 +5,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.activities.profile.ProfileAct
+import com.example.commyproject.base.BaseViewModel
 import com.example.commyproject.base.checkPermissionFile
 import com.example.commyproject.base.showPermissionSettingsDialog
 import com.example.commyproject.data.model.Comment
@@ -25,7 +31,6 @@ import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.StatusResponse
-import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.DialogBottomMenuBinding
 import com.example.commyproject.databinding.DialogCommentBinding
 import com.example.commyproject.databinding.DialogFileDetailBinding
@@ -72,10 +77,35 @@ fun Fragment.showFileDetailDialog(
     )
 }
 
+fun Context.showFileDetailDialog(
+    file: FileEntry,
+    updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+    updateLike: (evaluation: Evaluation) -> Unit,
+) {
+    val viewModel = ViewModelProvider(this as ViewModelStoreOwner)[DialogViewModel::class.java]
+    val b = DialogFileDetailBinding.inflate(LayoutInflater.from(this), null, false)
+
+    b.root.layoutParams = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        calculateUsableHeight()
+    )
+
+    openFileDetailDialog(
+        this,
+        null,
+        null,
+        b,
+        viewModel,
+        file,
+        updateState,
+        updateLike
+    )
+}
+
 private fun openFileDetailDialog(
     context: Context,
-    fragment: Fragment,
-    activity: FragmentActivity,
+    fragment: Fragment?,
+    activity: FragmentActivity?,
     b: DialogFileDetailBinding,
     viewModel: DialogViewModel,
     file: FileEntry,
@@ -97,10 +127,10 @@ private fun openFileDetailDialog(
         }
         content.text = file.recognizeText
         body.setOnClickListener {
-            fragment.goToUserProfile(file.idUser)
+            context.goToUserProfile(file.idUser)
         }
         btnMenu.setOnClickListener {
-            fragment.showContextMenuDialog(file, updateState)
+            context.showContextMenuDialog(file, updateState)
         }
         btnFollow.setOnClickListener {
             // ====================================================================================
@@ -109,10 +139,10 @@ private fun openFileDetailDialog(
             bottomDialog.dismiss()
         }
         btnOpenLike.setOnClickListener {
-            fragment.showLikeDialog(file, null)
+            context.showLikeDialog(file, null)
         }
         btnComment.setOnClickListener {
-            fragment.showCommentDialog(file)
+            context.showCommentDialog(file)
         }
         btnLike.setOnClickListener {
             val id = FileConverter.generateIdByUserId(user._id)
@@ -145,7 +175,7 @@ private fun openFileDetailDialog(
         txtCommentCount.text = file.comments.size.toString()
 
         btnOpenComment.setOnClickListener {
-            fragment.showCommentDialog(file)
+            context.showCommentDialog(file)
         }
         val prettyTime = FileConverter.getTimePassFromId(file._id)
         txtTime.text = prettyTime
@@ -172,26 +202,36 @@ fun Fragment.showCommentDialog(file: FileEntry) {
     openCommentDialog(requireContext(), this, requireActivity(), b, viewModel, file)
 }
 
+fun Context.showCommentDialog(file: FileEntry) {
+    val viewModel = ViewModelProvider(this as ViewModelStoreOwner)[DialogViewModel::class.java]
+    val b = DialogCommentBinding.inflate(LayoutInflater.from(this), null, false)
+    b.root.layoutParams = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        calculateUsableHeight()
+    )
+    openCommentDialog(this, null, null, b, viewModel, file)
+}
+
 private fun openCommentDialog(
     context: Context?,
-    fragment: Fragment,
-    activity: FragmentActivity,
+    fragment: Fragment?,
+    activity: FragmentActivity?,
     b: DialogCommentBinding,
-    viewModel: DialogViewModel,
+    viewModel: BaseViewModel,
     file: FileEntry
 ) {
     val bottomDialog = BottomSheetDialog(context!!)  //, android.R.style.Theme_DeviceDefault_Light
     bottomDialog.setContentView(b.root)
-    val user = viewModel.user
+    val userId = viewModel.userId
     val cmtAdapter = CommentAdapter(
         context,
-        user._id,
+        userId,
         file.comments,
         onGoToUserProfile = { cmt ->
-            fragment.goToUserProfile(cmt.idUser)
+            context.goToUserProfile(cmt.idUser)
         },
         onClickLike = { cmt, callback ->
-            postLike(null, cmt, EvaluationEntityType.COMMENT, user, viewModel, callback)
+            postLike(null, cmt, EvaluationEntityType.COMMENT, userId, viewModel, callback)
         },
         onClickReply = { cmt ->
             viewModel.toId = cmt.idUser
@@ -202,7 +242,7 @@ private fun openCommentDialog(
             }
         },
         onOpenLike = { cmt ->
-            fragment.showLikeDialog(null, cmt)
+            context.showLikeDialog(null, cmt)
             bottomDialog.dismiss()
         }
     )
@@ -215,10 +255,10 @@ private fun openCommentDialog(
                 b.inputReply.setText("")
                 val id = FileConverter.generateIdByUserId(file.idUser)
                 if (viewModel.toId != null) content = "Answer @${viewModel.toUserName} $content"
-                val cmt = CommentEntity(id, user._id, viewModel.toId, file._id, content)
+                val cmt = CommentEntity(id, userId, viewModel.toId, file._id, content)
                 viewModel.postComment(cmt) {
                     file.comments.add(it)
-                    activity.runOnUiThread {
+                    (context as Activity).runOnUiThread {
                         cmtAdapter.notifyDataSetChanged()
                     }
                     viewModel.toId = null
@@ -233,7 +273,7 @@ private fun openCommentDialog(
         }
         txtLikeCount.text = file.likes.size.toString()
         like.setOnClickListener {
-            fragment.showLikeDialog(file, null)
+            context.showLikeDialog(file, null)
         }
     }
     bottomDialog.show()
@@ -245,18 +285,18 @@ private fun postLike(
     file: FileEntry?,
     cmt: Comment?,
     type: EvaluationEntityType,
-    user: User,
-    viewModel: DialogViewModel,
+    userId: String,
+    viewModel: BaseViewModel,
     callback: (evaluation: Evaluation) -> Unit
 ) {
     val evaluationEntity: EvaluationEntity
-    val id = FileConverter.generateIdByUserId(user._id)
+    val id = FileConverter.generateIdByUserId(userId)
     evaluationEntity = when (type) {
         EvaluationEntityType.FILE -> {
-            EvaluationEntity(id, user._id, file!!._id, null, type)
+            EvaluationEntity(id, userId, file!!._id, null, type)
         }
         EvaluationEntityType.COMMENT -> {
-            EvaluationEntity(id, user._id, cmt!!.idFile, cmt._id, type)
+            EvaluationEntity(id, userId, cmt!!.idFile, cmt._id, type)
         }
     }
     viewModel.postLike(evaluationEntity) { evaluation ->
@@ -274,10 +314,20 @@ fun Fragment.showLikeDialog(file: FileEntry?, cmt: Comment?) {
     openLikeDialog(requireContext(), this, requireActivity(), b, viewModel, file, cmt)
 }
 
+fun Context.showLikeDialog(file: FileEntry?, cmt: Comment?) {
+    val viewModel = ViewModelProvider(this as ViewModelStoreOwner)[DialogViewModel::class.java]
+    val b = DialogLikeBinding.inflate(LayoutInflater.from(this), null, false)
+    b.root.layoutParams = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        calculateUsableHeight()
+    )
+    openLikeDialog(this, null, null, b, viewModel, file, cmt)
+}
+
 private fun openLikeDialog(
     context: Context,
-    fragment: Fragment,
-    activity: FragmentActivity,
+    fragment: Fragment?,
+    activity: FragmentActivity?,
     b: DialogLikeBinding,
     viewModel: DialogViewModel,
     file: FileEntry?,
@@ -291,7 +341,7 @@ private fun openLikeDialog(
         context,
         likeList ?: mutableListOf(),
         openProfile = { evaluation ->
-            fragment.goToUserProfile(evaluation.idUser)
+            context.goToUserProfile(evaluation.idUser)
         }
     )
     b.apply {
@@ -332,23 +382,43 @@ fun Fragment.showContextMenuDialog(
     )
 }
 
+fun Context.showContextMenuDialog(
+    file: FileEntry,
+    updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+//    updateLike: (Evaluation) -> Unit
+) {
+    val viewModel = ViewModelProvider(this as AppCompatActivity)[DialogViewModel::class.java]
+    val b = DialogBottomMenuBinding.inflate(layoutInflater, null, false)
+    b.root.layoutParams = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+//        calculateUsableHeight()
+    )
+    openContextMenuDialog(
+        this,
+        null,
+        null,
+        b,
+        viewModel,
+        file,
+        updateState,
+//        updateLike
+    )
+}
+
 private fun openContextMenuDialog(
     context: Context,
-    fragment: Fragment,
-    activity: FragmentActivity,
+    fragment: Fragment?,
+    activity: FragmentActivity?,
     b: DialogBottomMenuBinding,
     viewModel: DialogViewModel,
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
-//    updateLike: (Evaluation) -> Unit
 ) {
     val bottomDialog = BottomSheetDialog(context)
     bottomDialog.setContentView(b.root)
     val fileEntity = FileEntity(file._id)
     b.apply {
-//        btnDetail.setOnClickListener {
-//            fragment.showFileDetailDialog(file, updateLike)
-//        }
         btnChangeState.setOnClickListener {
             viewModel.changeState(fileEntity) { response, mFile ->
                 updateState(response, mFile)
@@ -360,7 +430,7 @@ private fun openContextMenuDialog(
         btnDownload.setOnClickListener {
             bottomDialog.dismiss()
             viewModel.download(fileEntity) { responseBody ->
-                if (activity.checkPermissionFile()) {
+                if (context.checkPermissionFile()) {
                     context.saveFile(responseBody, file.fileName)
                 } else {
                     context.showPermissionSettingsDialog()
@@ -380,6 +450,11 @@ private fun openContextMenuDialog(
 
 fun Fragment.goToUserProfile(idUser: String) {
     startActivity(Intent(requireActivity(), ProfileAct::class.java).apply {
+        putExtra(Constant.USER_ID, idUser)
+    })
+}
+fun Context.goToUserProfile(idUser: String) {
+    startActivity(Intent(this, ProfileAct::class.java).apply {
         putExtra(Constant.USER_ID, idUser)
     })
 }
@@ -425,4 +500,39 @@ fun Activity.calculateUsableHeight(): Int {
     val statusBarHeight = getStatusBarHeight()
     val navigationBarHeight = getNavigationBarHeight()
     return windowHeight - statusBarHeight - navigationBarHeight
+}
+
+fun Context.calculateUsableHeight(): Int {
+    val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val display = windowManager.defaultDisplay
+    val size = android.graphics.Point()
+    display.getRealSize(size)
+
+    val statusBarHeight = getStatusBarHeight()
+    val navigationBarHeight = getNavigationBarHeight()
+
+    return size.y - statusBarHeight - navigationBarHeight
+}
+
+fun Context.getStatusBarHeight(): Int {
+    val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+    return if (resourceId > 0) {
+        resources.getDimensionPixelSize(resourceId)
+    } else {
+        0
+    }
+}
+
+fun Context.getNavigationBarHeight(): Int {
+    val hasNavigationBar = ViewConfiguration.get(this).hasPermanentMenuKey()
+    if (hasNavigationBar) {
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        return if (resourceId > 0) {
+            resources.getDimensionPixelSize(resourceId)
+        } else {
+            0
+        }
+    } else {
+        return 0
+    }
 }

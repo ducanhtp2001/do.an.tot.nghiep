@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.FileEntry
@@ -52,8 +53,11 @@ class GlobalFileAdapter(
             viewHolder = view.tag as GlobalViewHolder
         }
 
-        val data = list[position]
+        val likeColor = ContextCompat.getColor(context, R.color.like)
+        val nonLikeColor = ContextCompat.getColor(context, R.color.black)
 
+        val data = list[position]
+        viewHolder.txtUserName.text = userName
         viewHolder.txtTitle.text = data.title
         viewHolder.txtTime.text = FileConverter.getTimePassFromId(data._id)
 
@@ -69,6 +73,28 @@ class GlobalFileAdapter(
         }
 
         viewHolder.apply {
+            btnLike.setOnClickListener {
+                onLike(data) { evaluation ->
+                    if (list[position].likes.any { it.idUser == evaluation.idUser } ) {
+                        list[position].likes.removeIf { it.idUser == evaluation.idUser }
+                        btnLikeTxt.setTextColor(nonLikeColor)
+                    } else {
+                        list[position].likes.add(evaluation)
+                        btnLikeTxt.setTextColor(likeColor)
+                    }
+                    btnLike.post {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+            btnHide.setOnClickListener {
+                hideFile(data) {
+                    list.remove(data)
+                    btnHide.post {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
             info.setOnClickListener {
                 openFileDetail(data) {evaluation ->
                     if (list[position].likes.any{ it.idUser == evaluation.idUser }) {
@@ -128,6 +154,7 @@ class GlobalFileAdapter(
         val commentCount: TextView = view.findViewById(R.id.commentCount)
         val info : View = view.findViewById(R.id.info)
         val btnLike : View = view.findViewById(R.id.btnLike)
+        val btnLikeTxt : TextView = view.findViewById(R.id.btnLikeTxt)
         val btnOpenLike : View = view.findViewById(R.id.btnOpenLike)
         val btnComment : View = view.findViewById(R.id.btnComment)
         val btnOpenComment : View = view.findViewById(R.id.btnOpenComment)

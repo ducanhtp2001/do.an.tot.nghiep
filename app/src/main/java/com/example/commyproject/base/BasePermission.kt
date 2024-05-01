@@ -40,7 +40,7 @@ fun Activity.requestAppPermissionFile(requestCode: Int) {
     }
 }
 
-fun Activity.checkPermissionFile(): Boolean {
+fun Context.checkPermissionFile(): Boolean {
 //    val cameraPermission = ContextCompat.checkSelfPermission(this, CAMERA)
     if (SDK_INT >= Build.VERSION_CODES.TIRAMISU){
         if (ContextCompat.checkSelfPermission(

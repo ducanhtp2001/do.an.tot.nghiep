@@ -78,10 +78,10 @@ class PublicFragment : Fragment() {
                 )
             },
             onOpenLikeDialog = { file ->
-                showLikeDialog(file, null)
+                requireActivity().showLikeDialog(file, null)
             },
             onClickComment = { file ->
-                showCommentDialog(file)
+                requireActivity().showCommentDialog(file)
             },
             onItemClick = { file, updateLike ->
                 showFileDetailDialog(file,
