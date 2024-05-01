@@ -27,10 +27,10 @@ class ProfileViewModel @Inject constructor(
     private val api: ApiClient,
     private val share: SharedPreferenceUtils,
 ): BaseViewModel() {
-    lateinit var user: UserResponse
-    override lateinit var userId: String
-    override lateinit var userName: String
-    override lateinit var userAvatar: String
+    val user = getUserData()
+    override lateinit var profileId: String
+    override lateinit var profileUserName: String
+    override lateinit var profileAvatar: String
 
     private val _profile = MutableLiveData<ProfileResponse>().apply {
         value = null
@@ -67,4 +67,6 @@ class ProfileViewModel @Inject constructor(
             callback(it)
         }
     }
+
+    private fun getUserData() = share.getUser()
 }

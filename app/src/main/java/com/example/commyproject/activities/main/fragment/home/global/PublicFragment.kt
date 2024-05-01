@@ -60,7 +60,7 @@ class PublicFragment : Fragment() {
             requireContext(),
             user._id,
             list,
-            hideFile = { file, _ ->
+            hideFile = { _, _ ->
 
             },
             createContextMenu = { file ->
@@ -84,7 +84,7 @@ class PublicFragment : Fragment() {
                 requireActivity().showCommentDialog(file)
             },
             onItemClick = { file, updateLike ->
-                showFileDetailDialog(file,
+                requireActivity().showFileDetailDialog(file,
                     updateState = { response, mFile ->
                         this.requireContext().showToast(response.msg)
                         this.list.removeIf { it._id == mFile._id }

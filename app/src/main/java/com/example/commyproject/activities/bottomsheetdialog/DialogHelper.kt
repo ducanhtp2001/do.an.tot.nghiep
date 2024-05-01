@@ -45,6 +45,7 @@ import com.example.commyproject.ultil.getStatusBarHeight
 import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.internal.managers.ViewComponentManager
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
@@ -82,7 +83,11 @@ fun Context.showFileDetailDialog(
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
     updateLike: (evaluation: Evaluation) -> Unit,
 ) {
-    val viewModel = ViewModelProvider(this as ViewModelStoreOwner)[DialogViewModel::class.java]
+    val mContext = if (this is ViewComponentManager.FragmentContextWrapper)
+        this.baseContext
+    else
+        this
+    val viewModel = ViewModelProvider(mContext as ViewModelStoreOwner)[DialogViewModel::class.java]
     val b = DialogFileDetailBinding.inflate(LayoutInflater.from(this), null, false)
 
     b.root.layoutParams = ViewGroup.LayoutParams(
@@ -91,7 +96,7 @@ fun Context.showFileDetailDialog(
     )
 
     openFileDetailDialog(
-        this,
+        mContext,
         null,
         null,
         b,
@@ -222,7 +227,7 @@ private fun openCommentDialog(
 ) {
     val bottomDialog = BottomSheetDialog(context!!)  //, android.R.style.Theme_DeviceDefault_Light
     bottomDialog.setContentView(b.root)
-    val userId = viewModel.userId
+    val userId = viewModel.profileId
     val cmtAdapter = CommentAdapter(
         context,
         userId,
@@ -281,7 +286,7 @@ private fun openCommentDialog(
         BottomSheetBehavior.STATE_EXPANDED
 }
 
-private fun postLike(
+fun postLike(
     file: FileEntry?,
     cmt: Comment?,
     type: EvaluationEntityType,

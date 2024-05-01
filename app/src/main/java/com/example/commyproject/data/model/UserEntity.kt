@@ -1,6 +1,6 @@
 package com.example.commyproject.data.model
 
 class UserEntity(
-    _id: String
+    val _id: String
 ) {
 }

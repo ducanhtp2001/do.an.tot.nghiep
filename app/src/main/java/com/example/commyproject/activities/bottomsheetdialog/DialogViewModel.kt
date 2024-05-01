@@ -23,9 +23,9 @@ class DialogViewModel @Inject constructor(
     private val share: SharedPreferenceUtils
 ): BaseViewModel() {
     val user = getUserData()
-    override val userId: String = user._id
-    override val userName: String = user.userName
-    override val userAvatar: String = user.avatar
+    override val profileId: String = user._id
+    override val profileUserName: String = user.userName
+    override val profileAvatar: String = user.avatar
 
     override var toId: String? = null
     override var toUserName: String? = null

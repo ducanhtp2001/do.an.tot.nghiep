@@ -5,6 +5,10 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
+//hilt {
+//    enableExperimentalClasspathAggregation = true
+//}
+
 android {
     namespace = "com.example.commyproject"
     compileSdk = 34
