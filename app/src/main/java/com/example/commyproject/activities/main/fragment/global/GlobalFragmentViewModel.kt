@@ -1,17 +1,12 @@
 package com.example.commyproject.activities.main.fragment.global
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.commyproject.data.model.Comment
-import com.example.commyproject.data.model.CommentEntity
-import com.example.commyproject.data.model.Evaluation
-import com.example.commyproject.data.model.EvaluationEntity
-import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.StatusResponse
+import com.example.commyproject.data.model.GlobalFile
+import com.example.commyproject.data.model.KeyRecommend
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,20 +21,16 @@ class GlobalFragmentViewModel @Inject constructor(
     private val api: ApiClient,
     private val share: SharedPreferenceUtils
 ): ViewModel() {
-    private val publicFiles = MutableLiveData<List<FileEntry>>().apply {
+    private val _recommendFiles = MutableLiveData<List<GlobalFile>>().apply {
         value = emptyList()
     }
-    val list: LiveData<List<FileEntry>>
-        get() = publicFiles
+    val list: LiveData<List<GlobalFile>>
+        get() = _recommendFiles
 
-    var toId: String? = null
-    var toUserName: String? = null
-
-
-    fun getPublicFile() = viewModelScope.launch(Dispatchers.IO) {
-        val privateFileData = async { api.getPublicFile(getUser()) }.await()
+    fun getGlobalFile(key: KeyRecommend) = viewModelScope.launch(Dispatchers.IO) {
+        val privateFileData = async { api.getGlobalFile(key) }.await()
         withContext(Dispatchers.Main) {
-            publicFiles.value = privateFileData
+            _recommendFiles.value = privateFileData
         }
     }
 

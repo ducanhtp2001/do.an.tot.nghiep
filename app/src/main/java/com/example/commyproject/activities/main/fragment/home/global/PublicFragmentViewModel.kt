@@ -11,7 +11,7 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.StatusResponse
+import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel

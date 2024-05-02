@@ -6,9 +6,11 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.MsgResponse
-import com.example.commyproject.data.model.ProfileResponse
-import com.example.commyproject.data.model.StatusResponse
+import com.example.commyproject.data.model.GlobalFile
+import com.example.commyproject.data.model.KeyRecommend
+import com.example.commyproject.data.model.networkresponse.MsgResponse
+import com.example.commyproject.data.model.networkresponse.ProfileResponse
+import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
 import okhttp3.MultipartBody
@@ -16,12 +18,10 @@ import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Streaming
-import retrofit2.http.Url
 
 
 interface ApiService {
@@ -54,6 +54,12 @@ interface ApiService {
 
     @POST("get-profile")
     suspend fun getProfile(@Body user: UserEntity): Response<ProfileResponse>
+
+    @POST("get-global-file")
+    suspend fun getGlobalFile(@Body request: KeyRecommend): Response<List<GlobalFile>>
+
+    @POST("get-follow-file")
+    suspend fun getFollowFile(@Body user: UserEntity): Response<List<GlobalFile>>
 
     @Multipart
     @POST("upload")

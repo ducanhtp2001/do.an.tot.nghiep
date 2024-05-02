@@ -21,7 +21,7 @@ import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.databinding.ActivityProfileBinding
 import com.example.commyproject.ultil.Constant
-import com.example.commyproject.ultil.adapter.GlobalFileRCAdapter
+import com.example.commyproject.ultil.adapter.ProfileFileRCAdapter
 import com.example.commyproject.ultil.adapter.PeopleRCAdapter
 import com.example.commyproject.ultil.loadImg
 import com.example.commyproject.ultil.showToast
@@ -34,7 +34,7 @@ class ProfileAct : AppCompatActivity() {
     private lateinit var b: ActivityProfileBinding
     private lateinit var list: MutableList<FileEntry>
     private lateinit var followerAdapter: PeopleRCAdapter
-    private lateinit var fileAdapter: GlobalFileRCAdapter
+    private lateinit var fileAdapter: ProfileFileRCAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityProfileBinding.inflate(layoutInflater)
@@ -89,7 +89,7 @@ class ProfileAct : AppCompatActivity() {
             listViewFollower.layoutManager = layoutManager
             listViewFollower.adapter = followerAdapter
 
-            fileAdapter = GlobalFileRCAdapter(
+            fileAdapter = ProfileFileRCAdapter(
                 this@ProfileAct,
                 viewModel.user, // user cua nguoi su dung
                 user, // user data cua profile dang duoc show

@@ -2,21 +2,18 @@ package com.example.commyproject.activities.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.BaseViewModel
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
-import com.example.commyproject.data.model.ProfileResponse
+import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.model.UserEntity
-import com.example.commyproject.data.model.UserResponse
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

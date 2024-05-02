@@ -8,9 +8,11 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.MsgResponse
-import com.example.commyproject.data.model.ProfileResponse
-import com.example.commyproject.data.model.StatusResponse
+import com.example.commyproject.data.model.GlobalFile
+import com.example.commyproject.data.model.KeyRecommend
+import com.example.commyproject.data.model.networkresponse.MsgResponse
+import com.example.commyproject.data.model.networkresponse.ProfileResponse
+import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.network.ApiService
@@ -18,7 +20,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
-import okhttp3.internal.notify
 import javax.inject.Inject
 
 class ApiClient @Inject constructor(private val apiService: ApiService) {
@@ -85,6 +86,22 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
 
     suspend fun getProfile(userEntity: UserEntity): ProfileResponse? {
         val response = apiService.getProfile(userEntity)
+        if (response.isSuccessful) {
+            return response.body()!!
+        }
+        return null
+    }
+
+    suspend fun getGlobalFile(key: KeyRecommend): List<GlobalFile>? {
+        val response = apiService.getGlobalFile(key)
+        if (response.isSuccessful) {
+            return response.body()!!
+        }
+        return null
+    }
+
+    suspend fun getFollowFile(user: UserEntity): List<GlobalFile>? {
+        val response = apiService.getFollowFile(user)
         if (response.isSuccessful) {
             return response.body()!!
         }

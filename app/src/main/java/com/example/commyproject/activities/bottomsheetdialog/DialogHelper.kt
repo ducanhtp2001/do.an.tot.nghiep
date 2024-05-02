@@ -30,7 +30,7 @@ import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.StatusResponse
+import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.databinding.DialogBottomMenuBinding
 import com.example.commyproject.databinding.DialogCommentBinding
 import com.example.commyproject.databinding.DialogFileDetailBinding

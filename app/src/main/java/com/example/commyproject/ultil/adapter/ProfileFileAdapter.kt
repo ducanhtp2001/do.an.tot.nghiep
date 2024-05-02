@@ -18,7 +18,7 @@ import com.example.commyproject.data.model.UserResponse
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
 
-class GlobalFileAdapter(
+class ProfileFileAdapter(
     private val context: Context,
     private val user: User,
     private val profile: UserResponse,
