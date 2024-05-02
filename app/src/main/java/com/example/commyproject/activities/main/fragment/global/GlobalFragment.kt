@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.commyproject.data.model.GlobalFile
 import com.example.commyproject.databinding.FragmentGlobalBinding
 import com.example.commyproject.ultil.adapter.GlobalFileRCAdapter
@@ -30,8 +31,22 @@ class GlobalFragment : Fragment() {
         viewModel = ViewModelProvider(this)[GlobalFragmentViewModel::class.java]
 
         initData()
+        initView()
         initObserver()
         return b.root
+    }
+
+    private fun initView() {
+        keyAdapter = KeyRecommendAdapter(requireContext()) {
+            // search by new keyword
+        }
+        b.apply {
+            listKeyRecommend.layoutManager = LinearLayoutManager(requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            listKeyRecommend.adapter = keyAdapter
+        }
     }
 
     private fun initObserver() {

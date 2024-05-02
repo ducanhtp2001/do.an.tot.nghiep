@@ -38,7 +38,12 @@ class KeyRecommendAdapter(
         if (position != choose) {
             holder.apply {
                 holder.txtRecommend.setTextColor(chooseBackgroundColor)
-                holder.txtRecommend.setBackgroundColor(chooseTextColor)
+                holder.txtRecommend.setBackgroundResource(R.drawable.bg_key_item)
+            }
+        } else {
+            holder.apply {
+                holder.txtRecommend.setTextColor(chooseTextColor)
+                holder.txtRecommend.setBackgroundResource(R.drawable.bg_item_key_choosed)
             }
         }
 
@@ -47,7 +52,7 @@ class KeyRecommendAdapter(
             val old = choose
             choose = position
             holder.txtRecommend.setTextColor(chooseTextColor)
-            holder.txtRecommend.setBackgroundColor(chooseBackgroundColor)
+            holder.txtRecommend.setBackgroundResource(R.drawable.bg_item_key_choosed)
             notifyItemChanged(old)
             notifyItemChanged(choose)
 
