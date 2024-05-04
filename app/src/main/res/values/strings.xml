@@ -100,4 +100,5 @@
     <string name="followers_count">%1$s followers</string>
     <string name="action_hind">action hind</string>
     <string name="recommend">Recommend</string>
+    <string name="search">Search</string>
 </resources>

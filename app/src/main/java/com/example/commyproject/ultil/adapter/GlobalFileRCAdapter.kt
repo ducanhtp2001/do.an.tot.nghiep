@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.GlobalFile
 import com.example.commyproject.data.model.User
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
@@ -20,7 +19,7 @@ import com.example.commyproject.ultil.converter.FileConverter
 class GlobalFileRCAdapter(
     private val context: Context,
     private val user: User, // la account cua nguoi dung
-    private val list: MutableList<GlobalFile>,
+    private val list: MutableList<FileEntry>,
     private val createContextMenu: (file: FileEntry) -> Unit,
     private val hideFile: (file: FileEntry, callback:() -> Unit) -> Unit,
     private val onOpenLikeDialog: (file: FileEntry) -> Unit,

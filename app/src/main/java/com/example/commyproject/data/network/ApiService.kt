@@ -6,7 +6,6 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.GlobalFile
 import com.example.commyproject.data.model.KeyRecommend
 import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.ProfileResponse
@@ -56,10 +55,10 @@ interface ApiService {
     suspend fun getProfile(@Body user: UserEntity): Response<ProfileResponse>
 
     @POST("get-global-file")
-    suspend fun getGlobalFile(@Body request: KeyRecommend): Response<List<GlobalFile>>
+    suspend fun getGlobalFile(@Body request: KeyRecommend): Response<List<FileEntry>>
 
     @POST("get-follow-file")
-    suspend fun getFollowFile(@Body user: UserEntity): Response<List<GlobalFile>>
+    suspend fun getFollowFile(@Body user: UserEntity): Response<List<FileEntry>>
 
     @Multipart
     @POST("upload")

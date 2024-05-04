@@ -2,10 +2,13 @@ package com.example.commyproject.activities.main.fragment.global
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.commyproject.base.BaseViewModel
+import com.example.commyproject.data.model.Comment
+import com.example.commyproject.data.model.CommentEntity
+import com.example.commyproject.data.model.Evaluation
+import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntry
-import com.example.commyproject.data.model.GlobalFile
 import com.example.commyproject.data.model.KeyRecommend
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
@@ -20,19 +23,52 @@ import javax.inject.Inject
 class GlobalFragmentViewModel @Inject constructor(
     private val api: ApiClient,
     private val share: SharedPreferenceUtils
-): ViewModel() {
-    private val _recommendFiles = MutableLiveData<List<GlobalFile>>().apply {
+): BaseViewModel() {
+    private val _recommendFiles = MutableLiveData<List<FileEntry>>().apply {
         value = emptyList()
     }
-    val list: LiveData<List<GlobalFile>>
+
+    val list: LiveData<List<FileEntry>>
         get() = _recommendFiles
 
+    val user = getUserData()
+
+    var spinnerOption: Int = 0
+    var time: Int = 1
+    var keyword: String? = ""
+
     fun getGlobalFile(key: KeyRecommend) = viewModelScope.launch(Dispatchers.IO) {
-        val privateFileData = async { api.getGlobalFile(key) }.await()
+        if (key.keyword == keyword) {
+            time++
+            key.time = time
+        } else {
+            keyword = key.keyword
+            time = 1
+        }
+        val globalFileData = async { api.getGlobalFile(key) }.await()
         withContext(Dispatchers.Main) {
-            _recommendFiles.value = privateFileData
+            _recommendFiles.value = globalFileData
         }
     }
 
-    fun getUser() = share.getUser()
+    fun getUserData() = share.getUser()
+
+    override val profileId: String = user._id
+    override val profileUserName: String = user.userName
+    override val profileAvatar: String = user.avatar
+    override var toId: String? = null
+    override var toUserName: String? = null
+
+    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
+        Dispatchers.IO) {
+        api.postComment(cmt) {
+            callback(it)
+        }
+    }
+    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
+        Dispatchers.IO) {
+        api.postLike(evaluation) {
+            callback(it)
+        }
+    }
 }

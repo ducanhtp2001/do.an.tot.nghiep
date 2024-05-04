@@ -12,7 +12,7 @@ import com.example.commyproject.ultil.Constant
 
 class KeyRecommendAdapter(
     private val context: Context,
-    private val searchByKey:(String) -> Unit
+    private val searchByKey:(String?) -> Unit
 ): RecyclerView.Adapter<KeyRecommendAdapter.viewHolder>() {
 
     var choose: Int = 0
@@ -56,7 +56,7 @@ class KeyRecommendAdapter(
             notifyItemChanged(old)
             notifyItemChanged(choose)
 
-            searchByKey(Constant.KEY_RECOMMEND_LIST[position])
+            searchByKey(Constant.getStringRecommend(position))
         }
     }
 }

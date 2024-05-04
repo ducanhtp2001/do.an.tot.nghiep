@@ -8,7 +8,7 @@
         android:id="@+id/txtRecommend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center"
         android:paddingVertical="8dp"
         android:paddingHorizontal="15dp"

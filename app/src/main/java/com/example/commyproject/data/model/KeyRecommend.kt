@@ -1,5 +1,7 @@
 package com.example.commyproject.data.model
 class KeyRecommend(
-    private val key: String,
-    private val time: Int,
+    val keyword: String?,
+    var time: Int,
+    val searchMode: Int,
+    val existFilesId: List<String>?
 )
