@@ -6,12 +6,14 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
+import com.example.commyproject.data.model.FollowerResponse
 import com.example.commyproject.data.model.KeyRecommend
 import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.data.model.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -59,6 +61,9 @@ interface ApiService {
 
     @POST("get-follow-file")
     suspend fun getFollowFile(@Body user: UserEntity): Response<List<FileEntry>>
+
+    @POST("get-follow-user")
+    suspend fun getFollowUser(@Body user: UserEntity): Response<List<FollowerResponse>>
 
     @Multipart
     @POST("upload")

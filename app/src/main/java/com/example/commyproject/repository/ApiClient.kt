@@ -8,6 +8,7 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
+import com.example.commyproject.data.model.FollowerResponse
 import com.example.commyproject.data.model.KeyRecommend
 import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.ProfileResponse
@@ -101,6 +102,14 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
 
     suspend fun getFollowFile(user: UserEntity): List<FileEntry>? {
         val response = apiService.getFollowFile(user)
+        if (response.isSuccessful) {
+            return response.body()!!
+        }
+        return null
+    }
+
+    suspend fun getFollowUser(user: UserEntity): List<FollowerResponse>? {
+        val response = apiService.getFollowUser(user)
         if (response.isSuccessful) {
             return response.body()!!
         }
