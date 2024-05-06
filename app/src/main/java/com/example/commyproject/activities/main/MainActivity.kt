@@ -1,5 +1,9 @@
 package com.example.commyproject.activities.main
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -14,6 +18,7 @@ import com.example.commyproject.R
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityMainBinding
 import com.example.commyproject.ultil.Config
+import com.example.commyproject.ultil.Constant
 import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("DEPRECATION")
@@ -22,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var b: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var viewModel: MainActViewModel
+    private lateinit var receiver: BroadcastReceiver
+    private lateinit var destinationChangedListener: NavController.OnDestinationChangedListener
 
     private lateinit var user: User
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +45,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initEvent() {
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val notificationMenuItem = b.topAppBar.contentMain.bottomNavigationView.menu.findItem(R.id.notificationFragment)
+                notificationMenuItem.setIcon(R.drawable.ic_avatar)
+            }
+        }
+
+        val filter = IntentFilter(Constant.BROADCAST_ACTION)
+        registerReceiver(receiver, filter)
+
+        destinationChangedListener = NavController.OnDestinationChangedListener { _, destination, _ ->
+            if (destination.id != R.id.notificationFragment) {
+                val notificationMenuItem = b.topAppBar.contentMain.bottomNavigationView.menu.findItem(R.id.notificationFragment)
+                notificationMenuItem.setIcon(R.drawable.ic_notification)
+            }
+        }
     }
 
     private fun initView() {
 
         navController = findNavController(R.id.fragmentContainerView)
+
         b.topAppBar.contentMain.bottomNavigationView.setupWithNavController(navController)
 //        b.topAppBar.toolBar.setNavigationIcon(R.drawable.ic_menu_2)
 
@@ -100,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        viewModel.socketDisconnect()
+        unregisterReceiver(receiver)
         super.onDestroy()
     }
 

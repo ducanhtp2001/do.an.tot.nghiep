@@ -109,6 +109,17 @@ class SocketIOManager @Inject constructor(
         }
     }
 
+    fun onMsgReceiver(callback: (msg: String, idFile: String) -> Unit) {
+        Log.d("testing", "register on")
+        mSocket.on("on_msg_receive") { args ->
+            val data =  args.getOrNull(0) as? JSONObject
+            val msg = data?.optString("msg") ?: ""
+            val idFile = data?.optString("idFile") ?: ""
+            callback(msg, idFile)
+            Log.d("testing", "$msg --- from user: $idFile")
+        }
+    }
+
     fun requestExecute() {
         onExecuteDone()
         Log.d("testing", "request execute")

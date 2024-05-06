@@ -57,7 +57,7 @@ class FollowFragmentViewModel @Inject constructor(
         }
     }
 
-    fun getUserData() = share.getUser()
+    private fun getUserData() = share.getUser()
 
     override val profileId: String = user._id
     override val profileUserName: String = user.userName

@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING"/>
 
     <application
         android:name=".MyApplication"
@@ -69,6 +70,11 @@
         <activity
             android:name=".activities.main.MainActivity"
             android:exported="true"></activity>
+
+        <service android:name=".service.ReceiverService"
+            android:exported="false"
+            android:enabled="true"
+            android:foregroundServiceType="remoteMessaging"/>
     </application>
 
 </manifest>
