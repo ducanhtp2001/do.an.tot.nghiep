@@ -26,11 +26,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ReceiverService: Service() {
     @Inject
-    private lateinit var share: SharedPreferenceUtils
+    lateinit var share: SharedPreferenceUtils
     @Inject
-    private lateinit var socket: SocketIOManager
+    lateinit var socket: SocketIOManager
     @Inject
-    private lateinit var networkHelper: NetworkHelper
+    lateinit var networkHelper: NetworkHelper
 
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
@@ -40,11 +40,20 @@ class ReceiverService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (networkHelper.isNetworkConnected()) {
-            socket.onMsgReceiver { msg, _ ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                startForeground(NOTIFICATION_ID, createNotification(getString(R.string.app_name), "", true), ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+            }else{
+                startForeground(NOTIFICATION_ID, createNotification(getString(R.string.app_name), "", true))
+            }
+
+            socket.socketConnect()
+            socket.login()
+
+            socket.onMsgReceiver { msg ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-                    startForeground(NOTIFICATION_ID, createNotification(getString(R.string.app_name), msg), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+                    startForeground(NOTIFICATION_ID, createNotification(getString(R.string.app_name), msg, false), ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
                 }else{
-                    startForeground(NOTIFICATION_ID, createNotification(getString(R.string.app_name), msg))
+                    startForeground(NOTIFICATION_ID, createNotification(getString(R.string.app_name), msg, false))
                 }
                 val broadcastIntent = Intent(Constant.BROADCAST_ACTION).apply {
 
@@ -56,7 +65,7 @@ class ReceiverService: Service() {
     }
 
     @SuppressLint("WrongConstant")
-    private fun createNotification(title: String, content: String): Notification {
+    private fun createNotification(title: String, content: String, isHide: Boolean): Notification {
         notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -81,11 +90,8 @@ class ReceiverService: Service() {
             .setContentText(content)
             .setSmallIcon(R.drawable.ic_pdf)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setOngoing(false)
-            .setAutoCancel(true)
-            .setCategory(NotificationCompat.CATEGORY_EVENT)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(pendingIntent)
+            .setVisibility(if (isHide) NotificationCompat.VISIBILITY_SECRET else NotificationCompat.VISIBILITY_PUBLIC)
 
         return builder.build()
     }
@@ -93,7 +99,7 @@ class ReceiverService: Service() {
     override fun onDestroy() {
         super.onDestroy()
         socket.socketDisconnect()
-        Log.e("testing", " ====== service disconnect ====== ")
+        Log.e("testing", " ====== service die ====== ")
     }
 
     companion object {

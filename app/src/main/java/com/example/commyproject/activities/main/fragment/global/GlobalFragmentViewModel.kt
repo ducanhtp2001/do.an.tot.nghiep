@@ -23,7 +23,7 @@ import javax.inject.Inject
 class GlobalFragmentViewModel @Inject constructor(
     private val api: ApiClient,
     private val share: SharedPreferenceUtils
-): BaseViewModel() {
+): BaseViewModel(api, share) {
     private val _recommendFiles = MutableLiveData<List<FileEntry>>().apply {
         value = emptyList()
     }
@@ -59,16 +59,16 @@ class GlobalFragmentViewModel @Inject constructor(
     override var toId: String? = null
     override var toUserName: String? = null
 
-    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
-        Dispatchers.IO) {
-        api.postComment(cmt) {
-            callback(it)
-        }
-    }
-    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
-        Dispatchers.IO) {
-        api.postLike(evaluation) {
-            callback(it)
-        }
-    }
+//    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
+//        Dispatchers.IO) {
+//        api.postComment(cmt) {
+//            callback(it)
+//        }
+//    }
+//    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
+//        Dispatchers.IO) {
+//        api.postLike(evaluation) {
+//            callback(it)
+//        }
+//    }
 }

@@ -244,6 +244,7 @@ private fun openCommentDialog(
                 toUser.visibility = View.VISIBLE
                 cancelReply.visibility = View.VISIBLE
                 toUser.text = context.getString(R.string.answer_to, cmt.userName)
+                viewModel.toUserName = cmt.userName
             }
         },
         onOpenLike = { cmt ->

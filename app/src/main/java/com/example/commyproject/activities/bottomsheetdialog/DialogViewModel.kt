@@ -20,7 +20,7 @@ import javax.inject.Inject
 class DialogViewModel @Inject constructor(
     private val api: ApiClient,
     private val share: SharedPreferenceUtils
-): BaseViewModel() {
+): BaseViewModel(api, share) {
     val user = getUserData()
     override val profileId: String = user._id
     override val profileUserName: String = user.userName
@@ -28,18 +28,18 @@ class DialogViewModel @Inject constructor(
 
     override var toId: String? = null
     override var toUserName: String? = null
-    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
-        Dispatchers.IO) {
-        api.postComment(cmt) {
-            callback(it)
-        }
-    }
-    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
-        Dispatchers.IO) {
-        api.postLike(evaluation) {
-            callback(it)
-        }
-    }
+//    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
+//        Dispatchers.IO) {
+//        api.postComment(cmt) {
+//            callback(it)
+//        }
+//    }
+//    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
+//        Dispatchers.IO) {
+//        api.postLike(evaluation) {
+//            callback(it)
+//        }
+//    }
     fun deleteFile(file: FileEntity, callback: (StatusResponse) -> Unit) = viewModelScope.launch(
         Dispatchers.IO) {
         api.deleteFile(file) {

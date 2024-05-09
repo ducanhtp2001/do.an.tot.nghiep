@@ -13,13 +13,5 @@ class MainActViewModel @Inject constructor(
     private val socket: SocketIOManager,
     private val share: SharedPreferenceUtils,
 ): ViewModel() {
-    init {
-        socket.socketConnect()
-        socket.login()
-    }
-
     fun getUser() = share.getUser()
-    fun socketDisconnect() {
-        socket.socketDisconnect()
-    }
 }

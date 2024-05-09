@@ -23,7 +23,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val api: ApiClient,
     private val share: SharedPreferenceUtils,
-): BaseViewModel() {
+): BaseViewModel(api, share) {
     val user = getUserData()
     override lateinit var profileId: String
     override lateinit var profileUserName: String
@@ -51,19 +51,19 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
-        Dispatchers.IO) {
-        api.postLike(evaluation) {
-            callback(it)
-        }
-    }
-
-    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
-        Dispatchers.IO) {
-        api.postComment(cmt) {
-            callback(it)
-        }
-    }
+//    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
+//        Dispatchers.IO) {
+//        api.postLike(evaluation) {
+//            callback(it)
+//        }
+//    }
+//
+//    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
+//        Dispatchers.IO) {
+//        api.postComment(cmt) {
+//            callback(it)
+//        }
+//    }
 
     private fun getUserData() = share.getUser()
 }

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -15,8 +16,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
+import com.example.commyproject.activities.profile.ProfileAct
+import com.example.commyproject.activities.setting.SettingActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityMainBinding
+import com.example.commyproject.service.ReceiverService
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.Constant
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,13 +46,20 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         initEvent()
+
+        val intent = Intent(this, ReceiverService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
     }
 
     private fun initEvent() {
         receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 val notificationMenuItem = b.topAppBar.contentMain.bottomNavigationView.menu.findItem(R.id.notificationFragment)
-                notificationMenuItem.setIcon(R.drawable.ic_avatar)
+                notificationMenuItem.setIcon(R.drawable.ic_notification_1)
             }
         }
 
@@ -56,11 +67,12 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, filter)
 
         destinationChangedListener = NavController.OnDestinationChangedListener { _, destination, _ ->
-            if (destination.id != R.id.notificationFragment) {
+            if (destination.id == R.id.notificationFragment) {
                 val notificationMenuItem = b.topAppBar.contentMain.bottomNavigationView.menu.findItem(R.id.notificationFragment)
                 notificationMenuItem.setIcon(R.drawable.ic_notification)
             }
         }
+        navController.addOnDestinationChangedListener(destinationChangedListener)
     }
 
     private fun initView() {
@@ -96,13 +108,17 @@ class MainActivity : AppCompatActivity() {
         b.drawerNav.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_item_profile -> {
-                    Log.d("MainActivity", "Profile clicked")
+//                    Log.d("MainActivity", "Profile clicked")
 //                    navController.navigate(R.id.fileDetailFragment)
+                    startActivity(Intent(this, ProfileAct::class.java).apply {
+                        putExtra(Constant.USER_ID, user._id)
+                    })
                 }
 
                 R.id.menu_item_setting -> {
-                    Log.d("MainActivity", "Setting clicked")
-
+                    startActivity(Intent(this, SettingActivity::class.java).apply {
+                        putExtra(Constant.USER_ID, user._id)
+                    })
                 }
 
                 R.id.menu_item_trash -> {
@@ -112,7 +128,6 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.menu_item_logout -> {
                     Log.d("MainActivity", "Logout clicked")
-
                 }
 
                 else -> {}
@@ -125,6 +140,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         unregisterReceiver(receiver)
+        navController.removeOnDestinationChangedListener(destinationChangedListener)
         super.onDestroy()
     }
 

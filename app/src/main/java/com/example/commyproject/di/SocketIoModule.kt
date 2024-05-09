@@ -13,17 +13,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object SocketIoModule {
-    private val TRANSPORTS = arrayOf(WebSocket.NAME)
+//    private val TRANSPORTS = arrayOf(WebSocket.NAME)
     @Provides
     @Singleton
     fun provideSocketIO() : Socket {
         val socket : Socket
-        val option = IO.Options.builder()
-            .setTransports(TRANSPORTS)
-            .setUpgrade(true)
-            .setReconnection(false)
-            .build()
+//        val option = IO.Options.builder()
+//            .setTransports(TRANSPORTS)
+//            .setUpgrade(true)
+//            .setReconnection(false)
+//            .build()
+        val option = IO.Options()
         option.reconnection = true
+//        option.transports = TRANSPORTS
+        option.upgrade = true
         option.reconnectionDelay = 1000
         option.timeout = 10000
         socket =

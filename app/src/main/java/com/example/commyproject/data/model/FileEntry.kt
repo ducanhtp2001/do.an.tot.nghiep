@@ -13,6 +13,7 @@ open class FileEntry(
     val isPublic: Boolean = false,
     val isTable: Boolean = false,
     val likes: MutableList<Evaluation> = mutableListOf(),
-    val comments: MutableList<Comment> = mutableListOf()
+    val comments: MutableList<Comment> = mutableListOf(),
+    val followers: MutableList<UserEntity> = mutableListOf()
 ) {
 }

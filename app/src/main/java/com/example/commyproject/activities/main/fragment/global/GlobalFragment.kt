@@ -168,7 +168,7 @@ class GlobalFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
         viewModel.list.observe(requireActivity()) {
-            if (it != null && it.isNotEmpty()) {
+            if (it != null) {
                 listFile.clear()
                 listFile.addAll(it)
                 fileAdapter.notifyDataSetChanged()
