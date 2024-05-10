@@ -47,7 +47,6 @@ class ReceiverService: Service() {
             }
 
             socket.socketConnect()
-            socket.login()
 
             socket.onMsgReceiver { msg ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){

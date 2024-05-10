@@ -4,10 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.BaseViewModel
-import com.example.commyproject.data.model.Comment
-import com.example.commyproject.data.model.CommentEntity
-import com.example.commyproject.data.model.Evaluation
-import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.KeyRecommend
 import com.example.commyproject.data.share.SharedPreferenceUtils
@@ -51,24 +47,9 @@ class GlobalFragmentViewModel @Inject constructor(
         }
     }
 
-    fun getUserData() = share.getUser()
-
     override val profileId: String = user._id
     override val profileUserName: String = user.userName
     override val profileAvatar: String = user.avatar
     override var toId: String? = null
     override var toUserName: String? = null
-
-//    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
-//        Dispatchers.IO) {
-//        api.postComment(cmt) {
-//            callback(it)
-//        }
-//    }
-//    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
-//        Dispatchers.IO) {
-//        api.postLike(evaluation) {
-//            callback(it)
-//        }
-//    }
 }

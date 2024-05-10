@@ -40,5 +40,5 @@ abstract class BaseViewModel constructor(
             callback(it)
         }
     }
-
+    fun getUserData() = share.getUser()
 }

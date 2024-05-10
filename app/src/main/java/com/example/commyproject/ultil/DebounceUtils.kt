@@ -28,6 +28,13 @@ object DebounceUtils {
         debounce(callback, 1000)
     }
 
+    fun debounce2000(callback: DebounceCallback) {
+        debounce(callback, 2000)
+    }
+    fun debounce5000(callback: DebounceCallback) {
+        debounce(callback, 5000)
+    }
+
 
     var runnable: Runnable? = null
     var handler = Handler(Looper.getMainLooper())

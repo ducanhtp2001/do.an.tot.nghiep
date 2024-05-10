@@ -8,6 +8,7 @@ import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.FollowerResponse
 import com.example.commyproject.data.model.KeyRecommend
+import com.example.commyproject.data.model.Notification
 import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
@@ -64,6 +65,12 @@ interface ApiService {
 
     @POST("get-follow-user")
     suspend fun getFollowUser(@Body user: UserEntity): Response<List<FollowerResponse>>
+
+    @POST("get-notifications")
+    suspend fun getNotifications(@Body user: UserEntity): Response<List<Notification>>
+
+    @POST("get-single-file")
+    suspend fun getSingleFile(@Body file: FileEntity): Response<FileEntry>
 
     @Multipart
     @POST("upload")

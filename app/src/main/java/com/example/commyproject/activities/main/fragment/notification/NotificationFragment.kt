@@ -1,22 +1,92 @@
 package com.example.commyproject.activities.main.fragment.notification
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.commyproject.R
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.commyproject.activities.bottomsheetdialog.showFileDetailDialog
+import com.example.commyproject.data.model.FileEntity
+import com.example.commyproject.data.model.Notification
+import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.databinding.FragmentNotificationBinding
+import com.example.commyproject.ultil.adapter.NotificationRCAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NotificationFragment : Fragment() {
-
+    private lateinit var b: FragmentNotificationBinding
+    private lateinit var viewModel: NotificationFragmentViewModel
+    private lateinit var listNotification: MutableList<Notification>
+    private lateinit var adapter: NotificationRCAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false)
+    ): View {
+        b = FragmentNotificationBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this)[NotificationFragmentViewModel::class.java]
+
+        initData()
+        initView()
+        initObserver()
+        initEvent()
+
+        return b.root
+    }
+
+    private fun initEvent() {
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initObserver() {
+        viewModel.apply {
+            list.observe(requireActivity()) {
+                it?.let { 
+                    if (it.isNotEmpty()) {
+                        listNotification.clear()
+                        listNotification.addAll(it)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+            file.observe(requireActivity()) {
+                it?.let { 
+                    requireActivity().showFileDetailDialog(it, 
+                        updateState = { _, _ ->
+                                      
+                        },
+                        updateLike = { _ ->
+                            
+                        })
+                }
+            }
+        }
+    }
+
+    private fun initView() {
+        adapter = NotificationRCAdapter(
+            requireContext(),
+            listNotification,
+            onClick = {
+                val file = FileEntity(it)
+                viewModel.getSingleFile(file)
+            },
+            openMenu = {
+
+            }
+        )
+        b.rcvNotification.layoutManager = LinearLayoutManager(requireContext())
+        b.rcvNotification.adapter = adapter
+    }
+
+    private fun initData() {
+        listNotification = mutableListOf()
+        val userId = UserEntity(viewModel.user._id)
+        viewModel.getNotifications(userId)
     }
 
 }

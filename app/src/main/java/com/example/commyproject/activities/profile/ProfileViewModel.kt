@@ -4,12 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.BaseViewModel
-import com.example.commyproject.data.model.Comment
-import com.example.commyproject.data.model.CommentEntity
-import com.example.commyproject.data.model.Evaluation
-import com.example.commyproject.data.model.EvaluationEntity
-import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,20 +46,4 @@ class ProfileViewModel @Inject constructor(
             loadingState.postValue(false)
         }
     }
-
-//    override fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) = viewModelScope.launch(
-//        Dispatchers.IO) {
-//        api.postLike(evaluation) {
-//            callback(it)
-//        }
-//    }
-//
-//    override fun postComment(cmt: CommentEntity, callback: (Comment) -> Unit) = viewModelScope.launch(
-//        Dispatchers.IO) {
-//        api.postComment(cmt) {
-//            callback(it)
-//        }
-//    }
-
-    private fun getUserData() = share.getUser()
 }

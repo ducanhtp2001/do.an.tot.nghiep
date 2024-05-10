@@ -13,7 +13,6 @@ import javax.inject.Singleton
 @Singleton
 class SocketIOManager @Inject constructor(
     private val mSocket: Socket,
-    private val listener: SocketIOListener,
     private val share: SharedPreferenceUtils
 ) {
     val user by lazy {
@@ -23,15 +22,16 @@ class SocketIOManager @Inject constructor(
     companion object {
         private const val TAG = "SocketIOManager"
         const val SERVER_URL = Config.SERVER_URL
-        const val TRANSACTION_EVENT = "transaction_event"
         const val REQUEST_EXECUTE = "start_task"
         const val ON_EXECUTE_DONE = "on_file_execute_done"
+        const val ON_MSG_RECEIVE = "on_msg_receive"
+        const val REQUEST_CHECK_NOTIFY = "check_has_notify"
     }
 
     fun socketDisconnect() {
-        socketOff()
         logout()
         mSocket.disconnect()
+        socketOff()
     }
 
     fun socketConnect() {
@@ -48,13 +48,12 @@ class SocketIOManager @Inject constructor(
     }
 
     private fun socketOn() {
-        socketOff()
-        mSocket.on(TRANSACTION_EVENT, listener.onTransactionsListening)
+        login()
     }
 
 
     private fun socketOff() {
-        mSocket.off(TRANSACTION_EVENT)
+        mSocket.off(ON_MSG_RECEIVE)
         mSocket.off(ON_EXECUTE_DONE)
     }
 
@@ -91,9 +90,14 @@ class SocketIOManager @Inject constructor(
         mSocket.emit("login", requestData)
     }
 
-    private fun logout() {
-        onLoginReceiver()
+    private fun checkHasNotify() {
+        Log.d("testing", "check has notify")
+        val requestData = JSONObject()
+        requestData.put("id", user._id)
+        mSocket.emit(REQUEST_CHECK_NOTIFY, requestData)
+    }
 
+    private fun logout() {
         val requestData = JSONObject()
         requestData.put("id", user._id)
         mSocket.emit("logout", requestData)
@@ -111,7 +115,7 @@ class SocketIOManager @Inject constructor(
 
     fun onMsgReceiver(callback: (msg: String) -> Unit) {
         Log.d("testing", "register on")
-        mSocket.on("on_msg_receive") { args ->
+        mSocket.on(ON_MSG_RECEIVE) { args ->
             val data =  args.getOrNull(0) as? JSONObject
             val _id = data?.getString("_id") ?: ""
             val msg = data?.getString("msg") ?: ""
@@ -123,12 +127,15 @@ class SocketIOManager @Inject constructor(
             requestData.put("id", _id)
             requestData.put("idUser", user._id)
 //            requestData.put("idFile", idFile)
-            mSocket.emit("on_msg_receive", requestData)
+            mSocket.emit(ON_MSG_RECEIVE, requestData)
 
             // handler this msg
             callback(msg)
 //            Log.d("testing", " ---------------- get new msg: $msg")
         }
+
+        // request server check this client has notify
+        checkHasNotify()
     }
 
     fun requestExecute() {
@@ -147,42 +154,6 @@ class SocketIOManager @Inject constructor(
             Log.d("testing", "file $title is done")
         }
     }
-
-
-
-
-
-
-//    fun getFriendRequest(callback: (String) -> Unit) {
-//        mSocket.on("friend_request_received") { args ->
-//            val data = args[0] as JSONObject
-//            val senderId = data.getString("sender_id")
-//            callback(senderId)
-//        }
-//        mSocket.on("friend_request_block") { args ->
-//            val data = args[0] as JSONObject
-//            val senderId = data.getString("sender_id")
-//            callback(senderId)
-//        }
-//        mSocket.on("friend_request_sended") { args ->
-//            val data = args[0] as JSONObject
-//            val senderId = data.getString("sender_id")
-//            callback(senderId)
-//
-//        }
-//        mSocket.on("friend_request_isfriend") { args ->
-//            val data = args[0] as JSONObject
-//            val senderId = data.getString("sender_id")
-//        }
-//    }
-//
-//    fun blockFriend(senderId: String, receiverId: String) {
-//        val data = JSONObject()
-//        data.put("idRequest", senderId + "_" + receiverId)
-//        data.put("idSender", senderId)
-//        data.put("idReceiver", receiverId)
-//        mSocket.emit("block_friend", data)
-//    }
 
 }
 

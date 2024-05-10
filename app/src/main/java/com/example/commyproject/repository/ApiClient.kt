@@ -10,6 +10,7 @@ import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.FollowerResponse
 import com.example.commyproject.data.model.KeyRecommend
+import com.example.commyproject.data.model.Notification
 import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
@@ -114,6 +115,20 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
             return response.body()!!
         }
         return null
+    }
+
+    suspend fun getNotifications(user: UserEntity, callback: (List<Notification>) -> Unit) {
+        val response = apiService.getNotifications(user)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
+    }
+
+    suspend fun getSingleFile(file: FileEntity, callback: (FileEntry) -> Unit) {
+        val response = apiService.getSingleFile(file)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
     }
 
     suspend fun upload(
