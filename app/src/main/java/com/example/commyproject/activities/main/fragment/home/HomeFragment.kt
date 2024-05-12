@@ -52,7 +52,6 @@ class HomeFragment : Fragment() {
     private fun initObserver() {
         viewModel.stateLoading.observe(requireActivity()) {
             if (!viewModel.stateLoading.value!!) {
-                requireContext().showToast(viewModel.msg)
             }
         }
     }
@@ -152,9 +151,11 @@ class HomeFragment : Fragment() {
             data?.data?.let { uri ->
                 requireContext().showToast(uri.toString())
                 requireContext().showSetConfigDialog {title, isTable, isPublic ->
-                    val fileName = FileConverter.getFileName(user._id ,Calendar.getInstance().timeInMillis.toString())
+                    val fileName = FileConverter.generateIdByUserId(user._id)
                     val description = "$title-$isTable-$isPublic"
-                    viewModel.upload(requireContext(), uri, description, fileName, user._id)
+                    viewModel.upload(requireContext(), uri, description, fileName, user._id) {
+                        requireContext().showToast(viewModel.msg)
+                    }
                 }
             }
         }

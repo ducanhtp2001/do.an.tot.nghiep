@@ -30,7 +30,7 @@ class HomeFragmentViewModel @Inject constructor(
         get() = _stateLoading
 
     var msg = ""
-    fun upload(context: Context, uri: Uri, description: String, fileId: String, userId: String) =
+    fun upload(context: Context, uri: Uri, description: String, fileId: String, userId: String, callback:() -> Unit) =
         viewModelScope.launch(Dispatchers.IO) {
             val userStr = share.getStringValue(Constant.USER, "")
             var user: User?

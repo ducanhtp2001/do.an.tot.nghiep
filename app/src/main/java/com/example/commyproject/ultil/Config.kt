@@ -6,5 +6,6 @@ class Config {
 //        const val SERVER_URL = "http://192.168.1.235:5000"
 //        const val SERVER_URL = "http://192.168.118.183:5000"
 //        const val SERVER_URL = "http://192.168.1.235:5000"
+//        const val SERVER_URL = "http://192.168.108.183:5000"
     }
 }
