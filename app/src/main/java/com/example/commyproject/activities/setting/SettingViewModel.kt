@@ -1,20 +1,16 @@
-package com.example.commyproject.activities.main
+package com.example.commyproject.activities.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.data.share.SharedPreferenceUtils
-import com.taymay.taoday.service.SocketIOManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
-class MainActViewModel @Inject constructor(
-    private val socket: SocketIOManager,
-    private val share: SharedPreferenceUtils,
+class SettingViewModel @Inject constructor(
+    private val share: SharedPreferenceUtils
 ): ViewModel() {
-    fun getUser() = share.getUser()
-
+    fun getUserData() = share.getUser()
     fun clearData() = viewModelScope.launch {
         share.logout()
     }

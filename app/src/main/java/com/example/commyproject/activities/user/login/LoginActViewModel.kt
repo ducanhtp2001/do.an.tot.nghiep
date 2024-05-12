@@ -49,13 +49,18 @@ class LoginActViewModel @Inject constructor(
             Log.d(mTAG, "response: $user")
             if (it._id != "") {
                 _stateLoading.postValue(true)
-                share.putUser(it)
+                share.login(it)
                 _stateLogin.postValue(true)
             } else {
                 Log.d(mTAG, "false login")
             }
             _stateLoading.postValue(false)
         }
+    }
+
+    fun checkLogin() = viewModelScope.launch {
+        val isLogin = share.checkLogin()
+        if (isLogin) _stateLogin.postValue(true)
     }
 
     private fun checkNetWork(): Boolean {

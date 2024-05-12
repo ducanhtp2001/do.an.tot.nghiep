@@ -67,7 +67,9 @@ class PublicFragment : Fragment() {
                 showContextMenuDialog(
                     file,
                     updateState = { response, mFile ->
-                        requireContext().showToast(response.msg)
+                        requireActivity().runOnUiThread {
+                            requireContext().showToast(response.msg)
+                        }
                         list.removeIf {
                             it._id == mFile._id
                         }
@@ -75,6 +77,13 @@ class PublicFragment : Fragment() {
                             adapter.notifyDataSetChanged()
                         }
                     },
+                    onDelete = { fileId ->
+                        requireActivity().runOnUiThread {
+                            list.removeIf { it._id == fileId }
+                            adapter.notifyDataSetChanged()
+                        }
+
+                    }
                 )
             },
             onOpenLikeDialog = { file ->
@@ -84,7 +93,8 @@ class PublicFragment : Fragment() {
                 requireActivity().showCommentDialog(file)
             },
             onItemClick = { file, updateLike ->
-                requireActivity().showFileDetailDialog(file,
+                requireActivity().showFileDetailDialog(
+                    file,
                     updateState = { response, mFile ->
                         this.requireContext().showToast(response.msg)
                         this.list.removeIf { it._id == mFile._id }
@@ -96,11 +106,18 @@ class PublicFragment : Fragment() {
                         updateLike(evaluation)
                         val position = list.indexOf(file)
                         if (list[position].likes.any { it.idUser == evaluation.idUser }) {
-                            list[position].likes.removeIf{ it.idUser == evaluation.idUser }
+                            list[position].likes.removeIf { it.idUser == evaluation.idUser }
                         } else {
                             list[position].likes.add(evaluation)
                         }
-                    })
+                    },
+                    onDelete = { fileId ->
+                        requireActivity().runOnUiThread {
+                            list.removeIf { it._id == fileId }
+                            adapter.notifyDataSetChanged()
+                        }
+                    }
+                )
             }
         )
         b.apply {

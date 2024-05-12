@@ -85,8 +85,7 @@ class ProfileAct : AppCompatActivity() {
                 startActivity(Intent(this@ProfileAct, SettingActivity::class.java))
             }
             followerAdapter = PeopleRCAdapter(this@ProfileAct, R.layout.item_people, user.followers)
-            val layoutManager = LinearLayoutManager(this@ProfileAct)
-            listViewFollower.layoutManager = layoutManager
+            listViewFollower.layoutManager = LinearLayoutManager(this@ProfileAct, LinearLayoutManager.HORIZONTAL, false)
             listViewFollower.adapter = followerAdapter
 
             fileAdapter = ProfileFileRCAdapter(
@@ -106,6 +105,13 @@ class ProfileAct : AppCompatActivity() {
                                  fileAdapter.notifyDataSetChanged()
                              }
                          },
+                         onDelete = { fileId ->
+                             this@ProfileAct.runOnUiThread {
+                                 list.removeIf { it._id == fileId}
+                                 fileAdapter.notifyDataSetChanged()
+                             }
+
+                         }
                      )
                 },
                 hideFile = { file, callback ->
@@ -133,7 +139,15 @@ class ProfileAct : AppCompatActivity() {
                             } else {
                                 list[position].likes.add(evaluation)
                             }
-                        })
+                        },
+                        onDelete = { fileId ->
+                            this@ProfileAct.runOnUiThread {
+                                list.removeIf { it._id == fileId}
+                                fileAdapter.notifyDataSetChanged()
+                            }
+
+                        }
+                    )
                 },
                 onLike = { file, callback ->
                     postLike(file, null, EvaluationEntityType.FILE, user._id, viewModel) { evaluation ->

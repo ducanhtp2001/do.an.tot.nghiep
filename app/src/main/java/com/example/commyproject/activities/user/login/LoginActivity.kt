@@ -38,8 +38,13 @@ class LoginActivity : AppCompatActivity() {
         setContentView(b.root)
         viewModel = ViewModelProvider(this)[LoginActViewModel::class.java]
 
+        initData()
         initEvent()
         initObserver()
+    }
+
+    private fun initData() {
+        viewModel.checkLogin()
     }
 
     private fun initObserver() {

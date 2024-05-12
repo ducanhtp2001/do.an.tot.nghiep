@@ -46,6 +46,9 @@ import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.internal.managers.ViewComponentManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
@@ -57,6 +60,7 @@ fun Fragment.showFileDetailDialog(
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
     updateLike: (evaluation: Evaluation) -> Unit,
+    onDelete: (String) -> Unit
 ) {
     val viewModel = ViewModelProvider(this)[DialogViewModel::class.java]
     val b = DialogFileDetailBinding.inflate(layoutInflater, null, false)
@@ -74,7 +78,8 @@ fun Fragment.showFileDetailDialog(
         viewModel,
         file,
         updateState,
-        updateLike
+        updateLike,
+        onDelete
     )
 }
 
@@ -82,6 +87,7 @@ fun Context.showFileDetailDialog(
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
     updateLike: (evaluation: Evaluation) -> Unit,
+    onDelete: (String) -> Unit
 ) {
     val mContext = if (this is ViewComponentManager.FragmentContextWrapper)
         this.baseContext
@@ -103,7 +109,8 @@ fun Context.showFileDetailDialog(
         viewModel,
         file,
         updateState,
-        updateLike
+        updateLike,
+        onDelete
     )
 }
 
@@ -116,6 +123,7 @@ private fun openFileDetailDialog(
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
     updateLike: (evaluation: Evaluation) -> Unit,
+    onDelete: (String) -> Unit
 ) {
     val likeColor = ContextCompat.getColor(context, R.color.like)
     val nonLikeColor = ContextCompat.getColor(context, R.color.black)
@@ -135,7 +143,7 @@ private fun openFileDetailDialog(
             context.goToUserProfile(file.idUser)
         }
         btnMenu.setOnClickListener {
-            context.showContextMenuDialog(file, updateState)
+            context.showContextMenuDialog(file, updateState, onDelete)
         }
         btnFollow.setOnClickListener {
             // ====================================================================================
@@ -367,7 +375,7 @@ private fun openLikeDialog(
 fun Fragment.showContextMenuDialog(
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
-//    updateLike: (Evaluation) -> Unit
+    onDelete: (String) -> Unit
 ) {
     val viewModel = ViewModelProvider(this)[DialogViewModel::class.java]
     val b = DialogBottomMenuBinding.inflate(layoutInflater, null, false)
@@ -384,13 +392,14 @@ fun Fragment.showContextMenuDialog(
         viewModel,
         file,
         updateState,
-//        updateLike
+        onDelete
     )
 }
 
 fun Context.showContextMenuDialog(
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+    onDelete: (String) -> Unit
 //    updateLike: (Evaluation) -> Unit
 ) {
     val viewModel = ViewModelProvider(this as AppCompatActivity)[DialogViewModel::class.java]
@@ -408,7 +417,7 @@ fun Context.showContextMenuDialog(
         viewModel,
         file,
         updateState,
-//        updateLike
+        onDelete
     )
 }
 
@@ -420,12 +429,14 @@ private fun openContextMenuDialog(
     viewModel: DialogViewModel,
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,
+    onDelete: (String) -> Unit
 ) {
     val bottomDialog = BottomSheetDialog(context)
     bottomDialog.setContentView(b.root)
     val fileEntity = FileEntity(file._id)
     b.apply {
         btnChangeState.setOnClickListener {
+            bottomDialog.dismiss()
             viewModel.changeState(fileEntity) { response, mFile ->
                 updateState(response, mFile)
             }
@@ -444,9 +455,12 @@ private fun openContextMenuDialog(
             }
         }
         btnDelete.setOnClickListener {
-
+            bottomDialog.dismiss()
             viewModel.deleteFile(fileEntity) {
-                context.showToast(it.msg)
+                GlobalScope.launch(Dispatchers.Main) {
+                    context.showToast(it.msg)
+                }
+                onDelete(fileEntity._id)
             }
         }
     }

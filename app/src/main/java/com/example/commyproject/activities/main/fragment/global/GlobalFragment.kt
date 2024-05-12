@@ -115,6 +115,13 @@ class GlobalFragment : Fragment() {
                                 fileAdapter.notifyDataSetChanged()
                             }
                         },
+                        onDelete = { fileId ->
+                            requireActivity().runOnUiThread {
+                                this@GlobalFragment.listFile.removeIf { it._id == fileId}
+                                this@GlobalFragment.fileAdapter.notifyDataSetChanged()
+                            }
+
+                        }
                     )
                 },
                 hideFile = { file, callback ->
@@ -142,7 +149,14 @@ class GlobalFragment : Fragment() {
                             } else {
                                 this@GlobalFragment.listFile[position].likes.add(evaluation)
                             }
-                        })
+                        },
+                        onDelete = { fileId ->
+                            requireActivity().runOnUiThread {
+                                this@GlobalFragment.listFile.removeIf { it._id == fileId}
+                                this@GlobalFragment.fileAdapter.notifyDataSetChanged()
+                            }
+                        }
+                    )
                 },
                 onLike = { file, callback ->
                     postLike(file, null, EvaluationEntityType.FILE, viewModel.user._id, viewModel) { evaluation ->

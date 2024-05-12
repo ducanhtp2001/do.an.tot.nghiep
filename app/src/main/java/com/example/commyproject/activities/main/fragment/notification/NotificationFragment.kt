@@ -61,7 +61,8 @@ class NotificationFragment : Fragment() {
                         },
                         updateLike = { _ ->
                             
-                        })
+                        },
+                        onDelete = {})
                 }
             }
         }

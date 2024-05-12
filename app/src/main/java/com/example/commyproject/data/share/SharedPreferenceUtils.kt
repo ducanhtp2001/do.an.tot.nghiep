@@ -21,6 +21,11 @@ class SharedPreferenceUtils(context: Context) {
         editor.putString(Constant.USER, userData).apply()
     }
 
+    fun login(user: User) {
+        putUser(user)
+        putBoolean(Constant.IS_LOGIN, true)
+    }
+
     fun getUser(): User {
         val userData = sharedPreferences.getString(Constant.USER, "")!!
         val dataArr = userData.split("-")
@@ -33,6 +38,16 @@ class SharedPreferenceUtils(context: Context) {
             follow = UserConverter.str2ListFollow(dataArr[4]),
             avatar = dataArr[5]
         )
+    }
+
+    fun checkLogin(): Boolean {
+        return getBooleanValue(Constant.IS_LOGIN, false)
+    }
+
+    fun logout() {
+        val editor = sharedPreferences.edit()
+        editor.remove(Constant.USER).apply()
+        putBoolean(Constant.IS_LOGIN, false)
     }
 
     fun putStringValue(key: String?, value: String?) {
@@ -54,6 +69,11 @@ class SharedPreferenceUtils(context: Context) {
         editor.putLong(key, value).apply()
     }
 
+    fun putBoolean(key: String, value: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(key, value).apply()
+    }
+
     fun getLong(key: String, def: Long): Long {
         return sharedPreferences.getLong(key, def)
     }
@@ -73,16 +93,7 @@ class SharedPreferenceUtils(context: Context) {
 
 
     companion object {
-        const val ANGLE_TYPE = "angle_type"
-        const val ID_THEME = "id_theme"
         const val MYAPPLICATION = "MY_APPLICATION"
-        const val NUMBER_SEPARATOR = "number_separator"
-        const val ANSWER_PRECISION = "answer_precision"
-        const val AUTO_DELETE_HISTORY = "auto_delete_history"
-        const val MILLI_SECONDS_IN_DAYS = 86_400_000L
-        const val SAVE_EXPRESSION = "save_expression"
-
-        const val TIME_DELETE_HISTORY = "time_delete_history"
     }
 
 

@@ -154,7 +154,9 @@ class HomeFragment : Fragment() {
                     val fileName = FileConverter.generateIdByUserId(user._id)
                     val description = "$title-$isTable-$isPublic"
                     viewModel.upload(requireContext(), uri, description, fileName, user._id) {
-                        requireContext().showToast(viewModel.msg)
+                        requireActivity().runOnUiThread {
+                            requireContext().showToast(viewModel.msg)
+                        }
                     }
                 }
             }

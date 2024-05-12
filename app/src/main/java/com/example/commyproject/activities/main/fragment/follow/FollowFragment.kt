@@ -55,7 +55,7 @@ class FollowFragment : Fragment() {
     private fun initObserver() {
         viewModel.apply {
             followList.observe(requireActivity()) {
-                if(it?.isNotEmpty() == true) {
+                if (it?.isNotEmpty() == true) {
                     this@FollowFragment.followList.clear()
                     this@FollowFragment.followList.addAll(it)
                     followAdapter.notifyDataSetChanged()
@@ -74,7 +74,8 @@ class FollowFragment : Fragment() {
     private fun initView() {
         followAdapter = PeopleRCAdapter(requireActivity(), R.layout.item_people_small, followList)
         b.apply {
-            listFollows.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            listFollows.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             listFollows.adapter = followAdapter
         }
 
@@ -94,6 +95,13 @@ class FollowFragment : Fragment() {
                             fileAdapter.notifyDataSetChanged()
                         }
                     },
+                    onDelete = { fileId ->
+                        requireActivity().runOnUiThread {
+                            fileList.removeIf { it._id == fileId }
+                            fileAdapter.notifyDataSetChanged()
+                        }
+
+                    }
                 )
             },
             hideFile = { file, callback ->
@@ -117,14 +125,27 @@ class FollowFragment : Fragment() {
                         updateLike(evaluation)
                         val position = this@FollowFragment.fileList.indexOf(file)
                         if (this@FollowFragment.fileList[position].likes.any { it.idUser == evaluation.idUser }) {
-                            this@FollowFragment.fileList[position].likes.removeIf{ it.idUser == evaluation.idUser }
+                            this@FollowFragment.fileList[position].likes.removeIf { it.idUser == evaluation.idUser }
                         } else {
                             this@FollowFragment.fileList[position].likes.add(evaluation)
                         }
-                    })
+                    },
+                    onDelete = { fileId ->
+                        requireActivity().runOnUiThread {
+                            fileList.removeIf { it._id == fileId }
+                            fileAdapter.notifyDataSetChanged()
+                        }
+                    }
+                )
             },
             onLike = { file, callback ->
-                postLike(file, null, EvaluationEntityType.FILE, viewModel.user._id, viewModel) { evaluation ->
+                postLike(
+                    file,
+                    null,
+                    EvaluationEntityType.FILE,
+                    viewModel.user._id,
+                    viewModel
+                ) { evaluation ->
                     callback(evaluation)
                 }
             },

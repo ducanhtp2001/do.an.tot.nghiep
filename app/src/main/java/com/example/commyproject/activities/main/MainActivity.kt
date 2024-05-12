@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.activities.setting.SettingActivity
+import com.example.commyproject.activities.user.login.LoginActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityMainBinding
 import com.example.commyproject.service.ReceiverService
@@ -127,7 +128,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.menu_item_logout -> {
-                    Log.d("MainActivity", "Logout clicked")
+                    Log.d("MainActivity", "Logout")
+                    stopService(Intent(this@MainActivity, ReceiverService::class.java))
+                    viewModel.clearData()
+                    startActivity(Intent(this@MainActivity, LoginActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    })
                 }
 
                 else -> {}

@@ -43,6 +43,7 @@ class HomeFragmentViewModel @Inject constructor(
                     msg = it.msg
                     socket.requestExecute()
                     _stateLoading.postValue(false)
+                    callback()
                 }
                 Log.d("testing", userStr)
             }
