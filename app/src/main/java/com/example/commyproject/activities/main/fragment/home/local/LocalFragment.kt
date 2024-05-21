@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.example.commyproject.activities.bottomsheetdialog.showContextMenuDialog
+import com.example.commyproject.activities.bottomsheetdialog.showFileDetailDialog
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.FragmentLocalBinding
@@ -42,7 +45,51 @@ class LocalFragment : Fragment() {
     }
 
     private fun initView() {
-        adapter = PrivateFileAdapter(requireContext(), list)
+        adapter = PrivateFileAdapter(
+            requireContext(),
+            list,
+            onClick = { file ->
+                requireActivity().showFileDetailDialog(
+                    file,
+                    updateLike = {
+                        // hide
+                    },
+                    updateState = { response, file ->
+                        requireActivity().showToast(response.msg)
+                        try {
+                            this.list.removeIf { it._id == file._id }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    },
+                    onDelete = {fileId ->
+                        try {
+                            this.list.removeIf { it._id == fileId }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                )
+            },
+            onOpenMenu = { file ->
+                requireActivity().showContextMenuDialog(
+                    file,
+                    updateState = { response, file ->
+                        requireActivity().showToast(response.msg)
+                        try {
+                            this.list.removeIf { it._id == file._id }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }, onDelete = { fileId ->
+                        try {
+                            this.list.removeIf { it._id == fileId }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    })
+            }
+        )
         b.apply {
             listView.adapter = adapter
         }

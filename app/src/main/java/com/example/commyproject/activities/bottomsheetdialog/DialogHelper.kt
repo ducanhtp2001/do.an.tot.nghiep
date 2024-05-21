@@ -133,6 +133,15 @@ private fun openFileDetailDialog(
     val user = viewModel.user
 
     b.apply {
+        if (file.idUser == viewModel.user._id) {
+            btnFollow.visibility = View.GONE
+        }
+        if (!file.isPublic) {
+            btnOpenComment.visibility = View.GONE
+            btnOpenLike.visibility = View.GONE
+            userAction.visibility = View.GONE
+            btnFollow.visibility = View.GONE
+        }
         if (file.likes.any { it.idUser == user._id }) {
             btnLikeTxt.setTextColor(likeColor)
         } else {
@@ -453,6 +462,13 @@ private fun openContextMenuDialog(
                     context.showPermissionSettingsDialog()
                 }
             }
+        }
+        if (file.idUser != viewModel.user._id) {
+            btnDelete.visibility = View.GONE
+            btnChangeState.visibility = View.GONE
+        }
+        if (!file.isPublic) {
+            btnNotification.visibility = View.GONE
         }
         btnDelete.setOnClickListener {
             bottomDialog.dismiss()

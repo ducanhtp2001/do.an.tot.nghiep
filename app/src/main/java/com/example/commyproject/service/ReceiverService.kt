@@ -9,14 +9,17 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.database.Observable
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.Observer
 import com.example.commyproject.R
 import com.example.commyproject.activities.main.MainActivity
 import com.example.commyproject.base.NetworkHelper
+import com.example.commyproject.base.NetworkLiveData
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.ultil.Constant
 import com.taymay.taoday.service.SocketIOManager
@@ -31,6 +34,12 @@ class ReceiverService: Service() {
     lateinit var socket: SocketIOManager
     @Inject
     lateinit var networkHelper: NetworkHelper
+    @Inject
+    lateinit var networkLiveData: NetworkLiveData
+
+    private var observer: Observer<Boolean> = Observer {
+        if (!it) stopSelf()
+    }
 
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
@@ -59,7 +68,13 @@ class ReceiverService: Service() {
                 }
                 sendBroadcast(broadcastIntent)
             }
-        } else Log.e("testing", "network err")
+        } else {
+            stopSelf()
+            Log.e("testing", "network err")
+        }
+
+        networkLiveData.observeForever(observer)
+
         return START_STICKY
     }
 
@@ -97,6 +112,7 @@ class ReceiverService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        networkLiveData.removeObserver(observer)
         socket.socketDisconnect()
         Log.e("testing", " ====== service die ====== ")
     }

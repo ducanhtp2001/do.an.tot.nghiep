@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.NetworkHelper
+import com.example.commyproject.base.NetworkLiveData
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginActViewModel @Inject constructor(
     val networkHelperCheck: NetworkHelper,
+    val networkLiveData: NetworkLiveData,
     val share: SharedPreferenceUtils,
     val socket: SocketIOManager,
     val api: ApiClient
@@ -46,7 +48,7 @@ class LoginActViewModel @Inject constructor(
 
     fun login(user: User) = viewModelScope.launch(Dispatchers.IO) {
         api.login(user) {
-            Log.d(mTAG, "response: $user")
+            Log.d(mTAG, "response: $it")
             if (it._id != "") {
                 _stateLoading.postValue(true)
                 share.login(it)
@@ -60,7 +62,10 @@ class LoginActViewModel @Inject constructor(
 
     fun checkLogin() = viewModelScope.launch {
         val isLogin = share.checkLogin()
-        if (isLogin) _stateLogin.postValue(true)
+        if (isLogin) {
+            val user = share.getUser()
+            login(user)
+        }
     }
 
     private fun checkNetWork(): Boolean {

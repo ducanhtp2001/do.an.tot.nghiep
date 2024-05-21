@@ -18,6 +18,7 @@ import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityLoginBinding
 import com.example.commyproject.ultil.constraint.PasswordConstraint
 import com.example.commyproject.ultil.constraint.UserNameConstraint
+import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,23 +49,28 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        viewModel.stateLoading.observe(this) {
-            if (it) {
-                loading()
-            } else {
-                loadDone()
-                if (viewModel.stateLogin.value != null && viewModel.stateLogin.value!!) {
-                    Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
+
+        viewModel.apply {
+            stateLoading.observe(this@LoginActivity) {
+                if (it) {
+                    loading()
                 } else {
-                    Toast.makeText(this, "Login Fail", Toast.LENGTH_SHORT).show()
+                    loadDone()
                 }
+            }
+
+            stateLogin.observe(this@LoginActivity) {
+
+                if (it) {
+                    this@LoginActivity.showToast("Login Success")
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                } else {
+                    this@LoginActivity.showToast("Login False")
+                }
+                finish()
             }
         }
 
-        viewModel.stateLogin.observe(this) {
-            if (it) startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-            finish()
-        }
     }
 
     private fun initEvent() {
