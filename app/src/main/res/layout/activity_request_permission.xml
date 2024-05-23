@@ -124,7 +124,7 @@
                     android:gravity="center">
 
                     <ImageButton
-                        android:id="@+id/btnCamera"
+                        android:id="@+id/btnStorage"
                         android:layout_width="100dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_button_login"

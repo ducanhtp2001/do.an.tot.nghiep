@@ -1,15 +1,16 @@
 package com.example.commyproject.activities.permission
 
-import android.app.Activity
-import android.app.VoiceInteractor.Request
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.commyproject.R
+import com.example.commyproject.activities.user.login.LoginActivity
+import com.example.commyproject.base.checkPermissionFile
 import com.example.commyproject.base.checkPermissionNotification
 import com.example.commyproject.base.requestAppPermissionNotification
+import com.example.commyproject.base.showPermissionSettingsDialog
 import com.example.commyproject.databinding.ActivityRequestPermissionBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,12 +34,37 @@ class RequestPermissionAct : AppCompatActivity() {
             btnNotification.setOnClickListener {
                 val isAccess = this@RequestPermissionAct.checkPermissionNotification()
                 if (isAccess) {
-
+                    btnNotification.setImageResource(R.drawable.ic_ok)
+                    btnNotification.setBackgroundColor(Color.parseColor("#30d8a0"))
                 } else {
-                    this@RequestPermissionAct.requestAppPermissionNotification(RQC_NOTIFICATION)
+                    this@RequestPermissionAct.requestAppPermissionNotification(RQ_NOTIFICATION)
                 }
+
+                if (checkPermission()) goMain()
+            }
+            btnStorage.setOnClickListener {
+                val isAccess = this@RequestPermissionAct.checkPermissionFile()
+                if (isAccess) {
+                    btnNotification.setImageResource(R.drawable.ic_ok)
+                    btnNotification.setBackgroundColor(Color.parseColor("#30d8a0"))
+                } else {
+                    this@RequestPermissionAct.showPermissionSettingsDialog()
+                }
+
+                if (checkPermission()) goMain()
             }
         }
+    }
+
+    private fun goMain() {
+        startActivity(Intent(this, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
+    }
+
+    fun checkPermission(): Boolean {
+        return this@RequestPermissionAct.checkPermissionFile() &&
+                this@RequestPermissionAct.checkPermissionNotification()
     }
 
     override fun onRequestPermissionsResult(
@@ -51,7 +77,8 @@ class RequestPermissionAct : AppCompatActivity() {
 
 
     companion object {
-        const val RQC_NOTIFICATION = 100
+        const val RQ_NOTIFICATION = 100
+        const val RQ_MANAGE_STORAGE = 101
     }
 
 }

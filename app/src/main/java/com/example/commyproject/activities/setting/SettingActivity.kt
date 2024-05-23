@@ -4,7 +4,8 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -53,8 +54,13 @@ class SettingActivity : AppCompatActivity() {
 
             btnFeedback.setOnClickListener {
                 val dialog = Dialog(this@SettingActivity)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.window?.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
                 val binding = DialogFeedbackBinding.inflate(layoutInflater)
-                dialog.setCancelable(false)
+                dialog.setCancelable(true)
 
                 binding.apply {
                     btnCancel.setOnClickListener {
@@ -68,6 +74,9 @@ class SettingActivity : AppCompatActivity() {
                             showToast("Thanks for your Feedback")
                         }
                     }
+
+                    val feedback = share.getStringValue(Constant.FEEDBACK, "")
+                    if (feedback.isNotEmpty()) inputFeedback.setText(feedback)
                 }
 
                 dialog.setContentView(binding.root)
@@ -76,8 +85,13 @@ class SettingActivity : AppCompatActivity() {
 
             btnRate.setOnClickListener {
                 val dialog = Dialog(this@SettingActivity)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.window?.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
                 val binding = DialogRateBinding.inflate(layoutInflater)
-                dialog.setCancelable(false)
+                dialog.setCancelable(true)
                 var list: List<ImageView> = listOf()
                 var position = 0
                 val draw: (Int) -> Unit = {
