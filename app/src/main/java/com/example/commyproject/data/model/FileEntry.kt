@@ -7,6 +7,7 @@ open class FileEntry(
     val avatar: String? = null,
     val title: String,
     val fileName: String,
+    val gmail: String? = "",
     val recognizeText: String,
     val summaryText: String,
     val state: Boolean,

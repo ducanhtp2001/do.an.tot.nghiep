@@ -3,9 +3,9 @@ package com.example.commyproject.ultil.constraint
 class UserNameConstraint {
     companion object {
         fun checkUserNameFormat(userName: String): Boolean {
-            // check user name format
+            val regex = Regex("^[A-Za-z][A-Za-z0-9]{5,19}$")
 
-            return true
+            return regex.matches(userName)
         }
     }
 }
