@@ -14,6 +14,7 @@ import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.data.model.UserName
 import com.example.commyproject.data.model.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -62,6 +63,9 @@ interface ApiService {
 
     @POST("get-follow-file")
     suspend fun getFollowFile(@Body user: UserEntity): Response<List<FileEntry>>
+
+    @POST("get-user-by-name")
+    suspend fun getUserByName(@Body userName: UserName): Response<List<FollowerResponse>>
 
     @POST("get-follow-user")
     suspend fun getFollowUser(@Body user: UserEntity): Response<List<FollowerResponse>>

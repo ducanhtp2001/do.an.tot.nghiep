@@ -16,6 +16,7 @@ import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.data.model.UserName
 import com.example.commyproject.data.network.ApiService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -87,6 +88,14 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
 
     suspend fun getProfile(userEntity: UserEntity): ProfileResponse? {
         val response = apiService.getProfile(userEntity)
+        if (response.isSuccessful) {
+            return response.body()!!
+        }
+        return null
+    }
+
+    suspend fun getUserByName(userName: UserName): List<FollowerResponse>? {
+        val response = apiService.getUserByName(userName)
         if (response.isSuccessful) {
             return response.body()!!
         }

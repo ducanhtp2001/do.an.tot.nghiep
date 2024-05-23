@@ -67,6 +67,9 @@ class ProfileAct : AppCompatActivity() {
     private fun initView() {
         val user = viewModel.profile.value!!.user
         b.apply {
+            btnFind.setOnClickListener {
+                startActivity(Intent(this@ProfileAct, FindActivity::class.java))
+            }
             btnBack.setOnClickListener { finish() }
             txtUserNameTop.text = user.userName
             txtUserNameBot.text = user.userName
