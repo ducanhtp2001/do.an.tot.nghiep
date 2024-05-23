@@ -12,10 +12,10 @@
             android:id="@+id/menu_item_setting"
             android:icon="@drawable/ic_setting"
             android:title="@string/setting_menu_item" />
-        <item
-            android:id="@+id/menu_item_trash"
-            android:icon="@drawable/ic_trash"
-            android:title="@string/trash_bin_menu_item" />
+<!--        <item-->
+<!--            android:id="@+id/menu_item_trash"-->
+<!--            android:icon="@drawable/ic_trash"-->
+<!--            android:title="@string/trash_bin_menu_item" />-->
     </group>
     <group>
         <item

@@ -122,10 +122,10 @@ class MainActivity : AppCompatActivity() {
                     })
                 }
 
-                R.id.menu_item_trash -> {
-                    Log.d("MainActivity", "Trash clicked")
-
-                }
+//                R.id.menu_item_trash -> {
+//                    Log.d("MainActivity", "Trash clicked")
+//
+//                }
 
                 R.id.menu_item_logout -> {
                     Log.d("MainActivity", "Logout")
