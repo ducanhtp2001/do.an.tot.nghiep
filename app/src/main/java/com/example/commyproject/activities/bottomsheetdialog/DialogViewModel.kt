@@ -9,6 +9,7 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.networkresponse.StatusResponse
+import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,6 +48,12 @@ class DialogViewModel @Inject constructor(
     fun download(file: FileEntity, callback: (ResponseBody) -> Unit) = viewModelScope.launch {
         api.download(file) {
             callback(it)
+        }
+    }
+
+    fun followUser(data: RequestFollow, callback: (String) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        api.followUser(data) {
+            callback(it.msg)
         }
     }
 }

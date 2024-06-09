@@ -24,6 +24,7 @@ import com.example.commyproject.databinding.ActivityMainBinding
 import com.example.commyproject.service.ReceiverService
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.Constant
+import com.example.commyproject.ultil.loadAvatar
 import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("DEPRECATION")
@@ -95,13 +96,14 @@ class MainActivity : AppCompatActivity() {
             val headerView = getHeaderView(0)
             headerView.findViewById<TextView>(R.id.headerUsername)?.text = user.userName
 
-            val avatarUrl = Config.SERVER_URL + user.avatar
-
-            Log.d("testing", avatarUrl)
-
-            Glide.with(this)
-                .load(avatarUrl)
-                .into(headerView.findViewById(R.id.headerImage))
+//            val avatarUrl = Config.SERVER_URL + user.avatar
+//
+//            Log.d("testing", avatarUrl)
+//
+//            Glide.with(this)
+//                .load(avatarUrl)
+//                .into(headerView.findViewById(R.id.headerImage))
+            context.loadAvatar(user._id, headerView.findViewById(R.id.headerImage))
         }
 
 //        Log.d("testing", "Menu items count: ${b.drawerNav.menu.size()}")

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/padding_profile"
@@ -25,46 +26,46 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/info"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="335dp"
+            android:layout_height="48dp"
             android:layout_marginStart="@dimen/padding"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintTop_toTopOf="parent"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             app:layout_constraintEnd_toEndOf="parent"
-            android:foreground="?attr/selectableItemBackgroundBorderless">
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/txtUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:text="user name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/btnFollow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:paddingStart="10dp"
                 android:text="@string/action_follow"
                 android:textColor="@color/like"
                 android:textSize="@dimen/text"
-                android:paddingStart="10dp"
                 app:layout_constraintStart_toEndOf="@+id/txtUserName"
-                app:layout_constraintTop_toTopOf="parent"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="title"
                 android:paddingEnd="10dp"
-                android:textSize="@dimen/text_small"
+                android:text="title"
                 android:textColor="@color/black"
+                android:textSize="@dimen/text_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtUserName" />
@@ -73,8 +74,8 @@
                 android:id="@+id/txtTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 day ago"
                 android:paddingEnd="10dp"
+                android:text="2 day ago"
                 android:textSize="@dimen/text_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txtTitle"
@@ -83,38 +84,38 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:contentDescription="@string/is_public_description"
                 android:padding="5dp"
                 android:src="@drawable/ic_public_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txtTime"
-                app:layout_constraintTop_toBottomOf="@+id/txtUserName"
-                android:contentDescription="@string/is_public_description" />
+                app:layout_constraintTop_toBottomOf="@+id/txtUserName" />
 
             <ImageView
                 android:id="@+id/btnMenu"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginBottom="20dp"
-                android:src="@drawable/ic_menu_1"
-                android:padding="2dp"
                 android:layout_margin="3dp"
-                app:layout_constraintEnd_toStartOf="@id/btnHide"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="20dp"
                 android:contentDescription=""
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="2dp"
+                android:src="@drawable/ic_menu_1"
+                app:layout_constraintEnd_toStartOf="@id/btnHide"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/btnHide"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginBottom="20dp"
-                android:src="@drawable/ic_delete"
-                android:padding="2dp"
                 android:layout_margin="3dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="20dp"
                 android:contentDescription="@string/action_hind"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="2dp"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

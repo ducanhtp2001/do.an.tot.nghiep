@@ -95,6 +95,12 @@ class GlobalFileRCAdapter(
                     visibility = View.GONE
                 }
             }
+            user.follow.forEach {
+                if (data.idUser == it) btnFollow.apply {
+                    isEnabled = false
+                    visibility = View.GONE
+                }
+            }
             btnFollow.setOnClickListener {
                 onFollow(data) {
                     btnFollow.visibility = View.GONE

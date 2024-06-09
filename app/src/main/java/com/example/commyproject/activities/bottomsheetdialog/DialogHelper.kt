@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +33,7 @@ import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.networkresponse.StatusResponse
+import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.databinding.DialogBottomMenuBinding
 import com.example.commyproject.databinding.DialogCommentBinding
 import com.example.commyproject.databinding.DialogFileDetailBinding
@@ -42,6 +45,7 @@ import com.example.commyproject.ultil.adapter.LikeAdapter
 import com.example.commyproject.ultil.converter.FileConverter
 import com.example.commyproject.ultil.getNavigationBarHeight
 import com.example.commyproject.ultil.getStatusBarHeight
+import com.example.commyproject.ultil.loadAvatar
 import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -49,6 +53,7 @@ import dagger.hilt.android.internal.managers.ViewComponentManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
@@ -136,6 +141,9 @@ private fun openFileDetailDialog(
         if (file.idUser == viewModel.user._id) {
             btnFollow.visibility = View.GONE
         }
+        viewModel.user.follow.forEach {
+            if (file.idUser == it) btnFollow.visibility = View.GONE
+        }
         if (!file.isPublic) {
             btnOpenComment.visibility = View.GONE
             btnOpenLike.visibility = View.GONE
@@ -155,7 +163,13 @@ private fun openFileDetailDialog(
             context.showContextMenuDialog(file, updateState, onDelete)
         }
         btnFollow.setOnClickListener {
-            // ====================================================================================
+            val data = RequestFollow(viewModel.user._id, file.idUser)
+            viewModel.followUser(data) {
+                runOnUiThread {
+                    btnFollow.visibility = View.GONE
+                    context.showToast(it)
+                }
+            }
         }
         btnBack.setOnClickListener {
             bottomDialog.dismiss()
@@ -202,16 +216,27 @@ private fun openFileDetailDialog(
         val prettyTime = FileConverter.getTimePassFromId(file._id)
         txtTime.text = prettyTime
 
-        txtUserNameTop.text = user.userName
-        txtUserNameBot.text = user.userName
+        txtUserNameTop.text = file.userName
+        txtUserNameBot.text = file.userName
         val avatarUrl = Config.SERVER_URL + user.avatar
-        Glide.with(context)
-            .load(avatarUrl)
-            .into(avatar)
+//        Glide.with(context)
+//            .load(avatarUrl)
+//            .into(avatar)
+        context.loadAvatar(file.idUser, avatar)
     }
     bottomDialog.show()
     if (bottomDialog.behavior.state != BottomSheetBehavior.STATE_EXPANDED) bottomDialog.behavior.state =
         BottomSheetBehavior.STATE_EXPANDED
+}
+
+fun runOnUiThread(action: () -> Unit) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+        action()
+    } else {
+        Handler(Looper.getMainLooper()).post {
+            action()
+        }
+    }
 }
 
 fun Fragment.showCommentDialog(file: FileEntry) {
