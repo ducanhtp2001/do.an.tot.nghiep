@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.commyproject.R
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.ultil.Config
+import com.example.commyproject.ultil.loadAvatar
 
 class LikeAdapter(
     private val context: Context,
@@ -45,10 +46,11 @@ class LikeAdapter(
         val data = list[position]
 
         viewHolder.apply {
-            val avatarUrl = Config.SERVER_URL + data.avatar
-            Glide.with(context)
-                .load(avatarUrl)
-                .into(avatar)
+//            val avatarUrl = Config.SERVER_URL + data.avatar
+//            Glide.with(context)
+//                .load(avatarUrl)
+//                .into(avatar)
+            context.loadAvatar(data.idUser, avatar)
 
             userName.text = data.userName
             item.setOnClickListener {

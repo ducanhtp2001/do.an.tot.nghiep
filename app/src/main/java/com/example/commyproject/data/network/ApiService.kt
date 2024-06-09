@@ -86,6 +86,14 @@ interface ApiService {
         @Part("fileId") fileId: RequestBody
     ): Response<MsgResponse>
 
+    @Multipart
+    @POST("upload-image")
+    suspend fun uploadImage(
+        @Part file: MultipartBody.Part,
+        @Part("fileName") name: RequestBody,
+        @Part("fileType") type: RequestBody,
+    ): Response<MsgResponse>
+
     @Streaming
     @POST("download")
     suspend fun downloadFile(@Body file: FileEntity): Response<ResponseBody>

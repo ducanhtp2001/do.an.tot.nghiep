@@ -12,6 +12,7 @@ import com.example.commyproject.R
 import com.example.commyproject.data.model.Notification
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.loadAvatar
 
 class NotificationRCAdapter(
     private val context: Context,

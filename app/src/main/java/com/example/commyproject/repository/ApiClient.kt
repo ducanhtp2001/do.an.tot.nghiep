@@ -169,6 +169,31 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         }
     }
 
+    suspend fun uploadImage(
+        context: Context,
+        uri: Uri,
+        type: String,
+        fileName: String,
+        callback: (MsgResponse) -> Unit
+    ) {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val file = inputStream?.readBytes()
+
+        val mimeType = context.contentResolver.getType(uri)
+        val requestBody = file?.toRequestBody(mimeType?.toMediaTypeOrNull())
+
+        val filePart = MultipartBody.Part.createFormData("file", fileName, requestBody!!)
+        val fileNamePart = fileName.toRequestBody("text/plain".toMediaTypeOrNull())
+        val fileTypePart = type.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val response = apiService.uploadImage(filePart, fileNamePart, fileTypePart)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        } else {
+
+        }
+    }
+
     suspend fun download(file: FileEntity, callback: (ResponseBody) -> Unit) {
         val response = apiService.downloadFile(file)
         if (response.isSuccessful) {

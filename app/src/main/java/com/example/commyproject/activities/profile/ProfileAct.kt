@@ -1,6 +1,7 @@
 package com.example.commyproject.activities.profile
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.example.commyproject.activities.bottomsheetdialog.showContextMenuDial
 import com.example.commyproject.activities.bottomsheetdialog.showFileDetailDialog
 import com.example.commyproject.activities.bottomsheetdialog.showLikeDialog
 import com.example.commyproject.activities.find.FindActivity
+import com.example.commyproject.activities.main.fragment.home.HomeFragment
 import com.example.commyproject.activities.setting.SettingActivity
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
@@ -23,7 +25,13 @@ import com.example.commyproject.databinding.ActivityProfileBinding
 import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.adapter.ProfileFileRCAdapter
 import com.example.commyproject.ultil.adapter.PeopleRCAdapter
+import com.example.commyproject.ultil.checkFilePermission
+import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.loadAvatar
+import com.example.commyproject.ultil.loadBanner
 import com.example.commyproject.ultil.loadImg
+import com.example.commyproject.ultil.requestFilePermission
+import com.example.commyproject.ultil.showSetConfigDialog
 import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +50,59 @@ class ProfileAct : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 
         initData()
+        initEvent()
         initObserver()
+    }
+
+    private fun initEvent() {
+        b.apply {
+            imgAvatar.setOnClickListener {
+                if (checkFilePermission()) {
+                    requestFilePermission()
+                } else {
+                    readFile(REQUEST_AVATAR)
+                }
+            }
+
+            imgBanner.setOnClickListener {
+                if (checkFilePermission()) {
+                    requestFilePermission()
+                } else {
+                    readFile(REQUEST_BANNER)
+                }
+            }
+        }
+    }
+
+    private fun readFile(action: Int) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "image/*"
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf(
+                "image/*"
+            ))
+        }
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), action)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            var type = "AVATAR"
+            if (requestCode != REQUEST_AVATAR) {
+                type = "BANNER"
+            }
+            data?.data?.let { uri ->
+//                showToast(uri.toString())
+                viewModel.uploadImage(this, uri, viewModel.profileId, type) {
+                    runOnUiThread {
+                        showToast(it)
+                        if (type == "BANNER") loadBanner(viewModel.profileId, b.imgBanner)
+                        else loadAvatar(viewModel.profileId, b.imgAvatar)
+                    }
+                }
+            }
+        }
     }
 
     private fun initObserver() {
@@ -73,7 +133,8 @@ class ProfileAct : AppCompatActivity() {
             btnBack.setOnClickListener { finish() }
             txtUserNameTop.text = user.userName
             txtUserNameBot.text = user.userName
-            this@ProfileAct.loadImg(user.avatar, imgAvatar)
+            this@ProfileAct.loadAvatar(user._id, imgAvatar)
+            this@ProfileAct.loadBanner(user._id, imgBanner)
             btnFind.setOnClickListener {
                 this@ProfileAct.startActivity(
                     Intent(
@@ -170,7 +231,6 @@ class ProfileAct : AppCompatActivity() {
             listViewFile.requestLayout()
         }
 
-
     }
 
     private fun initData() {
@@ -183,5 +243,10 @@ class ProfileAct : AppCompatActivity() {
             onBackPressed()
             Log.e("testing", "not found id")
         }
+    }
+
+    companion object {
+        const val REQUEST_AVATAR = 10200
+        const val REQUEST_BANNER = 10201
     }
 }

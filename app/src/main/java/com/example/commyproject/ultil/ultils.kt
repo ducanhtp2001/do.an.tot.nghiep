@@ -1,8 +1,13 @@
 package com.example.commyproject.ultil
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
@@ -10,30 +15,36 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.commyproject.R
+import com.example.commyproject.activities.main.fragment.home.HomeFragment
 
 fun Context.showToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
-
 fun Context.showLongToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 }
-
 fun Context.loadImg(imgName: String, imageView: ImageView) {
     val avatarUrl = Config.SERVER_URL + imgName
     Glide.with(this)
         .load(avatarUrl)
         .into(imageView)
 }
-
 const val TAG = "testing"
-fun Context.log(context: Context, msg: String) {
+fun Context.log(msg: String) {
     Log.d(TAG, msg)
 }
-
+fun log(msg: String) {
+    Log.d(TAG, msg)
+}
+fun loge(msg: String) {
+    Log.e(TAG, msg)
+}
 fun Context.showSetConfigDialog(callback: (name: String, isTable: Boolean, isPublic: Boolean) -> Unit) {
 
     val builder = AlertDialog.Builder(this)
@@ -95,4 +106,45 @@ fun Activity.getNavigationBarHeight(): Int {
     } else {
         0
     }
+}
+
+fun Context.loadAvatar(idUser: String, view: ImageView) {
+    val avatarUrl = Config.SERVER_URL + "/get_avatar/$idUser.png"
+    Glide.with(this)
+        .load(avatarUrl)
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .skipMemoryCache(true)
+        .into(view)
+}
+
+fun Context.loadBanner(idUser: String, view: ImageView) {
+    val avatarUrl = Config.SERVER_URL + "/get_banner/$idUser.png"
+    Glide.with(this)
+        .load(avatarUrl)
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .skipMemoryCache(true)
+        .into(view)
+}
+
+fun Context.checkFilePermission(): Boolean {
+    return (ContextCompat.checkSelfPermission(
+        this,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    ) != PackageManager.PERMISSION_GRANTED)
+}
+
+fun Activity.requestFilePermission() {
+    ActivityCompat.requestPermissions(
+        this,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+        HomeFragment.PERMISSION_READ_STORAGE
+    )
+    if (checkFilePermission())
+        startActivityForResult(
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse(
+                    "package:${this.packageName}"
+                )
+            ), HomeFragment.PERMISSION_READ_STORAGE
+        )
 }

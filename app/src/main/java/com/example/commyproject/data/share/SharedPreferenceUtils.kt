@@ -36,7 +36,7 @@ class SharedPreferenceUtils(context: Context) {
             passWord = dataArr[2],
             email = dataArr[3],
             follow = UserConverter.str2ListFollow(dataArr[4]),
-            avatar = dataArr[5]
+            avatar = dataArr[5],
         )
     }
 

@@ -13,6 +13,7 @@ import com.example.commyproject.R
 import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.data.model.FollowerResponse
 import com.example.commyproject.ultil.Constant
+import com.example.commyproject.ultil.loadAvatar
 import com.example.commyproject.ultil.loadImg
 
 class PeopleRCAdapter(
@@ -34,7 +35,8 @@ class PeopleRCAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = list[position]
-        context.loadImg(data.avatar, holder.avatar)
+//        context.loadImg(data.avatar, holder.avatar)
+        context.loadAvatar(data._id, holder.avatar)
         holder.userName.text = data.userName
         holder.item.setOnClickListener {
             context.startActivity(Intent((context as Activity), ProfileAct::class.java).apply {

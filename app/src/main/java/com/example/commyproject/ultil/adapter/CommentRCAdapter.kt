@@ -14,6 +14,7 @@ import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.loadAvatar
 
 class CommentRCAdapter(
     private val context: Context,
@@ -60,11 +61,12 @@ class CommentRCAdapter(
         }
 
         holder.apply {
-            val avatarUrl = Config.SERVER_URL + data.avatar
-
-            Glide.with(context)
-                .load(avatarUrl)
-                .into(avatar)
+//            val avatarUrl = Config.SERVER_URL + data.avatar
+//
+//            Glide.with(context)
+//                .load(avatarUrl)
+//                .into(avatar)
+            context.loadAvatar(data.idUser, avatar)
 
             userName.text = data.userName
             cmtContent.text = data.content

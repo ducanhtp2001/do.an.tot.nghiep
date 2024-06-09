@@ -15,6 +15,7 @@ import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.loadAvatar
 
 class GlobalFileRCAdapter(
     private val context: Context,
@@ -38,10 +39,12 @@ class GlobalFileRCAdapter(
         holder.txtTitle.text = data.title
         holder.txtTime.text = FileConverter.getTimePassFromId(data._id)
 
-        val avatarUrl = Config.SERVER_URL + data.avatar
-        Glide.with(context)
-            .load(avatarUrl)
-            .into(holder.avatar)
+//        val avatarUrl = Config.SERVER_URL + data.avatar
+//        Glide.with(context)
+//            .load(avatarUrl)
+//            .into(holder.avatar)
+
+        context.loadAvatar(data.idUser, holder.avatar)
 
         holder.apply {
             if (list[position].likes.any{it.idUser == user._id}) {

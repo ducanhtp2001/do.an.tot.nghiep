@@ -17,6 +17,7 @@ import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserResponse
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.loadAvatar
 
 class ProfileFileAdapter(
     private val context: Context,
@@ -65,10 +66,11 @@ class ProfileFileAdapter(
         viewHolder.txtTitle.text = data.title
         viewHolder.txtTime.text = FileConverter.getTimePassFromId(data._id)
 
-        val avatarUrl = Config.SERVER_URL + profile.avatar
-        Glide.with(context)
-            .load(avatarUrl)
-            .into(viewHolder.avatar)
+//        val avatarUrl = Config.SERVER_URL + profile.avatar
+//        Glide.with(context)
+//            .load(avatarUrl)
+//            .into(viewHolder.avatar)
+        context.loadAvatar(data.idUser, viewHolder.avatar)
 
         viewHolder.apply {
             if (list[position].likes.any{it.idUser == user._id}) {

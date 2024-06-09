@@ -1,13 +1,19 @@
 package com.example.commyproject.activities.profile
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.BaseViewModel
+import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.model.networkresponse.ProfileResponse
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
+import com.example.commyproject.ultil.Constant
+import com.example.commyproject.ultil.converter.UserConverter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -46,4 +52,18 @@ class ProfileViewModel @Inject constructor(
             loadingState.postValue(false)
         }
     }
+
+    fun uploadImage(context: Context, uri: Uri, userId: String, type: String, callback:(String) -> Unit) =
+        viewModelScope.launch(Dispatchers.IO) {
+            val userStr = share.getStringValue(Constant.USER, "")
+            var user: User?
+            if(userStr != "") {
+                user = UserConverter.str2User(userStr)
+                api.uploadImage(context, uri, type, userId) {
+                    val msg = it.msg
+                    callback(msg)
+                }
+                Log.d("testing", userStr)
+            }
+        }
 }
