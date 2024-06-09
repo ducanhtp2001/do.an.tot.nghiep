@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.example.commyproject.activities.bottomsheetdialog.showLikeDialog
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.KeyRecommend
+import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.databinding.FragmentGlobalBinding
 import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.adapter.GlobalFileRCAdapter
@@ -164,7 +166,13 @@ class GlobalFragment : Fragment() {
                     }
                 },
                 onFollow = { file, callback ->
-
+                    val data = RequestFollow(viewModel.user._id, file.idUser)
+                    viewModel.followUser(data) {
+                        requireActivity().runOnUiThread {
+                            requireContext().showToast(it)
+                            callback()
+                        }
+                    }
                 })
             listFile.layoutManager = LinearLayoutManager(requireContext())
             listFile.adapter = fileAdapter

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.BaseViewModel
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.KeyRecommend
+import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,6 +45,12 @@ class GlobalFragmentViewModel @Inject constructor(
         val globalFileData = async { api.getGlobalFile(key) }.await()
         withContext(Dispatchers.Main) {
             _recommendFiles.value = globalFileData
+        }
+    }
+
+    fun followUser(data: RequestFollow, callback: (String) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        api.followUser(data) {
+            callback(it.msg)
         }
     }
 

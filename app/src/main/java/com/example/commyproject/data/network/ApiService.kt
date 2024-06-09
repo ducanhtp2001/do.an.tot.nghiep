@@ -16,6 +16,7 @@ import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.model.UserName
 import com.example.commyproject.data.model.UserResponse
+import com.example.commyproject.data.model.requestmodel.RequestFollow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -75,6 +76,9 @@ interface ApiService {
 
     @POST("get-single-file")
     suspend fun getSingleFile(@Body file: FileEntity): Response<FileEntry>
+
+    @POST("follow-user")
+    suspend fun followUser(@Body data: RequestFollow): Response<MsgResponse>
 
     @Multipart
     @POST("upload")

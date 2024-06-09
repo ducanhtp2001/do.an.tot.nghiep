@@ -97,7 +97,7 @@ class GlobalFileRCAdapter(
             }
             btnFollow.setOnClickListener {
                 onFollow(data) {
-                    // =============================================================================
+                    btnFollow.visibility = View.GONE
                 }
             }
             info.setOnClickListener {

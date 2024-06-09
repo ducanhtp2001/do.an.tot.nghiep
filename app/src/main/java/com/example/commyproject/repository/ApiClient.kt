@@ -17,6 +17,7 @@ import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.model.UserName
+import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.data.network.ApiService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -137,6 +138,17 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         val response = apiService.getSingleFile(file)
         if (response.isSuccessful) {
             callback(response.body()!!)
+        }
+    }
+
+    suspend fun followUser(
+        data: RequestFollow,
+        callback: (MsgResponse) -> Unit
+    ) {
+        val response = apiService.followUser(data)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        } else {
         }
     }
 
