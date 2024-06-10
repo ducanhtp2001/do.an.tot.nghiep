@@ -59,6 +59,9 @@ interface ApiService {
     @POST("get-profile")
     suspend fun getProfile(@Body user: UserEntity): Response<ProfileResponse>
 
+    @POST("change-gmail")
+    suspend fun changeGmail(@Body user: UserEntity): Response<MsgResponse>
+
     @POST("get-global-file")
     suspend fun getGlobalFile(@Body request: KeyRecommend): Response<List<FileEntry>>
 

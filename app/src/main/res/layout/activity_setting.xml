@@ -37,13 +37,15 @@
         android:layout_height="45dp"
         android:orientation="horizontal"
         android:layout_marginTop="80dp"
+        android:layout_marginBottom="30dp"
         android:background="#f0f3f7"
         android:layout_marginHorizontal="40dp">
 
         <ImageView
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/ic_avatar"/>
+            android:padding="8dp"
+            android:src="@drawable/ic_profile"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -56,36 +58,57 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="50dp"
-        android:background="#f0f3f7">
+        android:layout_marginHorizontal="40dp">
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_edt"
+            android:textColor="@color/black"
+            android:layout_marginVertical="5dp"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Save"/>
 
         <LinearLayout
-            android:id="@+id/btnLanguage"
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="#f0f3f7"
+            app:layout_constraintTop_toBottomOf="@+id/btnSave">
 
             <ImageView
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:padding="10dp"
-                android:src="@drawable/ic_language"/>
+                android:src="@drawable/ic_email_2"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:gravity="center_vertical"
                 android:textSize="20sp"
                 android:fontFamily="@font/lita_one"
-                android:text="@string/language"/>
+                android:hint="@string/input_your_email"/>
 
         </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="40dp"
+        android:background="#f0f3f7">
 
         <LinearLayout
             android:id="@+id/btnRate"

@@ -3,22 +3,29 @@ package com.example.commyproject.activities.setting
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.R
 import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.activities.user.login.LoginActivity
 import com.example.commyproject.data.model.User
+import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.databinding.ActivitySettingBinding
 import com.example.commyproject.databinding.DialogFeedbackBinding
 import com.example.commyproject.databinding.DialogRateBinding
 import com.example.commyproject.service.ReceiverService
 import com.example.commyproject.ultil.Constant
+import com.example.commyproject.ultil.constraint.PasswordConstraint
+import com.example.commyproject.ultil.constraint.UserNameConstraint
 import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -46,6 +53,58 @@ class SettingActivity : AppCompatActivity() {
                 startActivity(Intent(this@SettingActivity, ProfileAct::class.java).apply {
                     putExtra(Constant.USER_ID, user._id)
                 })
+            }
+            edtEmail.setText(user.email)
+            edtEmail.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    if (
+                            s.toString() != user.email &&
+                            UserNameConstraint.checkGmailFormat(s.toString())
+                        )
+                    {
+                        btnSave.visibility = View.VISIBLE
+                    } else btnSave.visibility = View.GONE
+                }
+            })
+
+            btnSave.setOnClickListener {
+                val gmail = edtEmail.text.toString()
+
+                val dialog = Dialog(this@SettingActivity)
+                val binding = DialogFeedbackBinding.inflate(layoutInflater)
+                binding.apply {
+                    title.text = "Input your Password to validate"
+                    inputFeedback.hint = "Input your Password"
+                    btnSend.text = "Save"
+                    btnSend.visibility = View.GONE
+                    inputFeedback.addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                        override fun afterTextChanged(s: Editable?) {
+                            if (PasswordConstraint.checkPassFormat(s.toString())) {
+                                btnSend.visibility = View.VISIBLE
+                            } else btnSend.visibility = View.GONE
+                        }
+
+                    })
+                    btnSend.setOnClickListener {
+                        val user = UserEntity(_id = user._id,
+                            password = inputFeedback.text.toString(),
+                            gmail = gmail)
+                        viewModel.changeGmail(user) {
+                            showToast(it)
+                        }
+                    }
+                    btnCancel.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                }
+
+                dialog.setContentView(binding.root)
+                dialog.show()
             }
 
             btnBack.setOnClickListener {

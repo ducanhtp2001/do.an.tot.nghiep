@@ -103,4 +103,5 @@
     <string name="search">Search...</string>
     <string name="notification">Notification</string>
     <string name="gmail">Gmail</string>
+    <string name="input_your_email">Input your email</string>
 </resources>

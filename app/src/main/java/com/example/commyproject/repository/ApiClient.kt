@@ -87,6 +87,14 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
         }
     }
 
+    suspend fun changeGmail(userEntity: UserEntity): MsgResponse? {
+        val response = apiService.changeGmail(userEntity)
+        if (response.isSuccessful) {
+            return response.body()!!
+        }
+        return null
+    }
+
     suspend fun getProfile(userEntity: UserEntity): ProfileResponse? {
         val response = apiService.getProfile(userEntity)
         if (response.isSuccessful) {
