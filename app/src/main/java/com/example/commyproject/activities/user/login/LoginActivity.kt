@@ -14,6 +14,7 @@ import com.example.commyproject.R
 import com.example.commyproject.activities.main.MainActivity
 import com.example.commyproject.activities.user.fogetpass.FogetPasswordActivity
 import com.example.commyproject.activities.user.register.RegisterActivity
+import com.example.commyproject.base.BaseActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityLoginBinding
 import com.example.commyproject.ultil.constraint.PasswordConstraint
@@ -22,7 +23,7 @@ import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     private lateinit var b: ActivityLoginBinding
     private lateinit var viewModel: LoginActViewModel

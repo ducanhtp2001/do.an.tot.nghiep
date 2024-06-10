@@ -19,17 +19,19 @@ import com.example.commyproject.R
 import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.activities.setting.SettingActivity
 import com.example.commyproject.activities.user.login.LoginActivity
+import com.example.commyproject.base.BaseActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityMainBinding
 import com.example.commyproject.service.ReceiverService
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.loadAvatar
+import com.example.commyproject.ultil.showNotificationNetworkDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var b: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var viewModel: MainActViewModel

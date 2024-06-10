@@ -104,4 +104,6 @@
     <string name="notification">Notification</string>
     <string name="gmail">Gmail</string>
     <string name="input_your_email">Input your email</string>
+    <string name="network_connected">Network connected</string>
+    <string name="network_disconnected">Network disconnected</string>
 </resources>

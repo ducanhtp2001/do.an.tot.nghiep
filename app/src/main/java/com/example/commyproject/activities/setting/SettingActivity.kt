@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.R
 import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.activities.user.login.LoginActivity
+import com.example.commyproject.base.BaseActivity
 import com.example.commyproject.data.model.User
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.share.SharedPreferenceUtils
@@ -31,7 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingActivity : AppCompatActivity() {
+class SettingActivity : BaseActivity() {
     @Inject
     lateinit var share: SharedPreferenceUtils
 

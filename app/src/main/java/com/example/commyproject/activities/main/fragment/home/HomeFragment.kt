@@ -20,6 +20,7 @@ import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.FragmentHomeBinding
 import com.example.commyproject.ultil.adapter.ViewPagerAdapter
 import com.example.commyproject.ultil.converter.FileConverter
+import com.example.commyproject.ultil.showNotificationNetworkDialog
 import com.example.commyproject.ultil.showSetConfigDialog
 import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint

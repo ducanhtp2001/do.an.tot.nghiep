@@ -8,6 +8,9 @@ object Constant {
     val KEY_RECOMMEND_LIST = listOf("Recommend", "Python", "Java", "C/C++", "Android", "Socket")
     val SPINNER_OPTION = listOf("Latest", "Most popular")
 
+    const val ACTION_SEND_NOTIFY_STATE_NETWORK = "com.taymay.file.transfer.action.send.notify.state.network"
+    const val DATA_STATE_NETWORK = "com.taymay.file.transfer.data.send.notify.state.network"
+
     const val FEEDBACK = "feedback"
     const val RATE = "rate"
 

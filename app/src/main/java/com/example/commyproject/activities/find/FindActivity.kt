@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.commyproject.R
+import com.example.commyproject.base.BaseActivity
 import com.example.commyproject.data.model.FollowerResponse
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.model.UserResponse
@@ -17,7 +18,7 @@ import com.example.commyproject.ultil.adapter.PeopleRCAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FindActivity : AppCompatActivity() {
+class FindActivity : BaseActivity() {
     private lateinit var b: ActivityFindBinding
     private lateinit var viewModel: FindViewModel
     private lateinit var adapter: PeopleRCAdapter

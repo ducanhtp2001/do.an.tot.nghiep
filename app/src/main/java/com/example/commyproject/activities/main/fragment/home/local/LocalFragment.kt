@@ -15,6 +15,7 @@ import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.FragmentLocalBinding
 import com.example.commyproject.ultil.adapter.PrivateFileAdapter
+import com.example.commyproject.ultil.showNotificationNetworkDialog
 import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,7 +36,6 @@ class LocalFragment : Fragment() {
         viewModel = ViewModelProvider(this)[LocalFragmentViewModel::class.java]
 
 //        Log.d("testing", "onCreate")
-
         initData()
         initView()
         initEvent()

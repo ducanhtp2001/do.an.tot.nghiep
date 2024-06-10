@@ -2,9 +2,11 @@ package com.example.commyproject.activities.profile
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -18,10 +20,12 @@ import com.example.commyproject.activities.bottomsheetdialog.showLikeDialog
 import com.example.commyproject.activities.find.FindActivity
 import com.example.commyproject.activities.main.fragment.home.HomeFragment
 import com.example.commyproject.activities.setting.SettingActivity
+import com.example.commyproject.base.BaseActivity
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.databinding.ActivityProfileBinding
+import com.example.commyproject.databinding.DialogNotifiNetworkConnectStatusBinding
 import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.adapter.ProfileFileRCAdapter
 import com.example.commyproject.ultil.adapter.PeopleRCAdapter
@@ -31,12 +35,13 @@ import com.example.commyproject.ultil.loadAvatar
 import com.example.commyproject.ultil.loadBanner
 import com.example.commyproject.ultil.loadImg
 import com.example.commyproject.ultil.requestFilePermission
+import com.example.commyproject.ultil.showNotificationNetworkDialog
 import com.example.commyproject.ultil.showSetConfigDialog
 import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileAct : AppCompatActivity() {
+class ProfileAct : BaseActivity() {
 
     private lateinit var viewModel: ProfileViewModel
     private lateinit var b: ActivityProfileBinding
@@ -48,6 +53,8 @@ class ProfileAct : AppCompatActivity() {
         b = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(b.root)
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+
+        showNotificationNetworkDialog(isConnect = true)
 
         initData()
         initEvent()

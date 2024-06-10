@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -22,6 +23,8 @@ import com.example.commyproject.base.NetworkHelper
 import com.example.commyproject.base.NetworkLiveData
 import com.example.commyproject.data.share.SharedPreferenceUtils
 import com.example.commyproject.ultil.Constant
+import com.example.commyproject.ultil.loge
+import com.example.commyproject.ultil.sendNetworkBroadCastReceiver
 import com.taymay.taoday.service.SocketIOManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -37,14 +40,22 @@ class ReceiverService: Service() {
     @Inject
     lateinit var networkLiveData: NetworkLiveData
 
+    val listReceiver: MutableList<BroadcastReceiver> = mutableListOf()
     private var observer: Observer<Boolean> = Observer {
-        if (!it) stopSelf()
+        loge("send network broadcast: $it")
+        sendNetworkBroadCastReceiver(it)
+//        if (!it) stopSelf()
     }
 
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        networkLiveData.observeForever(observer)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -72,8 +83,6 @@ class ReceiverService: Service() {
             stopSelf()
             Log.e("testing", "network err")
         }
-
-        networkLiveData.observeForever(observer)
 
         return START_STICKY
     }

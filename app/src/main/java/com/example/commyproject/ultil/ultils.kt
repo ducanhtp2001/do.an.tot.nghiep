@@ -3,10 +3,15 @@ package com.example.commyproject.ultil
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
+import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,7 +26,14 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.commyproject.R
+import com.example.commyproject.activities.bottomsheetdialog.runOnUiThread
 import com.example.commyproject.activities.main.fragment.home.HomeFragment
+import com.example.commyproject.databinding.DialogNotifiNetworkConnectStatusBinding
+import com.example.commyproject.ultil.Constant.ACTION_SEND_NOTIFY_STATE_NETWORK
+import com.example.commyproject.ultil.Constant.DATA_STATE_NETWORK
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 
 fun Context.showToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
@@ -147,4 +159,99 @@ fun Activity.requestFilePermission() {
                 )
             ), HomeFragment.PERMISSION_READ_STORAGE
         )
+}
+
+var networkDialog: Dialog? = null
+var oldContextType: KClass<out Context>? = null
+var firstNotifyNetwork : Boolean = true
+fun Context.showNotificationNetworkDialog(isConnect: Boolean) {
+
+    if (networkDialog != null && networkDialog!!.isShowing) {
+        networkDialog!!.dismiss()
+    }
+    oldContextType?.let {
+        loge("")
+        if (oldContextType == this::class) firstNotifyNetwork = true
+    }
+    networkDialog = Dialog(this)
+    oldContextType = this::class
+
+    val binding = DialogNotifiNetworkConnectStatusBinding.inflate(LayoutInflater.from(this))
+    networkDialog!!.setContentView(binding.root)
+    networkDialog!!.setCancelable(false)
+    binding.apply {
+        if (isConnect) {
+            contentDialog.text = getString(R.string.network_connected)
+        } else {
+            contentDialog.text = getString(R.string.network_disconnected)
+        }
+
+        btnOk.setOnClickListener {
+            networkDialog!!.dismiss()
+        }
+    }
+//    networkDialog!!.show()
+    networkDialog!!.apply {
+        loge("before: isShowing: $isShowing, isFirst: $firstNotifyNetwork")
+        if (isShowing) {
+            dismiss()
+            show()
+        }
+        if (!firstNotifyNetwork) {
+            show()
+        } else {
+            firstNotifyNetwork = false
+        }
+    }
+    loge("show this dialog?: ${networkDialog!!.isShowing}")
+}
+
+fun Context.registerNetworkBroadCaseReceiver(): BroadcastReceiver {
+    return registerBroadCastWithTag(ACTION_SEND_NOTIFY_STATE_NETWORK) { _, intent ->
+        try {
+            val isConnect = intent?.getStringExtra(DATA_STATE_NETWORK).toBoolean()
+            MainScope().launch {
+                showNotificationNetworkDialog(isConnect)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+}
+fun Context.sendNetworkBroadCastReceiver(isConnected: Boolean) {
+    sendBroadCastWithTag(ACTION_SEND_NOTIFY_STATE_NETWORK, mapOf(DATA_STATE_NETWORK to isConnected.toString()))
+}
+
+fun Context.sendBroadCastWithTag(action: String, data: Map<String, String>?) {
+    sendBroadcast(Intent(action).apply {
+        data?.forEach { (name, value) ->
+            putExtra(name, value)
+        }
+    })
+}
+
+fun Context.registerBroadCastWithTag(
+    action: String,
+    callback: (context: Context?, intent: Intent?) -> Unit
+): BroadcastReceiver {
+
+    val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            loge("network event   ..........................  ")
+            try {
+                callback(context, intent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    val intentFilter = IntentFilter().apply {
+        addAction(action)
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        registerReceiver(broadcastReceiver, intentFilter, Service.RECEIVER_NOT_EXPORTED)
+    } else {
+        registerReceiver(broadcastReceiver, intentFilter)
+    }
+    return broadcastReceiver
 }
