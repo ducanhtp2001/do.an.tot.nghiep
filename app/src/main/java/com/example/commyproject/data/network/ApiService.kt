@@ -1,5 +1,6 @@
 package com.example.commyproject.data.network
 
+import com.example.commyproject.data.model.CodeEntry
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
@@ -82,6 +83,9 @@ interface ApiService {
 
     @POST("follow-user")
     suspend fun followUser(@Body data: RequestFollow): Response<MsgResponse>
+
+    @POST("post-code")
+    suspend fun postCode(@Body code: CodeEntry): Response<MsgResponse>
 
     @Multipart
     @POST("upload")

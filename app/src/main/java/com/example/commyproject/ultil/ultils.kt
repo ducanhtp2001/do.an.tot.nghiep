@@ -68,7 +68,7 @@ fun Context.showSetConfigDialog(callback: (name: String, isTable: Boolean, isPub
 
     val btnOk = dialogView.findViewById<Button>(R.id.btnOk)
     val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
-    val isTableCheckbox = dialogView.findViewById<CheckBox>(R.id.isTable)
+//    val isTableCheckbox = dialogView.findViewById<CheckBox>(R.id.isTable)
     val isPublicCheckbox = dialogView.findViewById<CheckBox>(R.id.isPublic)
     val inputTitle = dialogView.findViewById<TextView>(R.id.inputName)
 
@@ -76,7 +76,8 @@ fun Context.showSetConfigDialog(callback: (name: String, isTable: Boolean, isPub
         dialog.dismiss()
         callback(
             inputTitle.text.toString().trim(),
-            isTableCheckbox.isChecked,
+//            isTableCheckbox.isChecked
+              false,
             isPublicCheckbox.isChecked
         )
     }

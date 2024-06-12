@@ -73,39 +73,7 @@ class SettingActivity : BaseActivity() {
             btnSave.setOnClickListener {
                 val gmail = edtEmail.text.toString()
 
-                val dialog = Dialog(this@SettingActivity)
-                val binding = DialogFeedbackBinding.inflate(layoutInflater)
-                binding.apply {
-                    title.text = "Input your Password to validate"
-                    inputFeedback.hint = "Input your Password"
-                    btnSend.text = "Save"
-                    btnSend.visibility = View.GONE
-                    inputFeedback.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-                        override fun afterTextChanged(s: Editable?) {
-                            if (PasswordConstraint.checkPassFormat(s.toString())) {
-                                btnSend.visibility = View.VISIBLE
-                            } else btnSend.visibility = View.GONE
-                        }
-
-                    })
-                    btnSend.setOnClickListener {
-                        val user = UserEntity(_id = user._id,
-                            password = inputFeedback.text.toString(),
-                            gmail = gmail)
-                        viewModel.changeGmail(user) {
-                            showToast(it)
-                        }
-                    }
-                    btnCancel.setOnClickListener {
-                        dialog.dismiss()
-                    }
-                }
-
-                dialog.setContentView(binding.root)
-                dialog.show()
             }
 
             btnBack.setOnClickListener {

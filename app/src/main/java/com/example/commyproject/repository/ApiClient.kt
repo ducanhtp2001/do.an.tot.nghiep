@@ -2,6 +2,7 @@ package com.example.commyproject.repository
 
 import android.content.Context
 import android.net.Uri
+import com.example.commyproject.data.model.CodeEntry
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
@@ -68,6 +69,20 @@ class ApiClient @Inject constructor(private val apiService: ApiService) {
 
     suspend fun postLike(evaluation: EvaluationEntity, callback: (Evaluation) -> Unit) {
         val response = apiService.postLike(evaluation)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
+    }
+
+    suspend fun postCode(code: CodeEntry, callback: (MsgResponse) -> Unit) {
+        val response = apiService.postCode(code)
+        if (response.isSuccessful) {
+            callback(response.body()!!)
+        }
+    }
+
+    suspend fun updateUser(user: User, callback: (User) -> Unit) {
+        val response = apiService.updateUser(user)
         if (response.isSuccessful) {
             callback(response.body()!!)
         }

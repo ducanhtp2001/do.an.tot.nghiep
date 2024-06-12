@@ -1,11 +1,14 @@
 package com.example.commyproject.activities.bottomsheetdialog
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +28,7 @@ import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.base.BaseViewModel
 import com.example.commyproject.base.checkPermissionFile
 import com.example.commyproject.base.showPermissionSettingsDialog
+import com.example.commyproject.data.model.CodeEntry
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
@@ -32,16 +36,19 @@ import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
+import com.example.commyproject.data.model.UserEntity
 import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.databinding.DialogBottomMenuBinding
 import com.example.commyproject.databinding.DialogCommentBinding
+import com.example.commyproject.databinding.DialogFeedbackBinding
 import com.example.commyproject.databinding.DialogFileDetailBinding
 import com.example.commyproject.databinding.DialogLikeBinding
 import com.example.commyproject.ultil.Config
 import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.adapter.CommentAdapter
 import com.example.commyproject.ultil.adapter.LikeAdapter
+import com.example.commyproject.ultil.constraint.PasswordConstraint
 import com.example.commyproject.ultil.converter.FileConverter
 import com.example.commyproject.ultil.getNavigationBarHeight
 import com.example.commyproject.ultil.getStatusBarHeight
@@ -61,6 +68,89 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
+fun Context.showRequirePassWordDialog(gmail: String) {
+    val mContext = if (this is ViewComponentManager.FragmentContextWrapper)
+        this.baseContext
+    else
+        this
+    val viewModel = ViewModelProvider(mContext as ViewModelStoreOwner)[DialogViewModel::class.java]
+    val dialog = Dialog(this)
+    val binding = DialogFeedbackBinding.inflate(LayoutInflater.from(this))
+    binding.apply {
+        title.text = "Input your Password to validate"
+        inputFeedback.hint = "Input your Password"
+        btnSend.text = "Save"
+        btnSend.visibility = View.GONE
+        inputFeedback.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (PasswordConstraint.checkPassFormat(s.toString())) {
+                    btnSend.visibility = View.VISIBLE
+                } else btnSend.visibility = View.GONE
+            }
+
+        })
+        btnSend.setOnClickListener {
+            val user = UserEntity(_id = viewModel.user._id,
+                password = inputFeedback.text.toString(),
+                gmail = gmail)
+            viewModel.changeGmail(user) {
+                showToast(it.msg)
+                if (it.isSuccess) {
+                    showInputCodeToVerify()
+                }
+            }
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+    }
+
+    dialog.setContentView(binding.root)
+    dialog.show()
+}
+
+fun Context.showInputCodeToVerify() {
+    val mContext = if (this is ViewComponentManager.FragmentContextWrapper)
+        this.baseContext
+    else
+        this
+    val viewModel = ViewModelProvider(mContext as ViewModelStoreOwner)[DialogViewModel::class.java]
+    val dialog = Dialog(this)
+    val binding = DialogFeedbackBinding.inflate(LayoutInflater.from(this))
+    binding.apply {
+        title.text = "OTP has been sent to your email."
+        inputFeedback.hint = "Input Code"
+        btnSend.text = "Verify"
+        btnSend.visibility = View.GONE
+        inputFeedback.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (PasswordConstraint.checkCodeFormat(s.toString())) {
+                    btnSend.visibility = View.VISIBLE
+                } else btnSend.visibility = View.GONE
+            }
+
+        })
+        btnSend.setOnClickListener {
+            val code = inputFeedback.text.toString()
+            viewModel.verifyCode(code) {
+                showToast(it.msg)
+                if (it.isSuccess) dialog.dismiss()
+            }
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+    }
+
+    dialog.setContentView(binding.root)
+    dialog.show()
+}
 fun Fragment.showFileDetailDialog(
     file: FileEntry,
     updateState: (response: StatusResponse, file: FileEntity) -> Unit,

@@ -3,11 +3,15 @@ package com.example.commyproject.activities.bottomsheetdialog
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.commyproject.base.BaseViewModel
+import com.example.commyproject.data.model.CODE_ACTION
+import com.example.commyproject.data.model.CodeEntry
 import com.example.commyproject.data.model.Comment
 import com.example.commyproject.data.model.CommentEntity
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
+import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.data.share.SharedPreferenceUtils
@@ -15,6 +19,7 @@ import com.example.commyproject.repository.ApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import javax.inject.Inject
 @HiltViewModel
@@ -54,6 +59,27 @@ class DialogViewModel @Inject constructor(
     fun followUser(data: RequestFollow, callback: (String) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         api.followUser(data) {
             callback(it.msg)
+        }
+    }
+
+    fun changeGmail(
+        user: UserEntity,
+        callback: (MsgResponse) -> Unit
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        val response = api.changeGmail(userEntity = user)
+        response?.let {
+            withContext(Dispatchers.Main) {
+                callback(response)
+            }
+        }
+    }
+
+    fun verifyCode(
+        code: String,
+        callback: (MsgResponse) -> Unit
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        api.postCode(CodeEntry.initCodeToVerify(user._id, code)) {
+            callback(it)
         }
     }
 }
