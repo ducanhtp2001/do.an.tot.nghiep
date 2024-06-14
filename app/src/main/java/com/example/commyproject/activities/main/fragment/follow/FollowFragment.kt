@@ -70,6 +70,19 @@ class FollowFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.apply {
+            followList.removeObservers(requireActivity())
+            fileList.removeObservers(requireActivity())
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun initView() {
         followAdapter = PeopleRCAdapter(requireActivity(), R.layout.item_people_small, followList)

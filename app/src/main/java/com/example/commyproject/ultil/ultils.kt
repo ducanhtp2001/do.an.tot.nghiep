@@ -179,7 +179,7 @@ fun Context.showNotificationNetworkDialog(isConnect: Boolean) {
         networkDialog!!.dismiss()
     }
     networkDialog = Dialog(this)
-
+    firstNotifyNetwork = true
     val binding = DialogNotifiNetworkConnectStatusBinding.inflate(LayoutInflater.from(this))
     networkDialog!!.setContentView(binding.root)
     networkDialog!!.setCancelable(false)

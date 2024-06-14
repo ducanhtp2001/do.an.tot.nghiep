@@ -580,10 +580,11 @@ private fun openContextMenuDialog(
         btnNotification.setOnClickListener {
             // ====================================================================================
         }
+        btnNotification.visibility = View.GONE
         btnDownload.setOnClickListener {
             bottomDialog.dismiss()
             viewModel.download(fileEntity) { responseBody ->
-                if (context.checkPermissionFile()) {
+                if (!context.checkPermissionFile()) {
                     context.saveFile(responseBody, file.fileName)
                 } else {
                     context.showPermissionSettingsDialog()
@@ -593,6 +594,7 @@ private fun openContextMenuDialog(
         if (file.idUser != viewModel.user._id) {
             btnDelete.visibility = View.GONE
             btnChangeState.visibility = View.GONE
+            btnNotification.visibility = View.GONE
         }
         if (!file.isPublic) {
             btnNotification.visibility = View.GONE

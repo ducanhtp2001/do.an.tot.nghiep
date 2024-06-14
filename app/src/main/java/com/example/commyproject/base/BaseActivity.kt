@@ -12,24 +12,25 @@ abstract class BaseActivity: AppCompatActivity() {
     val baseViewModel: BaseViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onResume() {
-        super.onResume()
         listReceiver.apply {
             add(registerNetworkBroadCaseReceiver())
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     override fun onPause() {
         super.onPause()
-        listReceiver.forEach {
-            unregisterReceiver(it)
-        }
-        listReceiver.clear()
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        listReceiver.forEach {
+            unregisterReceiver(it)
+        }
     }
 }
