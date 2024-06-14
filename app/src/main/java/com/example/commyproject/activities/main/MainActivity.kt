@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() {
         setContentView(b.root)
 
         viewModel = ViewModelProvider(this)[MainActViewModel::class.java]
-        user = viewModel.getUser()
+        user = viewModel.getUserFromCache()
 
         initView()
         initEvent()
@@ -56,6 +56,18 @@ class MainActivity : BaseActivity() {
             startForegroundService(intent)
         } else {
             startService(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fresh() {
+            b.drawerNav.apply {
+                val headerView = getHeaderView(0)
+                headerView.findViewById<TextView>(R.id.headerUsername)?.text = viewModel.user.userName
+                headerView.findViewById<TextView>(R.id.headerGmail)?.text = viewModel.user.email
+                context.loadAvatar(viewModel.user._id, headerView.findViewById(R.id.headerImage))
+            }
         }
     }
 
@@ -94,19 +106,19 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        b.drawerNav.apply {
-            val headerView = getHeaderView(0)
-            headerView.findViewById<TextView>(R.id.headerUsername)?.text = user.userName
-
-//            val avatarUrl = Config.SERVER_URL + user.avatar
+//        b.drawerNav.apply {
+//            val headerView = getHeaderView(0)
+//            headerView.findViewById<TextView>(R.id.headerUsername)?.text = user.userName
 //
-//            Log.d("testing", avatarUrl)
-//
-//            Glide.with(this)
-//                .load(avatarUrl)
-//                .into(headerView.findViewById(R.id.headerImage))
-            context.loadAvatar(user._id, headerView.findViewById(R.id.headerImage))
-        }
+////            val avatarUrl = Config.SERVER_URL + user.avatar
+////
+////            Log.d("testing", avatarUrl)
+////
+////            Glide.with(this)
+////                .load(avatarUrl)
+////                .into(headerView.findViewById(R.id.headerImage))
+//            context.loadAvatar(user._id, headerView.findViewById(R.id.headerImage))
+//        }
 
 //        Log.d("testing", "Menu items count: ${b.drawerNav.menu.size()}")
 

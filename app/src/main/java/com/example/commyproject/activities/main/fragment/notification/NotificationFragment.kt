@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.commyproject.activities.bottomsheetdialog.runOnUiThread
 import com.example.commyproject.activities.bottomsheetdialog.showFileDetailDialog
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.Notification
@@ -54,16 +55,7 @@ class NotificationFragment : Fragment() {
                 }
             }
             file.observe(requireActivity()) {
-                it?.let { 
-                    requireActivity().showFileDetailDialog(it, 
-                        updateState = { _, _ ->
-                                      
-                        },
-                        updateLike = { _ ->
-                            
-                        },
-                        onDelete = {})
-                }
+
             }
         }
     }
@@ -74,7 +66,20 @@ class NotificationFragment : Fragment() {
             listNotification,
             onClick = {
                 val file = FileEntity(it)
-                viewModel.getSingleFile(file)
+                viewModel.getSingleFile(file) {
+                    runOnUiThread {
+                        it?.let {
+                            requireActivity().showFileDetailDialog(it,
+                                updateState = { _, _ ->
+
+                                },
+                                updateLike = { _ ->
+
+                                },
+                                onDelete = {})
+                        }
+                    }
+                }
             },
             openMenu = {
 

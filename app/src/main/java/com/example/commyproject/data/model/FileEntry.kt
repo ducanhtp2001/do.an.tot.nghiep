@@ -17,4 +17,10 @@ open class FileEntry(
     val comments: MutableList<Comment> = mutableListOf(),
     val followers: MutableList<UserEntity> = mutableListOf()
 ) {
+    override fun toString(): String {
+        return "FileEntry(_id='$_id', idUser='$idUser', userName=$userName, avatar=$avatar, " +
+                "title='$title', fileName='$fileName', gmail=$gmail, recognizeText='$recognizeText', " +
+                "summaryText='$summaryText', state=$state, isPublic=$isPublic, isTable=$isTable, " +
+                "likes=$likes, comments=$comments, followers=$followers)"
+    }
 }

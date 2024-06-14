@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.example.commyproject.activities.bottomsheetdialog.runOnUiThread
 import com.example.commyproject.activities.bottomsheetdialog.showContextMenuDialog
 import com.example.commyproject.activities.bottomsheetdialog.showFileDetailDialog
 import com.example.commyproject.data.model.FileEntry
@@ -75,11 +76,13 @@ class LocalFragment : Fragment() {
                 requireActivity().showContextMenuDialog(
                     file,
                     updateState = { response, file ->
-                        requireActivity().showToast(response.msg)
-                        try {
-                            this.list.removeIf { it._id == file._id }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                        runOnUiThread {
+                            requireActivity().showToast(response.msg)
+                            try {
+                                this.list.removeIf { it._id == file._id }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                     }, onDelete = { fileId ->
                         try {

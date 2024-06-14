@@ -143,45 +143,6 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_gravity="center"
                 android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="220dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="17sp"
-                        android:textColor="@color/black"
-                        android:text="Internet Access"/>
-
-                    <TextView
-                        android:layout_width="220dp"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@color/black"
-                        android:text="@string/internet_access_description"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <ImageButton
-                        android:id="@+id/btnInternet"
-                        android:layout_width="100dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_button_login"
-                        android:padding="13dp"
-                        android:scaleType="centerInside"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_allow"/>
-                </LinearLayout>
-
             </LinearLayout>
 
         </LinearLayout>

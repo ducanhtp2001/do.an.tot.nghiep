@@ -4,7 +4,7 @@ class User(
     val _id: String = "",
     val userName: String = "",
     val passWord: String = "",
-    val email: String = "",
+    var email: String = "",
     val follow: List<String> = emptyList(),
     val avatar: String = ""
     ) {

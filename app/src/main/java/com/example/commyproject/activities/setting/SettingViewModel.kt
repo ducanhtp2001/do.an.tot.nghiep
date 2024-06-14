@@ -39,4 +39,8 @@ class SettingViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateUserToCache(user: User) = viewModelScope.launch {
+        share.putUser(user)
+    }
 }

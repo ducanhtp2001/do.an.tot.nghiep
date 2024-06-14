@@ -44,9 +44,9 @@ class NotificationFragmentViewModel @Inject constructor(
         }
     }
 
-    fun getSingleFile(file: FileEntity) = viewModelScope.launch(Dispatchers.IO) {
+    fun getSingleFile(file: FileEntity, callback:(FileEntry) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         api.getSingleFile(file) {
-            _file.postValue(it)
+            callback(it)
         }
     }
 }

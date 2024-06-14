@@ -163,19 +163,13 @@ fun Activity.requestFilePermission() {
 }
 
 var networkDialog: Dialog? = null
-var oldContextType: KClass<out Context>? = null
 var firstNotifyNetwork : Boolean = true
 fun Context.showNotificationNetworkDialog(isConnect: Boolean) {
 
     if (networkDialog != null && networkDialog!!.isShowing) {
         networkDialog!!.dismiss()
     }
-    oldContextType?.let {
-        loge("")
-        if (oldContextType == this::class) firstNotifyNetwork = true
-    }
     networkDialog = Dialog(this)
-    oldContextType = this::class
 
     val binding = DialogNotifiNetworkConnectStatusBinding.inflate(LayoutInflater.from(this))
     networkDialog!!.setContentView(binding.root)

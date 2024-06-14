@@ -8,6 +8,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -37,6 +38,7 @@ import com.example.commyproject.data.model.EvaluationEntityType
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.requestmodel.RequestFollow
 import com.example.commyproject.databinding.DialogBottomMenuBinding
@@ -53,6 +55,7 @@ import com.example.commyproject.ultil.converter.FileConverter
 import com.example.commyproject.ultil.getNavigationBarHeight
 import com.example.commyproject.ultil.getStatusBarHeight
 import com.example.commyproject.ultil.loadAvatar
+import com.example.commyproject.ultil.loge
 import com.example.commyproject.ultil.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -68,7 +71,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-fun Context.showRequirePassWordDialog(gmail: String) {
+fun Context.showRequirePassWordDialog(gmail: String, callback: (MsgResponse) -> Unit) {
     val mContext = if (this is ViewComponentManager.FragmentContextWrapper)
         this.baseContext
     else
@@ -79,6 +82,7 @@ fun Context.showRequirePassWordDialog(gmail: String) {
     binding.apply {
         title.text = "Input your Password to validate"
         inputFeedback.hint = "Input your Password"
+        inputFeedback.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         btnSend.text = "Save"
         btnSend.visibility = View.GONE
         inputFeedback.addTextChangedListener(object : TextWatcher {
@@ -99,7 +103,8 @@ fun Context.showRequirePassWordDialog(gmail: String) {
             viewModel.changeGmail(user) {
                 showToast(it.msg)
                 if (it.isSuccess) {
-                    showInputCodeToVerify()
+                    showInputCodeToVerify(callback)
+                    dialog.dismiss()
                 }
             }
         }
@@ -112,7 +117,7 @@ fun Context.showRequirePassWordDialog(gmail: String) {
     dialog.show()
 }
 
-fun Context.showInputCodeToVerify() {
+fun Context.showInputCodeToVerify(callback: (MsgResponse) -> Unit) {
     val mContext = if (this is ViewComponentManager.FragmentContextWrapper)
         this.baseContext
     else
@@ -139,7 +144,7 @@ fun Context.showInputCodeToVerify() {
         btnSend.setOnClickListener {
             val code = inputFeedback.text.toString()
             viewModel.verifyCode(code) {
-                showToast(it.msg)
+                callback(it)
                 if (it.isSuccess) dialog.dismiss()
             }
         }
@@ -220,6 +225,7 @@ private fun openFileDetailDialog(
     updateLike: (evaluation: Evaluation) -> Unit,
     onDelete: (String) -> Unit
 ) {
+    loge("file: ${file.toString()}")
     val likeColor = ContextCompat.getColor(context, R.color.like)
     val nonLikeColor = ContextCompat.getColor(context, R.color.black)
     val bottomDialog = BottomSheetDialog(context)

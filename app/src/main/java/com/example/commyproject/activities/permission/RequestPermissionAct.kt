@@ -1,6 +1,5 @@
 package com.example.commyproject.activities.permission
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,6 +11,7 @@ import com.example.commyproject.base.checkPermissionNotification
 import com.example.commyproject.base.requestAppPermissionNotification
 import com.example.commyproject.base.showPermissionSettingsDialog
 import com.example.commyproject.databinding.ActivityRequestPermissionBinding
+import com.example.commyproject.ultil.loge
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,8 +43,9 @@ class RequestPermissionAct : AppCompatActivity() {
                 if (checkPermission()) goMain()
             }
             btnStorage.setOnClickListener {
-                val isAccess = this@RequestPermissionAct.checkPermissionFile()
-                if (isAccess) {
+                val isNotAccess = this@RequestPermissionAct.checkPermissionFile()
+                loge("is isNotAccess $isNotAccess")
+                if (!isNotAccess) {
                     btnNotification.setImageResource(R.drawable.ic_ok)
                     btnNotification.setBackgroundColor(Color.parseColor("#30d8a0"))
                 } else {
@@ -56,6 +57,11 @@ class RequestPermissionAct : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (checkPermission()) goMain()
+    }
+
     private fun goMain() {
         startActivity(Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -63,7 +69,7 @@ class RequestPermissionAct : AppCompatActivity() {
     }
 
     fun checkPermission(): Boolean {
-        return this@RequestPermissionAct.checkPermissionFile() &&
+        return !this@RequestPermissionAct.checkPermissionFile() &&
                 this@RequestPermissionAct.checkPermissionNotification()
     }
 

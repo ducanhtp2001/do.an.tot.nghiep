@@ -12,8 +12,10 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isNotEmpty
 import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.R
+import com.example.commyproject.activities.bottomsheetdialog.showRequirePassWordDialog
 import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.activities.user.login.LoginActivity
 import com.example.commyproject.base.BaseActivity
@@ -73,7 +75,18 @@ class SettingActivity : BaseActivity() {
             btnSave.setOnClickListener {
                 val gmail = edtEmail.text.toString()
 
-
+                if (email.isNotEmpty()) {
+                    showRequirePassWordDialog(gmail) {
+                        runOnUiThread {
+                            showToast(it.msg)
+                        }
+                        if (it.isSuccess) {
+                            val user = viewModel.user
+                            user.email = gmail
+                            viewModel.updateUserToCache(user)
+                        }
+                    }
+                } else showToast("Email is Empty or incorrect format")
             }
 
             btnBack.setOnClickListener {

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.commyproject.R
+import com.example.commyproject.activities.permission.RequestPermissionAct
 import com.example.commyproject.activities.user.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +31,7 @@ class IntroAct : AppCompatActivity() {
     }
 
     private fun nextAct() {
-        val intent = Intent(this@IntroAct, LoginActivity::class.java)
+        val intent = Intent(this@IntroAct, RequestPermissionAct::class.java)
         this.startActivity(intent)
     }
 }
