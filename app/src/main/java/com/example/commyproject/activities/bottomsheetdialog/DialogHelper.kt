@@ -101,10 +101,12 @@ fun Context.showRequirePassWordDialog(gmail: String, callback: (MsgResponse) -> 
                 password = inputFeedback.text.toString(),
                 gmail = gmail)
             viewModel.changeGmail(user) {
-                showToast(it.msg)
-                if (it.isSuccess) {
-                    showInputCodeToVerify(callback)
-                    dialog.dismiss()
+                runOnUiThread {
+                    showToast(it.msg)
+                    if (it.isSuccess) {
+                        showInputCodeToVerify(ACTION_CODE.EMAIL, "", callback)
+                        dialog.dismiss()
+                    }
                 }
             }
         }
@@ -117,7 +119,11 @@ fun Context.showRequirePassWordDialog(gmail: String, callback: (MsgResponse) -> 
     dialog.show()
 }
 
-fun Context.showInputCodeToVerify(callback: (MsgResponse) -> Unit) {
+enum class ACTION_CODE {
+    EMAIL, PASS
+}
+
+fun Context.showInputCodeToVerify(action: ACTION_CODE, userName: String = "",callback: (MsgResponse) -> Unit) {
     val mContext = if (this is ViewComponentManager.FragmentContextWrapper)
         this.baseContext
     else
@@ -143,7 +149,7 @@ fun Context.showInputCodeToVerify(callback: (MsgResponse) -> Unit) {
         })
         btnSend.setOnClickListener {
             val code = inputFeedback.text.toString()
-            viewModel.verifyCode(code) {
+            viewModel.verifyCode(action, code = code, userName = userName) {
                 callback(it)
                 if (it.isSuccess) dialog.dismiss()
             }

@@ -91,6 +91,10 @@ dependencies {
     // WorkManager dependency
     implementation (libs.androidx.work.runtime.ktx)
 
+    // circle img dependency
+    implementation(libs.circleimageview)
+//    implementation("com.github.abdularis:circularimageview:<latest-version>")
+
     implementation("io.socket:socket.io-client:2.0.0") {
         exclude(group = "com.google.android.gms")
     }

@@ -14,7 +14,9 @@
         android:orientation="horizontal"
         android:paddingStart="10dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
+            app:civ_border_width="2dp"
+            app:civ_border_color="#1100FF00"
             android:id="@+id/cmtOwnerAvatar"
             android:layout_width="45dp"
             android:layout_height="45dp"

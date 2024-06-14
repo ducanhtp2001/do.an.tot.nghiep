@@ -27,17 +27,21 @@ class SharedPreferenceUtils(context: Context) {
     }
 
     fun getUser(): User {
-        val userData = sharedPreferences.getString(Constant.USER, "")!!
-        val dataArr = userData.split("-")
+        try {
+            val userData = sharedPreferences.getString(Constant.USER, "")!!
+            val dataArr = userData.split("-")
 //        $_id-$userName-$passWord-$email-$follow-$avatar
-        return User(
-            _id = dataArr[0],
-            userName = dataArr[1],
-            passWord = dataArr[2],
-            email = dataArr[3],
-            follow = UserConverter.str2ListFollow(dataArr[4]),
-            avatar = dataArr[5],
-        )
+            return User(
+                _id = dataArr[0],
+                userName = dataArr[1],
+                passWord = dataArr[2],
+                email = dataArr[3],
+                follow = UserConverter.str2ListFollow(dataArr[4]),
+                avatar = dataArr[5],
+            )
+        } catch (e: Exception) {
+            return User()
+        }
     }
 
     fun checkLogin(): Boolean {

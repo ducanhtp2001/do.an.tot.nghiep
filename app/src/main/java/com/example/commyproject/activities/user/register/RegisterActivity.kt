@@ -16,6 +16,7 @@ import com.example.commyproject.data.model.User
 import com.example.commyproject.databinding.ActivityRegisterBinding
 import com.example.commyproject.ultil.constraint.PasswordConstraint
 import com.example.commyproject.ultil.constraint.UserNameConstraint
+import com.example.commyproject.ultil.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,18 +42,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        viewModel.stateLoading.observe(this) {
-            if (it) {
-                loading()
-            } else {
-                loadDone()
-            }
-        }
-
-        viewModel.stateRegister.observe(this) {
-            if (it) startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
-            finish()
-        }
     }
 
     private fun loading() {
@@ -75,38 +64,59 @@ class RegisterActivity : AppCompatActivity() {
     private fun initEvent() {
         b.apply {
             btnRegister.setOnClickListener {
+                loading()
                 viewModel.networkHelper.observe(this@RegisterActivity) {
                     if (it) {
                         val userName = edtName.text.toString()
                         val pass = edtPass.text.toString()
                         val rePass = edtRetypePass.text.toString()
-                        if (userName.isEmpty() || pass.isEmpty() || rePass.isEmpty())
+                        if (userName.isEmpty() || pass.isEmpty() || rePass.isEmpty()) {
                             Toast.makeText(
                                 this@RegisterActivity,
                                 "Fill all information",
                                 Toast.LENGTH_SHORT
-                                ).show()
+                            ).show()
+                            loadDone()
+                        }
                         else if (!UserNameConstraint.checkUserNameFormat(userName)) {
                             Toast.makeText(
                                 this@RegisterActivity,
                                 "Username format is not correct",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            loadDone()
                         } else if (!PasswordConstraint.checkPassFormat(pass)) {
                             Toast.makeText(
                                 this@RegisterActivity,
                                 "Password format is not correct",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            loadDone()
                         } else if (!pass.equals(rePass)) {
                             Toast.makeText(
                                 this@RegisterActivity,
                                 "Re-enter incorrect password",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            loadDone()
                         } else {
                             val user = User.userInit(userName, pass)
-                            viewModel.register(user)
+                            viewModel.register(
+                                user,
+                                onSuccess = {
+                                    runOnUiThread {
+                                        showToast("Success")
+                                        if (it) startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+                                        finish()
+                                    }
+                                },
+                                onFalse = {
+                                    runOnUiThread {
+                                        showToast("Register false")
+                                        loadDone()
+                                    }
+                                }
+                            )
                         }
                     }
                 }

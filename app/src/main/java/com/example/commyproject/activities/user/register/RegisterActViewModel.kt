@@ -35,20 +35,26 @@ class RegisterActViewModel @Inject constructor(
     val stateRegister: LiveData<Boolean>
         get() = _stateRegister
 
-    fun register(user: User)= viewModelScope.launch(Dispatchers.IO) {
-        api.register(user) { it ->
-            Log.d(mTAG, "register: $it")
-            if (it._id != "") {
-                _stateLoading.postValue(true)
-                val userData = it._id + "_" + it.userName + "_" + it.passWord
-                Log.d("testing", "on register save to cache: $userData")
-                share.putStringValue(Constant.USER, userData)
-                _stateRegister.postValue(true)
-            } else {
-                Log.d(mTAG, "false register")
+    fun register(user: User, onSuccess: () -> Unit, onFalse:() -> Unit)= viewModelScope.launch(Dispatchers.IO) {
+        api.register(
+            user,
+            callback = {
+                Log.d(mTAG, "register: $it")
+                if (it._id != "") {
+
+                    val userData = it._id + "_" + it.userName + "_" + it.passWord
+                    Log.d("testing", "on register save to cache: $userData")
+                    share.putStringValue(Constant.USER, userData)
+                    onSuccess()
+                } else {
+                    Log.d(mTAG, "false register")
+                    onFalse()
+                }
+            },
+            onFalse = {
+                onFalse()
             }
-            _stateLoading.postValue(false)
-        }
+        )
     }
 
     private fun checkNetWork(): Boolean {

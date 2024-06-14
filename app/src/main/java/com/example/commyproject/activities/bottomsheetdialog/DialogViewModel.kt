@@ -11,6 +11,7 @@ import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.EvaluationEntity
 import com.example.commyproject.data.model.FileEntity
 import com.example.commyproject.data.model.UserEntity
+import com.example.commyproject.data.model.UserName
 import com.example.commyproject.data.model.networkresponse.MsgResponse
 import com.example.commyproject.data.model.networkresponse.StatusResponse
 import com.example.commyproject.data.model.requestmodel.RequestFollow
@@ -75,11 +76,19 @@ class DialogViewModel @Inject constructor(
     }
 
     fun verifyCode(
+        actionCode: ACTION_CODE,
         code: String,
+        userName: String = "",
         callback: (MsgResponse) -> Unit
     ) = viewModelScope.launch(Dispatchers.IO) {
-        api.postCode(CodeEntry.initCodeToVerify(user._id, code)) {
-            callback(it)
+        if (actionCode == ACTION_CODE.EMAIL) {
+            api.postCode(CodeEntry.initCodeToVerify(user._id, code)) {
+                callback(it)
+            }
+        } else {
+            api.postCode(CodeEntry.initCodeToReset(userName, code)) {
+                callback(it)
+            }
         }
     }
 }

@@ -7,17 +7,18 @@
     android:layout_height="150dp"
     android:foreground="?attr/selectableItemBackgroundBorderless">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        app:civ_border_width="2dp"
+        app:civ_border_color="#1100FF00"
         android:id="@+id/avatar"
         android:layout_width="100dp"
         android:layout_height="120dp"
-        android:background="@drawable/bg_avatar_2"
-        android:src="@drawable/ic_avatar"
-        android:scaleType="center"
+        app:srcCompat="@drawable/ic_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/image_avatar" />
+
 
     <TextView
         android:id="@+id/userName"

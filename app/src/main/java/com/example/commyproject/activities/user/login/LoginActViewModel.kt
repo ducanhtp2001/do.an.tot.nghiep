@@ -46,25 +46,33 @@ class LoginActViewModel @Inject constructor(
         return UserConverter.str2User(userStr)
     }
 
-    fun login(user: User) = viewModelScope.launch(Dispatchers.IO) {
-        api.login(user) {
-            Log.d(mTAG, "response: $it")
-            if (it._id != "") {
-                _stateLoading.postValue(true)
-                share.login(it)
-                _stateLogin.postValue(true)
-            } else {
-                Log.d(mTAG, "false login")
+    fun login(user: User, onFalse: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        api.login(
+            user,
+            callback = {
+                Log.d(mTAG, "response: $it")
+                if (it._id != "") {
+                    _stateLoading.postValue(true)
+                    share.login(it)
+                    _stateLogin.postValue(true)
+                } else {
+                    Log.d(mTAG, "false login")
+                }
+                _stateLoading.postValue(false)
+            },
+            onFalse = {
+                onFalse()
             }
-            _stateLoading.postValue(false)
-        }
+        )
     }
 
-    fun checkLogin() = viewModelScope.launch {
+    fun checkLogin(onFalse: () -> Unit) = viewModelScope.launch {
         val isLogin = share.checkLogin()
         if (isLogin) {
             val user = share.getUser()
-            login(user)
+            login(user) {
+                onFalse()
+            }
         }
     }
 

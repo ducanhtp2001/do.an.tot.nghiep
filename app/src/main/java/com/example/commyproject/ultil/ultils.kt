@@ -47,6 +47,15 @@ fun Context.loadImg(imgName: String, imageView: ImageView) {
         .load(avatarUrl)
         .into(imageView)
 }
+
+suspend fun tryAction(callback: () -> Unit) {
+    try {
+        callback()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
 const val TAG = "testing"
 fun Context.log(msg: String) {
     Log.d(TAG, msg)

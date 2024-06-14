@@ -64,18 +64,22 @@ class ProfileAct : BaseActivity() {
     private fun initEvent() {
         b.apply {
             imgAvatar.setOnClickListener {
-                if (checkFilePermission()) {
-                    requestFilePermission()
-                } else {
-                    readFile(REQUEST_AVATAR)
+                if (viewModel.user._id == viewModel.profileId) {
+                    if (checkFilePermission()) {
+                        requestFilePermission()
+                    } else {
+                        readFile(REQUEST_AVATAR)
+                    }
                 }
             }
 
             imgBanner.setOnClickListener {
-                if (checkFilePermission()) {
-                    requestFilePermission()
-                } else {
-                    readFile(REQUEST_BANNER)
+                if (viewModel.user._id == viewModel.profileId) {
+                    if (checkFilePermission()) {
+                        requestFilePermission()
+                    } else {
+                        readFile(REQUEST_BANNER)
+                    }
                 }
             }
         }

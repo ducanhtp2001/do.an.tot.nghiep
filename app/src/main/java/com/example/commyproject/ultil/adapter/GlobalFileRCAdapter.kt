@@ -1,6 +1,8 @@
 package com.example.commyproject.ultil.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +12,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.commyproject.R
+import com.example.commyproject.activities.profile.ProfileAct
 import com.example.commyproject.data.model.Evaluation
 import com.example.commyproject.data.model.FileEntry
 import com.example.commyproject.data.model.User
 import com.example.commyproject.ultil.Config
+import com.example.commyproject.ultil.Constant
 import com.example.commyproject.ultil.converter.FileConverter
 import com.example.commyproject.ultil.loadAvatar
 
@@ -45,6 +49,11 @@ class GlobalFileRCAdapter(
 //            .into(holder.avatar)
 
         context.loadAvatar(data.idUser, holder.avatar)
+//        holder.avatar.setOnClickListener {
+//            context.startActivity(Intent((context as Activity), ProfileAct::class.java).apply {
+//                putExtra(Constant.USER_ID, data._id)
+//            })
+//        }
 
         holder.apply {
             if (list[position].likes.any{it.idUser == user._id}) {
@@ -104,6 +113,19 @@ class GlobalFileRCAdapter(
             btnFollow.setOnClickListener {
                 onFollow(data) {
                     btnFollow.visibility = View.GONE
+                }
+            }
+            avatar.setOnClickListener {
+                openFileDetail(data) { evaluation ->
+                    if (list[position].likes.any{ it.idUser == evaluation.idUser }) {
+                        list[position].likes.removeIf { it.idUser == evaluation.idUser }
+                    } else {
+                        list[position].likes.add(evaluation)
+                    }
+
+                    btnMenu.post {
+                        notifyDataSetChanged()
+                    }
                 }
             }
             info.setOnClickListener {

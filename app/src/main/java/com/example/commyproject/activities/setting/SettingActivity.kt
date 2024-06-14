@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.commyproject.R
 import com.example.commyproject.activities.bottomsheetdialog.showRequirePassWordDialog
 import com.example.commyproject.activities.profile.ProfileAct
+import com.example.commyproject.activities.user.changepass.ChangePasswordActivity
 import com.example.commyproject.activities.user.login.LoginActivity
 import com.example.commyproject.base.BaseActivity
 import com.example.commyproject.data.model.User
@@ -184,6 +185,11 @@ class SettingActivity : BaseActivity() {
                 viewModel.clearData()
                 startActivity(Intent(this@SettingActivity, LoginActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
+            }
+            btnChangePass.setOnClickListener {
+                startActivity(Intent(this@SettingActivity, ChangePasswordActivity::class.java).apply {
+
                 })
             }
         }

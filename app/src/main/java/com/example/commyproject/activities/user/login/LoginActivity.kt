@@ -46,7 +46,11 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun initData() {
-        viewModel.checkLogin()
+        viewModel.checkLogin() {
+            runOnUiThread {
+                showToast("Login False")
+            }
+        }
     }
 
     private fun initObserver() {
@@ -110,7 +114,9 @@ class LoginActivity : BaseActivity() {
                         } else {
                             val user = User(userName = userName, passWord =  pass)
                             Log.d("testing", "user: $user")
-                            viewModel.login(user)
+                            viewModel.login(user) {
+                                runOnUiThread { showToast("Login false") }
+                            }
                         }
                     }
                 }

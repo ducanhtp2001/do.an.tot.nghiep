@@ -86,12 +86,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#1100FF00"
                     android:id="@+id/imgAvatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/padding_profile"
-                    android:background="@drawable/bg_avatar_1"
                     android:src="@drawable/ic_avatar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

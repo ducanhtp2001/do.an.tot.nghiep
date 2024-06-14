@@ -70,11 +70,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/padding"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#1100FF00"
                     android:id="@+id/avatar"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_avatar"
                     android:src="@drawable/ic_avatar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

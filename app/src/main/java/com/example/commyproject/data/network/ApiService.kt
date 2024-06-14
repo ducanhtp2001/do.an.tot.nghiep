@@ -45,6 +45,12 @@ interface ApiService {
     @POST("get-public-file")
     suspend fun getPublicFile(@Body user: User): Response<List<FileEntry>>
 
+    @POST("change-pass")
+    suspend fun changePass(@Body user: User): Response<MsgResponse>
+
+    @POST("forget-pass")
+    suspend fun forgetPass(@Body user: User): Response<MsgResponse>
+
     @POST("post-comment")
     suspend fun postComment(@Body commentEntity: CommentEntity): Response<Comment>
 

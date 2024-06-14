@@ -10,13 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
+            app:civ_border_width="2dp"
+            app:civ_border_color="#1100FF00"
             android:id="@+id/avatar"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/ic_avatar"
             android:layout_marginHorizontal="15dp"
-            android:background="@drawable/bg_avatar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
