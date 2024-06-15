@@ -100,11 +100,20 @@ fun Context.showRequirePassWordDialog(gmail: String, callback: (MsgResponse) -> 
             val user = UserEntity(_id = viewModel.user._id,
                 password = inputFeedback.text.toString(),
                 gmail = gmail)
+            btnSend.visibility = View.GONE
+            loading.visibility = View.VISIBLE
             viewModel.changeGmail(user) {
                 runOnUiThread {
                     showToast(it.msg)
                     if (it.isSuccess) {
+                        btnSend.visibility = View.VISIBLE
+                        loading.visibility = View.GONE
                         showInputCodeToVerify(ACTION_CODE.EMAIL, "", callback)
+                        dialog.dismiss()
+                    } else {
+                        showToast("Err")
+                        btnSend.visibility = View.VISIBLE
+                        loading.visibility = View.GONE
                         dialog.dismiss()
                     }
                 }
@@ -118,6 +127,8 @@ fun Context.showRequirePassWordDialog(gmail: String, callback: (MsgResponse) -> 
     dialog.setContentView(binding.root)
     dialog.show()
 }
+
+
 
 enum class ACTION_CODE {
     EMAIL, PASS
@@ -148,10 +159,15 @@ fun Context.showInputCodeToVerify(action: ACTION_CODE, userName: String = "",cal
 
         })
         btnSend.setOnClickListener {
+            btnSend.visibility = View.GONE
+            loading.visibility = View.VISIBLE
             val code = inputFeedback.text.toString()
             viewModel.verifyCode(action, code = code, userName = userName) {
-                callback(it)
-                if (it.isSuccess) dialog.dismiss()
+                runOnUiThread {
+                    btnSend.visibility = View.VISIBLE
+                    loading.visibility = View.GONE
+                    callback(it)
+                    dialog.dismiss() }
             }
         }
         btnCancel.setOnClickListener {

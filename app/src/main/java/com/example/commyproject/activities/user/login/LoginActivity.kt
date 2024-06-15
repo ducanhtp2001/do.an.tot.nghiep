@@ -56,13 +56,6 @@ class LoginActivity : BaseActivity() {
     private fun initObserver() {
 
         viewModel.apply {
-            stateLoading.observe(this@LoginActivity) {
-                if (it) {
-                    loading()
-                } else {
-                    loadDone()
-                }
-            }
 
             stateLogin.observe(this@LoginActivity) {
 
@@ -89,6 +82,7 @@ class LoginActivity : BaseActivity() {
             }
 
             btnLogin.setOnClickListener {
+                loading()
                 viewModel.networkHelper.observe(this@LoginActivity) {
                     if (it) {
                         val userName = edtName.text.toString()
@@ -115,7 +109,10 @@ class LoginActivity : BaseActivity() {
                             val user = User(userName = userName, passWord =  pass)
                             Log.d("testing", "user: $user")
                             viewModel.login(user) {
-                                runOnUiThread { showToast("Login false") }
+                                runOnUiThread {
+                                    loadDone()
+                                    showToast("Login false")
+                                }
                             }
                         }
                     }
@@ -127,6 +124,7 @@ class LoginActivity : BaseActivity() {
     private fun loading() {
         b.apply {
             btnLogin.isEnabled = false
+            btnLogin.visibility = View.GONE
             btnForgetPass.isEnabled = false
             btnNewAcc.isEnabled = false
             progressBar.visibility = View.VISIBLE
@@ -136,6 +134,7 @@ class LoginActivity : BaseActivity() {
     private fun loadDone() {
         b.apply {
             btnLogin.isEnabled = true
+            btnLogin.visibility = View.VISIBLE
             btnForgetPass.isEnabled = true
             btnNewAcc.isEnabled = true
             progressBar.visibility = View.GONE

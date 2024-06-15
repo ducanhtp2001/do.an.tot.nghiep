@@ -52,13 +52,12 @@ class LoginActViewModel @Inject constructor(
             callback = {
                 Log.d(mTAG, "response: $it")
                 if (it._id != "") {
-                    _stateLoading.postValue(true)
                     share.login(it)
                     _stateLogin.postValue(true)
                 } else {
+                    onFalse()
                     Log.d(mTAG, "false login")
                 }
-                _stateLoading.postValue(false)
             },
             onFalse = {
                 onFalse()

@@ -2,6 +2,7 @@ package com.example.commyproject.activities.user.fogetpass
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -32,11 +33,26 @@ class FogetPasswordActivity : BaseActivity() {
         initEvent()
     }
 
+    fun loading() {
+        b.apply {
+            btnReset.visibility = View.GONE
+            loading.visibility = View.VISIBLE
+        }
+    }
+
+    fun loadDone() {
+        b.apply {
+            btnReset.visibility = View.VISIBLE
+            loading.visibility = View.GONE
+        }
+    }
+
     private fun initEvent() {
         b.apply {
             btnCancel.setOnClickListener { onBackPressed() }
 
             btnReset.setOnClickListener {
+                loading()
                 val userName = edtUserName.text.toString()
                 val newPass = edtPass.text.toString()
                 val rePass = edtRetypePass.text.toString()
@@ -52,6 +68,7 @@ class FogetPasswordActivity : BaseActivity() {
 
                     viewModel.forgetPass(userName, newPass) { msg ->
                         runOnUiThread {
+                            loadDone()
                             showToast(msg.msg)
                             if (msg.isSuccess) {
                                 runOnUiThread {
@@ -63,7 +80,8 @@ class FogetPasswordActivity : BaseActivity() {
                                                         this@FogetPasswordActivity,
                                                         LoginActivity::class.java)
                                                 )
-                                            } }
+                                            }
+                                        }
                                     }
                                 }
                             }
